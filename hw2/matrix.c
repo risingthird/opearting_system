@@ -153,15 +153,17 @@ void *maxRowSum(void *args) {
 	struct timeSeed *seed = args;
 	int i = seed->xLoc;
 	int j = seed->yLoc;
-	int sum = 0;
+	unsigned int sleepTime = seed->seed1;
+	int sum = MAX_ROW_SUM;
 	for(int x = 0; x < N; x++) {
-		sum += C[i][x];
+		sum -= C[i][x];
 	}
 	//printf("Row %d has a sum of %d\n", i, sum);
 	pthread_mutex_lock(&lock);
-	printf("Row %d has a sum of %d\n", i, sum);
-	if(sum >= MAX_ROW_SUM) {
-		MAX_ROW_SUM = sum;
+	printf("Row %d has a sum of %d\n", i, MAX_ROW_SUM-sum);
+	sleep(rand_r(&sleepTime)%5);
+	if(sum < 0) {
+		MAX_ROW_SUM -= sum;
 	}
 	pthread_mutex_unlock(&lock);
 	//return;
