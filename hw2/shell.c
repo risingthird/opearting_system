@@ -23,7 +23,8 @@ int main(int argc, char **argv) {
 		myPrompt();
 		length = MAXLENGTH;
 		commandLine = malloc(sizeof(char) * length);
-		if(fgets(commandLine, length, STDIN) == NULL) {
+		bzero(commandLine, length);
+		if(fgets(commandLine, length, stdin) == NULL) {
 			free(commandLine);
 			exit(0);
 		}
@@ -31,22 +32,27 @@ int main(int argc, char **argv) {
 			int loc = length;
 			length = strlen(commandLine) + MAXLENGTH;
 			commandLine = realloc(commandLine, length);
-			fgets(commandLine[loc-1], length, STDIN);
+			bzero(commandLine, length);
+			fgets(commandLine[loc-1], length, stdin);
 		}
 
-		if(strtok(commandLine, " \n\t") == NULL) continue;
+		if((split = strtok(commandLine, " \n\t")) == NULL) continue;
 		counter = 0;
+
 		i = 0;
 		args = malloc(sizeof(char*) * DEFAULT_NUMARG);
+		bzero(args, DEFAULT_NUMARG);
 		while(split != NULL){
-			split = strtok(NULL, " \n");
+			//split = strtok(NULL, " \n\t");
 			args[counter++] = split;
+			split = strtok(NULL, " \n\t");
 			if(counter == (DEFAULT_NUMARG << i)) {
 				i++;
 				args = realloc(args, (DEFAULT_NUMARG << i));
 			}
 		}
 		numArg = counter;
+		args[DEFAULT_NUMARG << i] = NULL;
 		callChild(numArg, args);
 		free(args);
 		free(commandLine);
