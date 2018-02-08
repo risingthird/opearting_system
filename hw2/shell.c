@@ -22,7 +22,7 @@ int main(int argc, char **argv) {
 		myPrompt();
 		length = MAXLENGTH;
 		commandLine = malloc(sizeof(char) * length);
-		if(fgets(commandLine[0], length, STDIN) == NULL) {
+		if(fgets(commandLine, length, STDIN) == NULL) {
 			free(commandLine);
 			exit(0);
 		}
@@ -30,7 +30,7 @@ int main(int argc, char **argv) {
 			int loc = length;
 			length = strlen(commandLine) + MAXLENGTH;
 			commandLine = realloc(commandLine, length);
-			fgets(commandLine[loc-1], length, STDIN)
+			fgets(commandLine[loc-1], length, STDIN);
 		}
 
 		if(strtok(commandLine, " \n\t") == NULL) continue;
@@ -63,7 +63,7 @@ void callChild(int cargc, char **argv) {
 		exit(0);
 	}
 	else if(pid == 0) {
-		if(execvp(args[0], args)<0) { 
+		if(execvp(argv[0], argv)<0) { 
 			printf("Cannot execute command! Exit in a second!\n");
 			exit(1);
 		}
