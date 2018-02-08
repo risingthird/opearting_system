@@ -9,6 +9,7 @@
 #define DEFAULT_NUMARG 32
 
 void myPrompt();
+void callChild(int cargc, char **argv);
 
 int main(int argc, char **argv) {
 	char* commandLine;
