@@ -46,7 +46,11 @@ int main(int argc, char **argv) {
 			}
 		}
 		numArg = counter;
+		callChild(numArg, args);
+		free(args);
+		free(commandLine);
 	}
+	return 0;
 }
 
 void callChild(int cargc, char **argv) {
