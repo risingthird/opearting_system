@@ -22,31 +22,46 @@ int main(int argc, char **argv) {
 	int i;
 	int counter;
 	while(1) {
+		int index = 0;
 		myPrompt();
 		length = MAXLENGTH;
-		char* temp_commandLine = malloc(sizeof(char) * MAXLENGTH);
+
 		commandLine = malloc(sizeof(char) * length);
-		bzero(commandLine, length);
-		if(fgets(temp_commandLine, length, stdin) == NULL) {
-			free(commandLine);
-			free(temp_commandLine);
-			exit(0);
+		if(!commandLine) {
+			printf("Malloc failed\n");
+			exit(1);
 		}
-		int count_commandLine = 1;
-		strcpy(commandLine, temp_commandLine);
-		while(temp_commandLine[MAXLENGTH-2] != '\n' && temp_commandLine[MAXLENGTH-2] != NULL) {
-			
-			//strcpy(commandLine[length/2], temp_commandLine);
-			int loc = length;
-			if(count_commandLine * MAXLENGTH >= loc) {
+		bzero(commandLine, length);
+
+		char ch = 'A';
+		while(ch != NULL && ch != '\n') {
+			ch = getchar();
+			commandLine[index] = ch;
+			index++;
+			if(index >= length) {
 				length *= 2;
-				commandLine = realloc(commandLine, length);
+				char* temp = malloc(sizeof(char) * length);
+				bzero(temp, length);
+				if(!temp) {
+					printf("Malloc failed\n");
+					exit(1);
+				}
+				strcpy(temp, commandLine);
+				free(commandLine);
+				commandLine = temp;
 			}
-			//commandLine = realloc(commandLine, length);
-			//bzero(commandLine, length);
-			fgets(temp_commandLine, MAXLENGTH, stdin);
-			strcpy(commandLine[MAXLENGTH * count_commandLine], temp_commandLine);
-			count_commandLine++;
+		}
+		commandLine[index] = '\0';
+		
+
+		if((split = strtok(commandLine, " \n\t")) == NULL) continue;
+		counter = 0;
+
+		i = 0;
+		args = malloc(sizeof(char*) * DEFAULT_NUMARG);
+		if(!args) {
+					printf("Malloc failed\n");
+					exit(1);
 		}
 		//strcpy(commandLine, temp_commandLine);
 		if((split = strtok(commandLine, " \n\t")) == NULL) continue;
