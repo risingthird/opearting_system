@@ -3,10 +3,10 @@
 #include <unistd.h>
 #include <string.h>
 
-#define MAXLENGTH 16
+#define MAXLENGTH 2
 #define STDIN 0
 #define STDOUT 0
-#define DEFAULT_NUMARG 32
+#define DEFAULT_NUMARG 1
 char** args;
 char* commandLine;
 
@@ -14,8 +14,6 @@ void myPrompt();
 void callChild(int cargc, char **argv);
 
 int main(int argc, char **argv) {
-	//char* commandLine;
-	//char** args;
 	int length;
 	char *split;
 	int numArg;
@@ -41,6 +39,8 @@ int main(int argc, char **argv) {
 			if(index >= length) {
 				length *= 2;
 				char* temp = malloc(sizeof(char) * length);
+				commandLine = realloc(commandLine, length/2+1);
+				commandLine[index] = '\0';
 				bzero(temp, length);
 				if(!temp) {
 					printf("Malloc failed\n");
@@ -68,19 +68,25 @@ int main(int argc, char **argv) {
 		counter = 0;
 
 		i = 0;
-		args = malloc(sizeof(char*) * DEFAULT_NUMARG);
+		args = (char**) malloc(sizeof(char*) * DEFAULT_NUMARG);
 		bzero(args, DEFAULT_NUMARG);
+		int argLength = DEFAULT_NUMARG;
 		while(split != NULL){
 			//split = strtok(NULL, " \n\t");
-			args[counter++] = split;
+			args[counter] = split;
+			counter++;
 			split = strtok(NULL, " \n\t");
-			if(counter == (DEFAULT_NUMARG << i)) {
+			//int argLength = DEFAULT_NUMARG << i;
+			if(counter >= argLength) {
 				i++;
-				args = realloc(args, (DEFAULT_NUMARG << i));
+				argLength = DEFAULT_NUMARG << i;
+				args = realloc(args, argLength * sizeof(char**));
 			}
 		}
 		numArg = counter;
-		args[(DEFAULT_NUMARG << i)-1] = NULL;
+		for(int j = numArg; j < (DEFAULT_NUMARG<<i); j++) {
+			args[j] = NULL;
+		}
 		callChild(numArg, args);
 		free(args);
 		free(commandLine);
@@ -108,6 +114,8 @@ void callChild(int cargc, char **argv) {
 	else if(pid == 0) {
 		if(execvp(argv[0], argv)<0) { 
 			printf("Cannot execute command! Exit in a second!\n");
+			free(args);
+			free(commandLine);
 			exit(1);
 		}
 		exit(0);
