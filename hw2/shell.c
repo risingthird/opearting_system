@@ -3,17 +3,19 @@
 #include <unistd.h>
 #include <string.h>
 
-#define MAXLENGTH 256
+#define MAXLENGTH 16
 #define STDIN 0
 #define STDOUT 0
 #define DEFAULT_NUMARG 32
+char** args;
+char* commandLine;
 
 void myPrompt();
 void callChild(int cargc, char **argv);
 
 int main(int argc, char **argv) {
-	char* commandLine;
-	char** args;
+	//char* commandLine;
+	//char** args;
 	int length;
 	char *split;
 	int numArg;
@@ -22,20 +24,31 @@ int main(int argc, char **argv) {
 	while(1) {
 		myPrompt();
 		length = MAXLENGTH;
+		char* temp_commandLine = malloc(sizeof(char) * MAXLENGTH);
 		commandLine = malloc(sizeof(char) * length);
 		bzero(commandLine, length);
-		if(fgets(commandLine, length, stdin) == NULL) {
+		if(fgets(temp_commandLine, length, stdin) == NULL) {
 			free(commandLine);
+			free(temp_commandLine);
 			exit(0);
 		}
-		while(commandLine[length-1] != '\n' && commandLine[length-1] != NULL) {
+		int count_commandLine = 1;
+		strcpy(commandLine, temp_commandLine);
+		while(temp_commandLine[MAXLENGTH-2] != '\n' && temp_commandLine[MAXLENGTH-2] != NULL) {
+			
+			//strcpy(commandLine[length/2], temp_commandLine);
 			int loc = length;
-			length = strlen(commandLine) + MAXLENGTH;
-			commandLine = realloc(commandLine, length);
-			bzero(commandLine, length);
-			fgets(commandLine[loc-1], length, stdin);
+			if(count_commandLine * MAXLENGTH >= loc) {
+				length *= 2;
+				commandLine = realloc(commandLine, length);
+			}
+			//commandLine = realloc(commandLine, length);
+			//bzero(commandLine, length);
+			fgets(temp_commandLine, MAXLENGTH, stdin);
+			strcpy(commandLine[MAXLENGTH * count_commandLine], temp_commandLine);
+			count_commandLine++;
 		}
-
+		//strcpy(commandLine, temp_commandLine);
 		if((split = strtok(commandLine, " \n\t")) == NULL) continue;
 		counter = 0;
 
@@ -52,7 +65,7 @@ int main(int argc, char **argv) {
 			}
 		}
 		numArg = counter;
-		args[DEFAULT_NUMARG << i] = NULL;
+		args[(DEFAULT_NUMARG << i)-1] = NULL;
 		callChild(numArg, args);
 		free(args);
 		free(commandLine);
@@ -65,12 +78,16 @@ void callChild(int cargc, char **argv) {
 	int status;
 	if(cargc == 1 && !strcmp(argv[0], "exit")) {
 		printf("Exit to main shell in a second!\n");
+		free(args);
+		free(commandLine);
 		sleep(1);
 		exit(0);
 	}
 	pid = fork();
 	if(pid == -1) {
 		printf("Fork error occured! Program terminate in one second!\n");
+		free(args);
+		free(commandLine);
 		exit(0);
 	}
 	else if(pid == 0) {
@@ -87,8 +104,8 @@ void callChild(int cargc, char **argv) {
 
 
 void myPrompt() {
-	char prompt[MAXLENGTH];
-	if(getcwd(prompt, MAXLENGTH) == NULL){
+	char prompt[256];
+	if(getcwd(prompt, 256) == NULL){
         printf("Cannot get current path! Exit in one second!\n");
         sleep(1);
         exit(1);
