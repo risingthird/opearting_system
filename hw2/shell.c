@@ -54,15 +54,15 @@ int main(int argc, char **argv) {
 		commandLine[index] = '\0';
 		
 
-		if((split = strtok(commandLine, " \n\t")) == NULL) continue;
-		counter = 0;
+		//if((split = strtok(commandLine, " \n\t")) == NULL) continue;
+		//counter = 0;
 
-		i = 0;
-		args = malloc(sizeof(char*) * DEFAULT_NUMARG);
-		if(!args) {
-					printf("Malloc failed\n");
-					exit(1);
-		}
+		//i = 0;
+		//args = malloc(sizeof(char*) * DEFAULT_NUMARG);
+		//if(!args) {
+					//printf("Malloc failed\n");
+					//exit(1);
+		//}
 		//strcpy(commandLine, temp_commandLine);
 		if((split = strtok(commandLine, " \n\t")) == NULL) continue;
 		counter = 0;
