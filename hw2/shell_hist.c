@@ -16,6 +16,8 @@ typedef struct prevCommand
 	char* command;
 	struct prevCommand* prev;
 	struct prevCommand* next;
+	int commandId;
+	int delete;
 } histCommand;
 
 
@@ -24,6 +26,7 @@ char* commandLine;
 unsigned int numHist;
 struct prevCommand* head;
 struct prevCommand* tail;
+int commandId;
 
 void myPrompt();
 void callChild(int cargc, char **argv);
@@ -36,7 +39,7 @@ int checkHist(char* toCheck);
 int isBeginWith(const char * str1, char *str2);
 histCommand* findFirstN(int n);
 histCommand*  findLastN(int n);
-histCommand* createNode(char* command, char** args, int numArg);
+histCommand* createNode(char* command, char** args, int numArg, int id);
 
 
 int main(int argc, char **argv) {
@@ -45,6 +48,7 @@ int main(int argc, char **argv) {
 	int numArg;
 	int i;
 	int counter;
+	commandId = 0;
 	numHist = 0;
 	head = malloc(sizeof(histCommand));
 	tail = malloc(sizeof(histCommand));
@@ -130,7 +134,7 @@ int main(int argc, char **argv) {
 		if(flag == 1) {
 			histCommand* toBeCalled = findLastN(1);
 			if(toBeCalled != NULL) {
-				histCommand* newHist = createNode(toBeCalled->command, toBeCalled->args, toBeCalled->numArg);
+				histCommand* newHist = createNode(toBeCalled->command, toBeCalled->args, toBeCalled->numArg, toBeCalled->commandId);
 				addToTail(newHist);
 				callChild(newHist->numArg, newHist->args);
 			}
@@ -140,7 +144,7 @@ int main(int argc, char **argv) {
 		else if(flag == 2) {
 			histCommand* toBeCalled = findLastN(atoi(args[0]+2));
 			if(toBeCalled != NULL) {
-				histCommand* newHist = createNode(toBeCalled->command, toBeCalled->args, toBeCalled->numArg);
+				histCommand* newHist = createNode(toBeCalled->command, toBeCalled->args, toBeCalled->numArg, toBeCalled->commandId);
 				addToTail(newHist);
 				callChild(newHist->numArg, newHist->args);
 			}
@@ -150,7 +154,7 @@ int main(int argc, char **argv) {
 		else if(flag == 3) {
 			histCommand* toBeCalled = findFirstN(atoi(args[0]+1));
 			if(toBeCalled != NULL) {
-				histCommand* newHist = createNode(toBeCalled->command, toBeCalled->args, toBeCalled->numArg);
+				histCommand* newHist = createNode(toBeCalled->command, toBeCalled->args, toBeCalled->numArg, toBeCalled->commandId);
 				addToTail(newHist);
 				callChild(newHist->numArg, newHist->args);
 			}
@@ -158,7 +162,8 @@ int main(int argc, char **argv) {
 			free(commandLine);
 		}
 		else if(flag == 0) {
-			histCommand* newHist = createNode(commandLine, args, numArg);
+			histCommand* newHist = createNode(commandLine, args, numArg, commandId);
+			commandId++;
 			addToTail(newHist);
 			callChild(newHist->numArg, newHist->args);
 			free(args);
@@ -224,36 +229,16 @@ void myPrompt() {
     printf("%s >>>>>>>>", prompt);
 }
 
-histCommand* createNode(char* command, char** args, int numArg) {
-	char *split;
+histCommand* createNode(char* command, char** args, int numArg, int commandId) {
+
 	histCommand* result = malloc(sizeof(histCommand));
 	result->next = NULL;
 	result->prev = NULL;
 	result->numArg = numArg;
-	result->command = malloc(strlen(command));
-	strcpy(result->command, command);
-	if((split = strtok(commandLine, " \n\t")) == NULL) {
-		free(result->command);
-		printf("Cannot record command!\n");
-		return NULL;
-	}
-	int p = 0;
-	int q = 0;
-	result->args = (char**) malloc(sizeof(char*) * DEFAULT_NUMARG);
-	bzero(args, DEFAULT_NUMARG);
-	int argLength = DEFAULT_NUMARG;
-	while(split != NULL){
-			//split = strtok(NULL, " \n\t");
-		args[q] = split;
-		q++;
-		split = strtok(NULL, " \n\t");
-			//int argLength = DEFAULT_NUMARG << i;
-		if(q >= argLength) {
-			p++;
-			argLength = DEFAULT_NUMARG << p;
-			args = realloc(args, argLength * sizeof(char**));
-		}
-	}
+	result->command = command;
+	result->args = args;
+	result->commandId = commandId;
+	result->delete = 1;
 	return result;
 }
 
@@ -288,8 +273,8 @@ void popFront() {
 	}
 	else if((head->next)->next == NULL) {
 		destroyNode(head->next);
-		head->next = NULL;
-		tail->prev = NULL;
+		head->next = tail;
+		tail->prev = head;
 		numHist--;
 		return;
 	}
@@ -340,16 +325,22 @@ histCommand*  findLastN(int n) {
 }
 
 void destroyNode(histCommand* current) {
-	if(current->args) {
+	if (current->delete == 0) {
+		free(current);
+	}
+	else {
+		histCommand* temp = head->next;
+		while(head->next->numArg != 0) {
+			head->next = temp->next;
+			if(temp->commandId == current->commandId) {
+				temp->delete = 0;
+			}
+			temp = head->next;
+		}
 		free(current->args);
-		current->args = NULL;
-	}
-	if(current->command) {
 		free(current->command);
-		current->command = NULL;
+		free(current);
 	}
-	free(current);
-	return;
 }
 
 void clearList() {
