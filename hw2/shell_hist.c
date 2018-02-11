@@ -7,7 +7,7 @@
 #define STDIN 0
 #define STDOUT 0
 #define DEFAULT_NUMARG 1
-#define HISTSIZE 2
+
 
 typedef struct prevCommand
 {
@@ -27,6 +27,7 @@ unsigned int numHist;
 struct prevCommand* head;
 struct prevCommand* tail;
 int commandId;
+int HISTSIZE;
 
 void myPrompt();
 void callChild(int cargc, char **argv);
@@ -48,6 +49,9 @@ int main(int argc, char **argv) {
 	int numArg;
 	int i;
 	int counter;
+	if((HISTSIZE = getenv("HISTSIZE")) == NULL) {
+		HISTSIZE = 50;
+	}
 	commandId = 0;
 	numHist = 0;
 	head = malloc(sizeof(histCommand));
