@@ -3,7 +3,7 @@ objects = matrix.c shell_hist.c shell.c
 
 
 all: $(objects)
-	@gcc matrix.c -o matrix && gcc shell_hist.c -o shell_hist && gcc shell.c -o shell
+	@gcc -pthread matrix.c -o matrix && gcc shell_hist.c -o shell_hist && gcc shell.c -o shell
 
 matrix : matrix.c
 	@gcc matrix.c -o matrix
