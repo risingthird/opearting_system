@@ -278,7 +278,7 @@ void popFront() {
 		numHist--;
 		return;
 	}
-	int flag = 0
+	int flag = 0;
 	histCommand* first = head->next;
 	histCommand* second = first->next;
 	head->next = second;
@@ -298,6 +298,7 @@ void popFront() {
 	else {
 		free(first->args);
 		free(first->command);
+		free(first);
 	}
 	numHist--;
 	return;
