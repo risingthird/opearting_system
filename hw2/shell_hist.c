@@ -225,6 +225,7 @@ void myPrompt() {
 }
 
 histCommand* createNode(char* command, char** args, int numArg) {
+	char *split;
 	histCommand* result = malloc(sizeof(histCommand));
 	result->next = NULL;
 	result->prev = NULL;
@@ -247,7 +248,7 @@ histCommand* createNode(char* command, char** args, int numArg) {
 		q++;
 		split = strtok(NULL, " \n\t");
 			//int argLength = DEFAULT_NUMARG << i;
-		if(counter >= argLength) {
+		if(q >= argLength) {
 			p++;
 			argLength = DEFAULT_NUMARG << p;
 			args = realloc(args, argLength * sizeof(char**));
