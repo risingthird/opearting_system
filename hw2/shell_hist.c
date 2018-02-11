@@ -161,6 +161,8 @@ int main(int argc, char **argv) {
 			histCommand* newHist = createNode(commandLine, args, numArg);
 			addToTail(newHist);
 			callChild(newHist->numArg, newHist->args);
+			free(args);
+			free(commandLine);
 		}
 		else {
 			free(args);
@@ -227,8 +229,30 @@ histCommand* createNode(char* command, char** args, int numArg) {
 	result->next = NULL;
 	result->prev = NULL;
 	result->numArg = numArg;
-	result->args = args;
-	result->command = command;
+	result->command = malloc(strlen(command));
+	strcpy(result->command, command);
+	if((split = strtok(commandLine, " \n\t")) == NULL) {
+		free(result->command);
+		printf("Cannot record command!\n");
+		return NULL;
+	}
+	int p = 0;
+	int q = 0;
+	result->args = (char**) malloc(sizeof(char*) * DEFAULT_NUMARG);
+	bzero(args, DEFAULT_NUMARG);
+	int argLength = DEFAULT_NUMARG;
+	while(split != NULL){
+			//split = strtok(NULL, " \n\t");
+		args[q] = split;
+		q++;
+		split = strtok(NULL, " \n\t");
+			//int argLength = DEFAULT_NUMARG << i;
+		if(counter >= argLength) {
+			p++;
+			argLength = DEFAULT_NUMARG << p;
+			args = realloc(args, argLength * sizeof(char**));
+		}
+	}
 	return result;
 }
 
