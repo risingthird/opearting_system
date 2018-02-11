@@ -7,7 +7,7 @@
 #define STDIN 0
 #define STDOUT 0
 #define DEFAULT_NUMARG 1
-#define HISTSIZE 50
+#define HISTSIZE 2
 
 typedef struct prevCommand
 {
@@ -166,8 +166,8 @@ int main(int argc, char **argv) {
 			commandId++;
 			addToTail(newHist);
 			callChild(newHist->numArg, newHist->args);
-			free(args);
-			free(commandLine);
+			//free(args);
+			//free(commandLine);
 		}
 		else {
 			free(args);
@@ -330,12 +330,12 @@ void destroyNode(histCommand* current) {
 	}
 	else {
 		histCommand* temp = head->next;
-		while(head->next->numArg != 0) {
-			head->next = temp->next;
+		while(temp->numArg != 0) {
+			//head->next = temp->next;
 			if(temp->commandId == current->commandId) {
 				temp->delete = 0;
 			}
-			temp = head->next;
+			temp = temp->next;
 		}
 		free(current->args);
 		free(current->command);
@@ -344,20 +344,20 @@ void destroyNode(histCommand* current) {
 }
 
 void clearList() {
-	if(!head->next) {
+	if(head->next->numArg == 0) {
 		free(head);
 		free(tail);
 		return;
 	}
 	else {
 		histCommand* temp = head->next;
-		while(head->next->numArg != 0) {
+		while(temp->numArg != 0) {
 			head->next = temp->next;
 			destroyNode(temp);
 			temp = head->next;
 		}
-		//free(head);
-		//free(tail);
+		free(head);
+		free(tail);
 	}
 }
 
@@ -367,7 +367,7 @@ void showHistory() {
 	}
 	else {
 		histCommand* temp = head->next;
-		while(temp->next->args) {
+		while(temp->numArg != 0) {
 			//printf("%s\n", temp->command);
 			for(int k = 0; k < temp->numArg-1; k++) {
 				printf("%s ", (temp->args)[k]);
