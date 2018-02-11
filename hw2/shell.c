@@ -11,17 +11,11 @@
 
 char** args;
 char* commandLine;
-unsigned int numHist = 0;
+
 
 void myPrompt();
 void callChild(int cargc, char **argv);
-void addToTail(histCommand* toAdd);
-void popFront();
-void destroyNode(histCommand* current);
-void clearList();
-histCommand* findFirstN(int n);
-histCommand*  findLastN(int n);
-histCommand* createNode(char** args, int numArg);
+
 
 int main(int argc, char **argv) {
 	int length;
@@ -146,101 +140,6 @@ void myPrompt() {
     printf("%s >>>>>>>>", prompt);
 }
 
-void addToTail(histCommand* toAdd) {
-	if(numHist <= HISTSIZE) {
-		histCommand* temp = tail->prev;
-		temp->next = toAdd;
-		toAdd->prev = temp;
-		toAdd->next = tail;
-		tail->prev = toAdd;
-		numHist++;
-	}
-	else {
-		popFront();
-		histCommand* temp = tail->prev;
-		temp->next = toAdd;
-		toAdd->prev = temp;
-		toAdd->next = tail;
-		tail->prev = toAdd;
-		numHist++;
-	}
-
-}
 
 
 
-void popFront() {
-	if(head->next == NULL) {
-		printf("No history commands!\n");
-		return;
-	}
-	else if((head->next)->next == NULL) {
-		destroyNode(head->next);
-		head->next = NULL;
-		tail->prev = NULL;
-		numHist--;
-		return;
-	}
-	
-	histCommand* first = head->tail;
-	histCommand* second = first->next;
-	head->next = second;
-	second->prev = head;
-	destroyNode(first);
-	numHist--;
-	return;
-}
-
-histCommand* findFirstN(int n) {
-	if(n > numHist) {
-		printf("Sorry! No such histroy command!\n");
-		exit(0);
-	}
-	else if(n == 1) {
-		return head->next;
-	}
-	else {
-		histCommand* temp = head;
-		for(int i = 0; i < n; i++) {
-			temp = temp->next;
-		}
-		return temp;
-	}
-}
-
-histCommand*  findLastN(int n) {
-	if(n > numHist) {
-		printf("Sorry! No such histroy command!\n");
-		exit(0);
-	}
-	else if(n == 1) {
-		return tail->prev;
-	}
-	else {
-		histCommand* temp = tail;
-		for(int i = 0; i < n; i++) {
-			temp = tail->prev;
-		}
-		return temp;
-	}
-}
-
-void destroyNode(histCommand* current) {
-	free(current->args);
-	free(current);
-	return;
-}
-
-void clearList() {
-	if(!head->next) {
-		return;
-	}
-	else {
-		histCommand* temp = head->next;
-		while(head->next->args) {
-			head->next = temp->next;
-			destroyNode(temp);
-			temp = head->next;
-		}
-	}
-}

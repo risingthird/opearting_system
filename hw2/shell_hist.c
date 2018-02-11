@@ -9,7 +9,7 @@
 #define DEFAULT_NUMARG 1
 #define HISTSIZE 50
 
-typedf struct prevCommand
+typedef struct prevCommand
 {
 	int numArg;
 	char** args;
@@ -22,8 +22,8 @@ typedf struct prevCommand
 char** args;
 char* commandLine;
 unsigned int numHist;
-histCommand* head;
-histCommand* tail;
+struct prevCommand* head;
+struct prevCommand* tail;
 
 void myPrompt();
 void callChild(int cargc, char **argv);
@@ -33,10 +33,10 @@ void destroyNode(histCommand* current);
 void clearList();
 void showHistory();
 int checkHist(char* toCheck);
-int isBeginWith(const char * str1, char *str2)
+int isBeginWith(const char * str1, char *str2);
 histCommand* findFirstN(int n);
 histCommand*  findLastN(int n);
-histCommand* createNode(char** args, int numArg);
+histCommand* createNode(char* command, char** args, int numArg);
 
 
 int main(int argc, char **argv) {
@@ -46,16 +46,18 @@ int main(int argc, char **argv) {
 	int i;
 	int counter;
 	numHist = 0;
-	head->next = NULL;
+	head = malloc(sizeof(histCommand));
+	tail = malloc(sizeof(histCommand));
+	head->next = tail;
 	tail->next = NULL;
 	head->prev = NULL;
-	tail->prev = NULL;
+	tail->prev = head;
 	head->args = NULL;
 	tail->args = NULL;
 	head->command = NULL;
 	tail->command = NULL;
-	head->next = NULL;
-	tail->next = NULL;
+	tail->numArg = 0;
+	head->numArg = 0;
 	while(1) {
 		int index = 0;
 		myPrompt();
@@ -184,7 +186,10 @@ void callChild(int cargc, char **argv) {
 		sleep(1);
 		exit(0);
 	}
-	if(cargc == 1 && !strcmp(argv[0], "history"))
+	if(cargc == 1 && !strcmp(argv[0], "history")) {
+		showHistory();
+		return;
+	}
 	pid = fork();
 	if(pid == -1) {
 		printf("Fork error occured! Program terminate in one second!\n");
@@ -264,11 +269,11 @@ void popFront() {
 		return;
 	}
 	
-	histCommand* first = head->tail;
+	histCommand* first = head->next;
 	histCommand* second = first->next;
 	head->next = second;
 	second->prev = head;
-	destroyNode(first);
+	free(first);
 	numHist--;
 	return;
 }
@@ -294,7 +299,8 @@ histCommand* findFirstN(int n) {
 histCommand*  findLastN(int n) {
 	if(n > numHist) {
 		printf("Sorry! No such history command!\n");
-		exit(0);
+		//exit(0);
+		return NULL;
 	}
 	else if(n == 1) {
 		return tail->prev;
@@ -302,30 +308,40 @@ histCommand*  findLastN(int n) {
 	else {
 		histCommand* temp = tail;
 		for(int i = 0; i < n; i++) {
-			temp = tail->prev;
+			temp = temp->prev;
 		}
 		return temp;
 	}
 }
 
 void destroyNode(histCommand* current) {
-	free(current->args);
-	free(current->command);
+	if(current->args) {
+		free(current->args);
+		current->args = NULL;
+	}
+	if(current->command) {
+		free(current->command);
+		current->command = NULL;
+	}
 	free(current);
 	return;
 }
 
 void clearList() {
 	if(!head->next) {
+		free(head);
+		free(tail);
 		return;
 	}
 	else {
 		histCommand* temp = head->next;
-		while(head->next->args) {
+		while(head->next->numArg != 0) {
 			head->next = temp->next;
 			destroyNode(temp);
 			temp = head->next;
 		}
+		//free(head);
+		//free(tail);
 	}
 }
 
@@ -336,8 +352,12 @@ void showHistory() {
 	else {
 		histCommand* temp = head->next;
 		while(temp->next->args) {
-			printf("%s\n", temp->command);
-			temp = temp->next
+			//printf("%s\n", temp->command);
+			for(int k = 0; k < temp->numArg-1; k++) {
+				printf("%s ", (temp->args)[k]);
+			}
+			printf("%s\n", (temp->args)[temp->numArg-1]);
+			temp = temp->next;
 		}
 	}
 }
@@ -359,7 +379,7 @@ int checkHist(char* toCheck) {
 			return -1;
 		}
 		else {
-			return 2
+			return 2;
 		}
 	}
 	else if(isBeginWith(toCheck , "!")) {
