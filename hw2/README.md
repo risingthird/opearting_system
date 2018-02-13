@@ -11,6 +11,8 @@ How to run: ./matrix will run matrix.c, no \
 Limitation: As described above, any further arguments after "!!" / "!n" / "!-n" will be ignored. Also, commands like 
 "cat file1> file2" or "cat file1 >file2" won't run as it will be in a real shell. In other words, commands are splited by tab or space, "file1>" will be considered as one argument rather than "file1" and ">".
 "cd" command can be correctly stored in history, but cannot be executed.
+Cannot handle ctrl-c, that is hitting on ctrl-c will terminate the shell rather than having a new prompt. 
+Cannot handle '>', '>>', '&', command. It seems execvp cannot handle them properly.
 
 
 File directory: /Desktop/cs355/opearting_system/hw2
