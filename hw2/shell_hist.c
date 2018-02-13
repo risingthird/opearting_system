@@ -41,11 +41,13 @@ void popFront();
 void destroyNode(histCommand* current);
 void clearList();
 void showHistory();
+void signal_handler();
 int checkHist(char* toCheck);
 int isBeginWith(const char * str1, char *str2);
 histCommand* findFirstN(int n);
 histCommand*  findLastN(int n);
 histCommand* createNode(char* command, char** args, int numArg, int id);
+
 
 
 int main(int argc, char **argv) {
@@ -74,6 +76,7 @@ int main(int argc, char **argv) {
 	tail->command = NULL;
 	tail->numArg = 0;
 	head->numArg = 0;
+	signal(SIGINT, signal_handler);
 	while(1) {
 		int index = 0;
 		myPrompt();
@@ -86,10 +89,16 @@ int main(int argc, char **argv) {
 		}
 		bzero(commandLine, length);
 
-		char ch = 'A';
+		char ch = getchar();
+		if(ch == EOF) {
+			free(commandLine);
+			clearList();
+			exit(0);
+		}
 		while(ch != '\0' && ch != '\n') {
-			ch = getchar();
+			
 			commandLine[index] = ch;
+			ch = getchar();
 			index++;
 			if(index >= length) {
 				length *= 2;
@@ -466,7 +475,9 @@ int isBeginWith(const char * str1,char *str2)
   return 1;
 }
 
-
+void signal_handler() {
+	return;
+}
 
 
 
