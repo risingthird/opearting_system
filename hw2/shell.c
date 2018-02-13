@@ -68,7 +68,10 @@ int main(int argc, char **argv) {
 					//exit(1);
 		//}
 		//strcpy(commandLine, temp_commandLine);
-		if((split = strtok(commandLine, " \n\t")) == NULL) continue;
+		if((split = strtok(commandLine, " \n\t")) == NULL) {
+			free(commandLine);
+			continue;
+		}
 		counter = 0;
 
 		i = 0;

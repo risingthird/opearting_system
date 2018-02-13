@@ -111,7 +111,10 @@ int main(int argc, char **argv) {
 					//exit(1);
 		//}
 		//strcpy(commandLine, temp_commandLine);
-		if((split = strtok(commandLine, " \n\t")) == NULL) continue;
+		if((split = strtok(commandLine, " \n\t")) == NULL) {
+			free(commandLine);
+			continue;
+		}
 		counter = 0;
 
 		i = 0;
@@ -166,11 +169,16 @@ int main(int argc, char **argv) {
 			free(commandLine);
 		}
 		else if(flag == 0) {
-			histCommand* newHist = createNode(commandLine, args, numArg, commandId);
-			commandId++;
-			addToTail(newHist);
-			callChild(newHist->numArg, newHist->args);
-			//free(args);
+			if(numArg == 0) {
+				free(args);
+				free(commandLine);
+			}
+			else {
+				histCommand* newHist = createNode(commandLine, args, numArg, commandId);
+				commandId++;
+				addToTail(newHist);
+				callChild(newHist->numArg, newHist->args);
+			}//free(args);
 			//free(commandLine);
 		}
 		else {
@@ -213,7 +221,7 @@ void callChild(int cargc, char **argv) {
 			printf("Cannot execute command! Exit in a second!\n");
 			//free(args);
 			//free(commandLine);
-			exit(1);
+			exit(0);
 		}
 		exit(0);
 	}
@@ -409,7 +417,7 @@ int checkHist(char* toCheck) {
 	if (!strcmp(toCheck, "!!")) {
 		return 1;
 	}
-	else if (isBeginWith(toCheck , "!-")) {
+	else if (isBeginWith(toCheck , "!-") == 1) {
 		if (atoi(toCheck+2) == 0) {
 			printf("Pleas type an interger right after !- .\n");
 			return -1;
@@ -418,7 +426,7 @@ int checkHist(char* toCheck) {
 			return 2;
 		}
 	}
-	else if(isBeginWith(toCheck , "!")) {
+	else if(isBeginWith(toCheck , "!") == 1) {
 		if (atoi(toCheck+1) == 0) {
 			printf("Pleas type an interger right after ! .\n");
 			return -1;
