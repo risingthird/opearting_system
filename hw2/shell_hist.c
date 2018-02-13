@@ -7,6 +7,8 @@
 #define STDIN 0
 #define STDOUT 0
 #define DEFAULT_NUMARG 1
+#define DELETED 0
+#define NOTDELETED 1
 
 
 typedef struct prevCommand
@@ -250,7 +252,7 @@ histCommand* createNode(char* command, char** args, int numArg, int commandId) {
 	result->command = command;
 	result->args = args;
 	result->commandId = commandId;
-	result->delete = 1;
+	result->delete = NOTDELETED;
 	return result;
 }
 
@@ -353,7 +355,7 @@ histCommand*  findLastN(int n) {
 }
 
 void destroyNode(histCommand* current) {
-	if (current->delete == 0) {
+	if (current->delete == DELETED) {
 		free(current);
 	}
 	else {
@@ -361,7 +363,7 @@ void destroyNode(histCommand* current) {
 		while(temp->numArg != 0) {
 			//head->next = temp->next;
 			if(temp->commandId == current->commandId) {
-				temp->delete = 0;
+				temp->delete = DELETED;
 			}
 			temp = temp->next;
 		}
