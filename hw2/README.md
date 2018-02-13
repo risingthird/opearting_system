@@ -10,6 +10,7 @@ How to run: ./matrix will run matrix.c, no \
 
 Limitation: As described above, any further arguments after "!!" / "!n" / "!-n" will be ignored. Also, commands like 
 "cat file1> file2" or "cat file1 >file2" won't run as it will be in a real shell. In other words, commands are splited by tab or space, "file1>" will be considered as one argument rather than "file1" and ">".
+"cd" command can be correctly stored in history, but cannot be executed.
 
 
 File directory: /Desktop/cs355/opearting_system/hw2
