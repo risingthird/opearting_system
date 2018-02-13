@@ -9,6 +9,7 @@
 #define DEFAULT_NUMARG 1
 #define DELETED 0
 #define NOTDELETED 1
+#define PROMPTSIZE 256
 
 
 typedef struct prevCommand
@@ -234,8 +235,8 @@ void callChild(int cargc, char **argv) {
 
 
 void myPrompt() {
-	char prompt[256];
-	if(getcwd(prompt, 256) == NULL){
+	char prompt[PROMPTSIZE];
+	if(getcwd(prompt, PROMPTSIZE) == NULL){
         printf("Cannot get current path! Exit in one second!\n");
         sleep(1);
         exit(1);
