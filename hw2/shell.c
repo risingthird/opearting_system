@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include <string.h>
+#include <sys/wait.h>
 
 #define MAXLENGTH 2
 #define STDIN 0
@@ -37,7 +38,7 @@ int main(int argc, char **argv) {
 		bzero(commandLine, length);
 
 		char ch = 'A';
-		while(ch != NULL && ch != '\n') {
+		while(ch != '\0' && ch != '\n') {
 			ch = getchar();
 			commandLine[index] = ch;
 			index++;

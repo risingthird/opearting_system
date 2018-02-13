@@ -3,6 +3,7 @@
 #include <pthread.h>
 #include <time.h>
 #include <unistd.h>
+#include <sys/time.h>
 
 #define N 7
 int A[N][N];

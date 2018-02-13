@@ -2,6 +2,8 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include <string.h>
+#include <sys/wait.h>
+#include <sys/time.h>
 
 #define MAXLENGTH 2
 #define STDIN 0
@@ -52,8 +54,11 @@ int main(int argc, char **argv) {
 	int numArg;
 	int i;
 	int counter;
-	if((HISTSIZE = getenv("HISTSIZE")) == NULL) {
+	if(!getenv("HISTSIZE")) {
 		HISTSIZE = 50;
+	}
+	else {
+		HISTSIZE = atoi(getenv("HISTSIZE"));
 	}
 	commandId = 0;
 	numHist = 0;
@@ -82,7 +87,7 @@ int main(int argc, char **argv) {
 		bzero(commandLine, length);
 
 		char ch = 'A';
-		while(ch != NULL && ch != '\n') {
+		while(ch != '\0' && ch != '\n') {
 			ch = getchar();
 			commandLine[index] = ch;
 			index++;
