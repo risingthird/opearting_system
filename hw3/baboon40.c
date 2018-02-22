@@ -132,11 +132,11 @@ void fly_Baboons_Fly(Baboon* aBaboon) {
     displayBaboon(aBaboon);
     sem_post(directionLock[direction]);
 
+    sem_post(starvation);
     cross();
     aBaboon->status = CROSSED;
     displayBaboon(aBaboon);
 
-    sem_post(starvation);
     sem_wait(directionLock[direction]);
     twoSideBaboons[direction]--;
     if(twoSideBaboons[direction] == 0) {
