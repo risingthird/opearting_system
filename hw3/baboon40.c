@@ -71,6 +71,7 @@ int main(int argc, char** argv){
       sem_unlink("ropeLock");
       sem_unlink("directionLockEAST");
       sem_unlink("directionLockWEST");
+      sem_unlink("starvation");
   }
     else {
 
