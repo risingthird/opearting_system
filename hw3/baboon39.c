@@ -10,15 +10,17 @@
 #include <sys/shm.h>
 #include <errno.h>
 #include <string.h>
+#include <sys/mman.h>
+#include <unistd.h>
 
 #define EAST 0
 #define WEST 1
 #define ARRIVAL 0
 #define ONROPE 1
 #define CROSSED 2
-#define NUMBABOON 100
+#define NUMBABOON 10
 
-typedef baboon{
+typedef struct baboon{
 	int dir; // 0-- east; 1 -- west
 	int id;
 	int status;
@@ -32,7 +34,7 @@ void arrive();
 void onRope();
 void cross();
 void fly_Baboons_Fly();
-void displayBaboon(baboon* aBaboon);
+void displayBaboon(Baboon* aBaboon);
 void* create_shared_memory(size_t size);
 
 int main(int argc, char** argv){
@@ -108,7 +110,7 @@ void fly_Baboons_Fly(Baboon* aBaboon) {
     aBaboon->dir = direction;
     aBaboon->status = ARRIVAL;
     displayBaboon(aBaboon);
-    sem_wait(directionLock[dir]);
+    sem_wait(directionLock[direction]);
     /*if(direction) {
     	*westBaboon = *westBaboon + 1;
     }
@@ -153,8 +155,8 @@ void* create_shared_memory(size_t size) {
   return mmap(NULL, size, protection, visibility, 0, 0);
 }
 
-void displayBaboon(baboon* aBaboon) {
-	if(aBaboon->direction) {
+void displayBaboon(Baboon* aBaboon) {
+	if(aBaboon->dir) {
 		if(aBaboon->status == 0) {
 			printf("Baboon %d arrives at the rope and will go Westward\n", aBaboon->id);
 		}
