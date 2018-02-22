@@ -39,9 +39,10 @@ void* create_shared_memory(size_t size);
 
 int main(int argc, char** argv){
   
-  sem_unlink("directionLockEAST");
+    sem_unlink("directionLockEAST");
     sem_unlink("directionLockWEST");
     sem_unlink("ropeLock");
+    sem_unlink("starvation");
 
     twoSideBaboons = (int*)create_shared_memory(8);
     twoSideBaboons[WEST] = 0;
@@ -72,6 +73,7 @@ int main(int argc, char** argv){
       sem_unlink("directionLockEAST");
       sem_unlink("directionLockWEST");
       sem_unlink("starvation");
+      munmap(twoSideBaboons, 8);
   }
     else {
 
