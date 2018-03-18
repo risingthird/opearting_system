@@ -31,7 +31,7 @@ int thread_libinit(int policy) {
 
 int thread_libterminate() {
 	free(scheduler_stack);
-	delete(main_thread->stack);
+	free(main_thread->stack);
 	delete(main_thread);
 	return util_terminate();
 }
@@ -69,9 +69,7 @@ int thread_create(void (*func)(void *), void *arg, int priority) {
 	current_thread->suspended_queue = queue<int> ();
 	thread_list_head.push_back(current_thread);
 	if (schedule_policy == FIFO) {
-		thread_PRI_SJF_FIFO* toAdd = new thread_PRI_SJF_FIFO();
-		toAdd->id = thread_count;
-		ready_FIFO.push(toAdd);
+		ready_FIFO.push(thread_count);
 	}
 	else if (schedule_policy == SJF) {
 		thread_PRI_SJF_FIFO* toAdd = new thread_PRI_SJF_FIFO();
@@ -81,19 +79,13 @@ int thread_create(void (*func)(void *), void *arg, int priority) {
 	}
 	else if (schedule_policy == PRI) {
 		if (priority == FIRST-1) {
-			thread_PRI_SJF_FIFO* toAdd = new thread_PRI_SJF_FIFO();
-			toAdd->id = thread_count;
-			ready_queue_first.push(toAdd);
+			ready_queue_first.push_back(thread_count);
 		}
 		else if (priority == SECOND-1) {
-			thread_PRI_SJF_FIFO* toAdd = new thread_PRI_SJF_FIFO();
-			toAdd->id = thread_count;
-			ready_queue_second.push(toAdd);
+			ready_queue_second.push_back(thread_count);
 		}
 		else if (priority == THIRD-1) {
-			thread_PRI_SJF_FIFO* toAdd = new thread_PRI_SJF_FIFO();
-			toAdd->id = thread_count;
-			ready_queue_third.push(toAdd);
+			ready_queue_third.push_back(thread_count);
 		}
 		else {
 			return EXIT_WITH_ERROR;
