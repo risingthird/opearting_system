@@ -1,8 +1,8 @@
 #ifndef __UTIL_H_
 #define __UTIL_H_
 
-#include <queue.h>
-#include <list.h>
+#include <queue>
+#include <list>
 #include <string.h>
 #include <ucontext.h> 
 #include <stdio.h>
