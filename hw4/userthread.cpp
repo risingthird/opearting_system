@@ -6,7 +6,7 @@ int thread_libinit(int policy) {
 	if (scheduler_stack == NULL) {
 		return EXIT_WITH_ERROR;
 	}
-	get(&scheduler_context);
+	getcontext(&scheduler_context);
 	scheduler_context.uc_link = 0;
 	scheduler_context.uc_stack.ss_sp = scheduler_stack;
 	scheduler_context.uc_stack.ss_size = STACKSIZE;
