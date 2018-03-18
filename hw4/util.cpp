@@ -53,12 +53,12 @@ int util_init(int policy) {
 		thread_count = FIRST_THREAD;
 
 	}
-	else if (schedule_policy == SJF) {
+	else if (schedule_policy == _SJF) {
 		thread_list_head = list<myThread*> ();
 		ready_SJF = priority_queue<thread_PRI_SJF_FIFO*> ();
 		thread_count = FIRST_THREAD;
 	}
-	else if (schedule_policy == PRIORITY) {
+	else if (schedule_policy == _PRIORITY) {
 		thread_list_head = list<myThread*> ();
 		ready_queue_first = list<int> ();
 		ready_queue_second = list<int> (); 
