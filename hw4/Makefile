@@ -32,4 +32,4 @@ nested_fifo_test: nested_fifo_test.c libuserthread.so
 	g++ nested_fifo_test nested_fifo_test.c libuserthread.so -L -luserthread -g
 
 clean:
-	@rm -f !(*.cpp|Makefile|README.md|*.h|BMC-CS355)
+	@rm -f !(*.cpp|Makefile|README.md|*.h|BMC-CS355|*.c)
