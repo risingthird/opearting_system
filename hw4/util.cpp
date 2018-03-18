@@ -110,119 +110,119 @@ int find_active() {
 	return NOT_FOUND;
 }
 
-myThread* choose_by_tid(int tid) {
-	myThread* toReturn = NULL;
-	list<myThread*> :: iterator it;
-	for(it = thread_list_head.begin(); it != thread_list_head.end(); ++it) {
-		if (*it->tid == tid) {
-			toReturn = *it;
-			break;
-		}
-	}
+// myThread* choose_by_tid(int tid) {
+// 	myThread* toReturn = NULL;
+// 	list<myThread*> :: iterator it;
+// 	for(it = thread_list_head.begin(); it != thread_list_head.end(); ++it) {
+// 		if (*it->tid == tid) {
+// 			toReturn = *it;
+// 			break;
+// 		}
+// 	}
 	
-	if (toReturn == NULL) {
-		printf("Bad thread id\n");
-		return EXIT_WITH_ERROR;
-	}
+// 	if (toReturn == NULL) {
+// 		printf("Bad thread id\n");
+// 		return EXIT_WITH_ERROR;
+// 	}
 
-	if (schedule_policy == FIFO) {
-		queue<thread_PRI_SJF_FIFO*> temp = queue<thread_PRI_SJF_FIFO*> ();
-		thread_PRI_SJF_FIFO* temp1 = NULL;
-		while(!ready_FIFO.empty()) {
-			temp1 = ready_FIFO.front();
-			if (temp1->id == tid) {
-				delete(temp1);
-				ready_FIFO.pop();
-				break;
-			}
-			else {
-				ready_FIFO.pop();
-				temp.push(temp1);
-			}
-		}
+// 	if (schedule_policy == FIFO) {
+// 		queue<thread_PRI_SJF_FIFO*> temp = queue<thread_PRI_SJF_FIFO*> ();
+// 		thread_PRI_SJF_FIFO* temp1 = NULL;
+// 		while(!ready_FIFO.empty()) {
+// 			temp1 = ready_FIFO.front();
+// 			if (temp1->id == tid) {
+// 				delete(temp1);
+// 				ready_FIFO.pop();
+// 				break;
+// 			}
+// 			else {
+// 				ready_FIFO.pop();
+// 				temp.push(temp1);
+// 			}
+// 		}
 
-		// set the priority queue to its original version but without the selected thread
-		while(!temp.empty()) {
-			temp1 = temp.top();
-			temp.pop();
-			ready_FIFO.push(temp1);
-		}
-	}
-	else if (schedule_policy == SJF) {
-		priority_queue<thread_PRI_SJF_FIFO*> temp = priority_queue<thread_PRI_SJF_FIFO*> ();
-		thread_PRI_SJF_FIFO* temp1 = NULL;
-		while(!ready_SJF.empty()) {
-			temp1 = ready_SJF.top();
-			if (temp1->id == tid) {
-				delete(temp1);
-				ready_SJF.pop();
-				break;
-			}
-			else {
-				ready_SJF.pop();
-				temp.push(temp1);
-			}
-		}
+// 		// set the priority queue to its original version but without the selected thread
+// 		while(!temp.empty()) {
+// 			temp1 = temp.top();
+// 			temp.pop();
+// 			ready_FIFO.push(temp1);
+// 		}
+// 	}
+// 	else if (schedule_policy == SJF) {
+// 		priority_queue<thread_PRI_SJF_FIFO*> temp = priority_queue<thread_PRI_SJF_FIFO*> ();
+// 		thread_PRI_SJF_FIFO* temp1 = NULL;
+// 		while(!ready_SJF.empty()) {
+// 			temp1 = ready_SJF.top();
+// 			if (temp1->id == tid) {
+// 				delete(temp1);
+// 				ready_SJF.pop();
+// 				break;
+// 			}
+// 			else {
+// 				ready_SJF.pop();
+// 				temp.push(temp1);
+// 			}
+// 		}
 
-		// set the priority queue to its original version but without the selected thread
-		while(!temp.empty()) {
-			temp1 = temp.top();
-			temp.pop();
-			ready_SJF.push(temp1);
-		}
-	}
-	// delete the selected thread
-	else if (schedule_policy == PRIORITY) {
-		if (toReturn->priority == FIRST-1) {
-			list<thread_PRI_SJF_FIFO*> :: iterator itt;
-			for(itt = ready_queue_first.begin(); itt != ready_queue_first.end();) {
-				if (*itt->id == tid) {
-					delete(*itt);
-					itt = ready_queue_first.erase(itt);
-					break;
-				}
-				else {
-					++itt;
-				}
-			}
-		}
-		else if (toReturn->priority == SECOND-1) {
-			list<thread_PRI_SJF_FIFO*> :: iterator itt;
-			for(itt = ready_queue_second.begin(); itt != ready_queue_second.end();) {
-				if (*itt->id == tid) {
-					delete(*itt);
-					itt = ready_queue_second.erase(itt);
-					break;
-				}
-				else {
-					++itt;
-				}
-			}
-		}
-		else if (toReturn->priority == THIRD-1) {
-			list<thread_PRI_SJF_FIFO*> :: iterator itt;
-			for(itt = ready_queue_third.begin(); itt != ready_queue_third.end();) {
-				if (*itt->id == tid) {
-					delete(*itt);
-					itt = ready_queue_third.erase(itt);
-					break;
-				}
-				else {
-					++itt;
-				}
-			}
-		}
-		else {
-			printf("Wrong priority number\n");
-			exit(EXIT_WITH_ERROR);
-		}
-	}
-	else {
-		printf("Wrong policy number\n");
-		return NULL;
-	}
-	return toReturn;
-}
+// 		// set the priority queue to its original version but without the selected thread
+// 		while(!temp.empty()) {
+// 			temp1 = temp.top();
+// 			temp.pop();
+// 			ready_SJF.push(temp1);
+// 		}
+// 	}
+// 	// delete the selected thread
+// 	else if (schedule_policy == PRIORITY) {
+// 		if (toReturn->priority == FIRST-1) {
+// 			list<thread_PRI_SJF_FIFO*> :: iterator itt;
+// 			for(itt = ready_queue_first.begin(); itt != ready_queue_first.end();) {
+// 				if (*itt->id == tid) {
+// 					delete(*itt);
+// 					itt = ready_queue_first.erase(itt);
+// 					break;
+// 				}
+// 				else {
+// 					++itt;
+// 				}
+// 			}
+// 		}
+// 		else if (toReturn->priority == SECOND-1) {
+// 			list<thread_PRI_SJF_FIFO*> :: iterator itt;
+// 			for(itt = ready_queue_second.begin(); itt != ready_queue_second.end();) {
+// 				if (*itt->id == tid) {
+// 					delete(*itt);
+// 					itt = ready_queue_second.erase(itt);
+// 					break;
+// 				}
+// 				else {
+// 					++itt;
+// 				}
+// 			}
+// 		}
+// 		else if (toReturn->priority == THIRD-1) {
+// 			list<thread_PRI_SJF_FIFO*> :: iterator itt;
+// 			for(itt = ready_queue_third.begin(); itt != ready_queue_third.end();) {
+// 				if (*itt->id == tid) {
+// 					delete(*itt);
+// 					itt = ready_queue_third.erase(itt);
+// 					break;
+// 				}
+// 				else {
+// 					++itt;
+// 				}
+// 			}
+// 		}
+// 		else {
+// 			printf("Wrong priority number\n");
+// 			exit(EXIT_WITH_ERROR);
+// 		}
+// 	}
+// 	else {
+// 		printf("Wrong policy number\n");
+// 		return NULL;
+// 	}
+// 	return toReturn;
+// }
 
 myThread* find_by_tid(int tid) {
 	list<myThread*>::iterator it;

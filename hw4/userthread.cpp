@@ -100,7 +100,7 @@ int thread_create(void (*func)(void *), void *arg, int priority) {
 
 int thread_yield() {
 	myThread* current_thread;
-	ucontext save_context;
+	ucontext_t save_context;
 	current_thread = current_active;
 	getcontext(&save_context);
 	if (current_thread != NULL) {
@@ -114,7 +114,7 @@ int thread_yield() {
 int thread_join(int tid) {
 	myThread* current_thread;
 	current_thread = current_active;
-	ucontext save_context;
+	ucontext_t save_context;
 	getcontext(&save_context);
 	if (current_thread != NULL) {
 		current_thread->status = STOPPED;
