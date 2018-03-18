@@ -55,6 +55,7 @@ void clear_up_SJFqueue(priority_queue<thread_PRI_SJF_FIFO*> *ll) {
 
 int util_init(int policy) {
 	schedule_policy = policy;
+	current_active = NULL;
 	if (schedule_policy == FIFO) {
 		ready_FIFO = queue<int> ();
 		thread_list_head = list<myThread*> ();
@@ -351,26 +352,118 @@ void my_scheduler() {
 	current_thread = current_active;
 	current_thread->active = FALSE;
 	// put threads in suspended queue back to ready queue
-	if (current_thread->status == FINISHED) {
-		if (schedule_policy == FIFO) {
-			while (!current_thread->suspended_queue.empty()) {
-				ready_FIFO.push(current_thread->suspended_queue.front());
-				current_thread->suspended_queue.pop();
+	if (current_thread != NULL) {
+		if (current_thread->status == FINISHED) {
+			if (schedule_policy == FIFO) {
+				while (!current_thread->suspended_queue.empty()) {
+					ready_FIFO.push(current_thread->suspended_queue.front());
+					current_thread->suspended_queue.pop();
+				}
+				nextID = choose_next_thread_FIFO();
+				if (nextID == NOT_FOUND) {
+					return EXIT_WITH_ERROR;
+				}
 			}
+			else if (schedule_policy == SJF) {
+				while (!current_thread->suspended_queue.empty()) {
+					thread_PRI_SJF_FIFO* temp = new thread_PRI_SJF_FIFO();
+					temp->id = current_thread->suspended_queue.front();
+					myThread* temp1 = find_by_tid(current_thread->suspended_queue.front());
+					temp->priority = temp1->estimated_runtime;
+					ready_SJF.push(temp);
+					current_thread->suspended_queue.pop();
+				}
+				thread_PRI_SJF_FIFO* temp = NULL;
+				temp = choose_next_thread_SJF();
+				if (temp == NULL) {
+					return EXIT_WITH_ERROR;
+				}
+				nextID = temp->id;
+				delete(temp);
+			}
+			else if (schedule_policy == PRIORITY) {
+				while (!current_thread->suspended_queue.empty()) {
+					myThread* temp1 = find_by_tid(current_thread->suspended_queue.front());
+					if (temp1->priority == FIRST-1) {
+						ready_queue_first.push_back(current_thread->suspended_queue.front());
+					}
+					else if (temp1->priority == SECOND-1) {
+						ready_queue_second.push_back(current_thread->suspended_queue.front());
+					}
+					else {
+						ready_queue_third.push_back(current_thread->suspended_queue.front());
+					}
+					current_thread->suspended_queue.pop();
+				}
+				nextID = choose_next_thread_PRI();
+				if (nextID == NOT_FOUND) {
+					return EXIT_WITH_ERROR;
+				}
+			}
+		}
+		else if (current_thread->status == YIELD){
+			if (schedule_policy == FIFO) {
+				ready_FIFO.push(activeID);
+				nextID = choose_next_thread_FIFO();
+				if (nextID == NOT_FOUND) {
+					return EXIT_WITH_ERROR;
+				}
+			}
+			else if (schedule_policy == SJF) {
+				set_end_time(current_thread);
+				set_estimated_time(current_thread);
+				current_thread->yield_count++;
+				thread_PRI_SJF_FIFO* temp = NULL;
+				thread_PRI_SJF_FIFO* temp2 = new thread_PRI_SJF_FIFO();
+				temp = choose_next_thread_SJF();
+				if (temp == NULL) {
+					delete(temp2);
+					return EXIT_WITH_ERROR;
+				}
+				delete(temp);
+				temp2->id = current_thread->tid;
+				temp2->priority = current_thread->estimated_runtime;
+				ready_SJF.push(temp2);
+			}
+			else {
+				/*To do here*/
+			}
+		}
+		else if (current_thread->status == STOPPED){
+			if (schedule_policy == FIFO) {
+				nextID = choose_next_thread_FIFO();
+				if (nextID == NOT_FOUND) {
+					return EXIT_WITH_ERROR;
+				}
+				wait_thread = find_by_tid(current_thread->wait_tid);
+				wait_thread->suspended_queue.push(activeID);
+			}
+			else if (schedule_policy == SJF) {
+				set_end_time(current_thread);
+				set_estimated_time(current_thread);
+				current_thread->yield_count++;
+				thread_PRI_SJF_FIFO* temp = NULL;
+				temp = choose_next_thread_SJF();
+				if (temp == NULL) {
+					return EXIT_WITH_ERROR;
+				}
+				delete(temp);
+				wait_thread = find_by_tid(current_thread->wait_tid);
+				wait_thread->suspended_queue.push(activeID);
+			}
+			else {
+				/*To do here*/
+			}	
+		}
+	}
+	else {
+		if (schedule_policy == FIFO) {
 			nextID = choose_next_thread_FIFO();
 			if (nextID == NOT_FOUND) {
 				return EXIT_WITH_ERROR;
 			}
 		}
 		else if (schedule_policy == SJF) {
-			while (!current_thread->suspended_queue.empty()) {
-				thread_PRI_SJF_FIFO* temp = new thread_PRI_SJF_FIFO();
-				temp->id = current_thread->suspended_queue.front();
-				myThread* temp1 = find_by_tid(current_thread->suspended_queue.front());
-				temp->priority = temp1->estimated_runtime;
-				ready_SJF.push(temp);
-				current_thread->suspended_queue.pop();
-			}
 			thread_PRI_SJF_FIFO* temp = NULL;
 			temp = choose_next_thread_SJF();
 			if (temp == NULL) {
@@ -379,79 +472,12 @@ void my_scheduler() {
 			nextID = temp->id;
 			delete(temp);
 		}
-		else if (schedule_policy == PRIORITY) {
-			while (!current_thread->suspended_queue.empty()) {
-				myThread* temp1 = find_by_tid(current_thread->suspended_queue.front());
-				if (temp1->priority == FIRST-1) {
-					ready_queue_first.push_back(current_thread->suspended_queue.front());
-				}
-				else if (temp1->priority == SECOND-1) {
-					ready_queue_second.push_back(current_thread->suspended_queue.front());
-				}
-				else {
-					ready_queue_third.push_back(current_thread->suspended_queue.front());
-				}
-				current_thread->suspended_queue.pop();
-			}
+		else {
 			nextID = choose_next_thread_PRI();
 			if (nextID == NOT_FOUND) {
 				return EXIT_WITH_ERROR;
 			}
 		}
-	}
-	else if (current_thread->status == YIELD){
-		if (schedule_policy == FIFO) {
-			ready_FIFO.push(activeID);
-			nextID = choose_next_thread_FIFO();
-			if (nextID == NOT_FOUND) {
-				return EXIT_WITH_ERROR;
-			}
-		}
-		else if (schedule_policy == SJF) {
-			set_end_time(current_thread);
-			set_estimated_time(current_thread);
-			current_thread->yield_count++;
-			thread_PRI_SJF_FIFO* temp = NULL;
-			thread_PRI_SJF_FIFO* temp2 = new thread_PRI_SJF_FIFO();
-			temp = choose_next_thread_SJF();
-			if (temp == NULL) {
-				delete(temp2);
-				return EXIT_WITH_ERROR;
-			}
-			delete(temp);
-			temp2->id = current_thread->tid;
-			temp2->priority = current_thread->estimated_runtime;
-			ready_SJF.push(temp2);
-		}
-		else {
-			/*To do here*/
-		}
-	}
-	else if (current_thread->status == STOPPED){
-		if (schedule_policy == FIFO) {
-			nextID = choose_next_thread_FIFO();
-			if (nextID == NOT_FOUND) {
-				return EXIT_WITH_ERROR;
-			}
-			wait_thread = find_by_tid(current_thread->wait_tid);
-			wait_thread->suspended_queue.push(activeID);
-		}
-		else if (schedule_policy == SJF) {
-			set_end_time(current_thread);
-			set_estimated_time(current_thread);
-			current_thread->yield_count++;
-			thread_PRI_SJF_FIFO* temp = NULL;
-			temp = choose_next_thread_SJF();
-			if (temp == NULL) {
-				return EXIT_WITH_ERROR;
-			}
-			delete(temp);
-			wait_thread = find_by_tid(current_thread->wait_tid);
-			wait_thread->suspended_queue.push(activeID);
-		}
-		else {
-			/*To do here*/
-		}	
 	}
 	next_thread = find_by_tid(nextID);
 	next_thread->active = TRUE;
@@ -460,8 +486,6 @@ void my_scheduler() {
 	set_start_time(next_thread);
 	makecontext(&scheduler_context, my_scheduler, 0);
 	swapcontext(&scheduler_context, &next_thread->context);
-
-
 }
 
 

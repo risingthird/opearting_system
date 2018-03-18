@@ -7,16 +7,32 @@ int thread_libinit(int policy) {
 		return EXIT_WITH_ERROR;
 	}
 	get(&scheduler_context);
-	scheduler_stack.uc_link = 0;
-	scheduler_stack.uc_stack.ss_sp = scheduler_stack;
-	scheduler_stack.uc_stack.ss_size = STACKSIZE;
-	scheduler_stack.uc_stack.ss_flags = 0;
+	scheduler_context.uc_link = 0;
+	scheduler_context.uc_stack.ss_sp = scheduler_stack;
+	scheduler_context.uc_stack.ss_size = STACKSIZE;
+	scheduler_context.uc_stack.ss_flags = 0;
 	makecontext(&scheduler_context, my_scheduler, 0);
+
+	main_thread = new myThread();
+	main_thread->status = CREATED;
+	main_thread->tid = NOT_FOUND;
+	main_thread->stack = malloc(STACKSIZE);	
+	if (main_thread->stack == NULL) {
+		return EXIT_WITH_ERROR;
+	}
+	getcontext(&(main_thread->context));
+	main_thread->context.uc_link = 0;
+	main_thread->context.uc_stack.ss_sp = main_thread->stack;
+	main_thread->context.uc_stack.ss_size = STACKSIZE;
+	main_thread->context.uc_stack.ss_flags = 0;
+
 	return util_init(policy);
 }
 
 int thread_libterminate() {
 	free(scheduler_stack);
+	delete(main_thread->stack);
+	delete(main_thread);
 	return util_terminate();
 }
 
@@ -92,11 +108,13 @@ int thread_create(void (*func)(void *), void *arg, int priority) {
 
 int thread_yield() {
 	myThread* current_thread;
-	current_thread = current_active;
-	current_thread->status = YIELD;
 	ucontext save_context;
+	current_thread = current_active;
 	getcontext(&save_context);
-	current_thread->context = save_context;
+	if (current_thread != NULL) {
+		current_thread->status = YIELD;
+		current_thread->context = save_context;
+	}
 	swapcontext(&save_context, &scheduler_context);
 	return EXIT_SUCCESS;
 }
@@ -104,11 +122,13 @@ int thread_yield() {
 int thread_join(int tid) {
 	myThread* current_thread;
 	current_thread = current_active;
-	current_thread->status = STOPPED;
-	current_thread->wait_tid = tid;
 	ucontext save_context;
 	getcontext(&save_context);
-	current_thread->context = save_context;
+	if (current_thread != NULL) {
+		current_thread->status = STOPPED;
+		current_thread->context = save_context;
+		current_thread->wait_tid = tid;
+	}
 	swapcontext(&save_context, &scheduler_context);
 	return EXIT_SUCCESS;
 }

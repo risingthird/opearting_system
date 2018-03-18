@@ -28,6 +28,7 @@ enum {FIFO, SJF, PRIORITY};
 
 static int thread_count;
 static int schedule_policy;
+static myThread* main_thread;
 static myThread* current_active;
 static ucontext scheduler_context;
 void* scheduler_stack;
