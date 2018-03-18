@@ -26,13 +26,6 @@ enum {CREATED, SCHEDULED, STOPPED, FINISHED, YIELD};
 enum {FIFO, SJF, PRIORITY};
 
 
-static int thread_count;
-static int schedule_policy;
-static myThread* main_thread;
-static myThread* current_active;
-static ucontext scheduler_context;
-void* scheduler_stack;
-
 typedef struct ThreadList{
 	int tid;
 	int status;
@@ -51,6 +44,15 @@ typedef struct ThreadList{
 	void* stack;
 	ucontext_t context; 
 } myThread;
+
+static int thread_count;
+static int schedule_policy;
+static myThread* main_thread;
+static myThread* current_active;
+static ucontext scheduler_context;
+void* scheduler_stack;
+
+
 
 typedef struct temp2
 {
