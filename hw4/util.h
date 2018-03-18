@@ -18,7 +18,7 @@
 #define EXIT_WITH_ERROR -1
 #define NOT_FOUND -1
 
-
+using namespace std;
 
 enum {FALSE, TRUE};
 enum {FIRST, SECOND, THIRD}; // the enum value for each priority, 0, 1, 2 respectively
