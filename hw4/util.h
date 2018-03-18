@@ -30,6 +30,7 @@ static int thread_count;
 static int schedule_policy;
 static myThread* current_active;
 static ucontext scheduler_context;
+void* scheduler_stack;
 
 typedef struct ThreadList{
 	int tid;

@@ -20,7 +20,7 @@ void clear_up(list<myThread*> *ll) {
 				ll->front()->wait_tid = NULL;
 			}
 			if (ll->front()->stack != NULL) {
-				delete(ll->front()->stack);
+				free(ll->front()->stack);
 				ll->front()->stack = NULL;
 			}			
 			delete(ll->front());
@@ -415,6 +415,7 @@ void my_scheduler() {
 			thread_PRI_SJF_FIFO* temp2 = new thread_PRI_SJF_FIFO();
 			temp = choose_next_thread_SJF();
 			if (temp == NULL) {
+				delete(temp2);
 				return EXIT_WITH_ERROR;
 			}
 			delete(temp);
@@ -457,9 +458,8 @@ void my_scheduler() {
 	next_thread->status = SCHEDULED;
 	current_active = next_thread;
 	set_start_time(next_thread);
-	getcontext(&save_context);
-	current_thread->context = save_context;
-	swapcontext(&current_thread->context, &next_thread->context);
+	makecontext(&scheduler_context, my_scheduler, 0);
+	swapcontext(&scheduler_context, &next_thread->context);
 
 
 }

@@ -2,10 +2,21 @@
 #include "util.h"
 
 int thread_libinit(int policy) {
+	scheduler_stack = malloc(STACKSIZE);
+	if (scheduler_stack == NULL) {
+		return EXIT_WITH_ERROR;
+	}
+	get(&scheduler_context);
+	scheduler_stack.uc_link = 0;
+	scheduler_stack.uc_stack.ss_sp = scheduler_stack;
+	scheduler_stack.uc_stack.ss_size = STACKSIZE;
+	scheduler_stack.uc_stack.ss_flags = 0;
+	makecontext(&scheduler_context, my_scheduler, 0);
 	return util_init(policy);
 }
 
 int thread_libterminate() {
+	free(scheduler_stack);
 	return util_terminate();
 }
 
@@ -80,51 +91,29 @@ int thread_create(void (*func)(void *), void *arg, int priority) {
 }
 
 int thread_yield() {
-	int activeID;
-	int nextID;
-	ucontext_t save_context, new_context;
 	myThread* current_thread;
-	myThread* next_thread;
-	activeID = current_active->tid;
 	current_thread = current_active;
-	current_thread->active = FALSE;
-	if (schedule_policy == FIFO) {
-		ready_FIFO.push(activeID);
-		nextID = choose_next_thread_FIFO();
-		if (nextID == NOT_FOUND) {
-			return EXIT_WITH_ERROR;
-		}
-		next_thread = find_by_tid(nextID);
-		next_thread->active = TRUE;
-		current_active = next_thread;
-		getcontext(&save_context);
-		current_thread->context = save_context;
-		swapcontext(&current_thread->context, &next_thread->context);
-	}
-	else if (schedule_policy == SJF) {
-		set_end_time(current_thread);
-		set_estimated_time(current_thread);
-		current_thread->yield_count++;
-		thread_PRI_SJF_FIFO* temp = NULL;
-		thread_PRI_SJF_FIFO* temp2 = new thread_PRI_SJF_FIFO();
-		temp = choose_next_thread_SJF();
-		if (temp == NULL) {
-			return EXIT_WITH_ERROR;
-		}
-		next_thread = find_by_tid(temp->id);
-		set_start_time(next_thread);
-		delete(temp);
-		temp2->id = current_thread->tid;
-		temp2->priority = current_thread->estimated_runtime;
-		ready_SJF.push(temp2);
-		next_thread->active = TRUE;
-		getcontext(&save_context);
-		current_thread->context = save_context;
-		current_active = next_thread;
-		swapcontext(&current_thread->context, &next_thread->context);
-
-	}
-	else if (schedule_policy == PRI){
-
-	}
+	current_thread->status = YIELD;
+	ucontext save_context;
+	getcontext(&save_context);
+	current_thread->context = save_context;
+	swapcontext(&save_context, &scheduler_context);
+	return EXIT_SUCCESS;
 }
+
+int thread_join(int tid) {
+	myThread* current_thread;
+	current_thread = current_active;
+	current_thread->status = STOPPED;
+	current_thread->wait_tid = tid;
+	ucontext save_context;
+	getcontext(&save_context);
+	current_thread->context = save_context;
+	swapcontext(&save_context, &scheduler_context);
+	return EXIT_SUCCESS;
+}
+
+
+
+
+
