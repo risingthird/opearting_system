@@ -52,6 +52,12 @@ static myThread* main_thread;
 static myThread* current_active;
 static ucontext_t scheduler_context;
 static list<myThread*> thread_list_head;
+//static list<myThread*> thread_list_head; // keep all created threads
+static list<int> ready_queue_first;
+static list<int> ready_queue_second;
+static list<int> ready_queue_third;
+static queue<int> ready_FIFO; 
+static priority_queue<thread_PRI_SJF_FIFO*> ready_SJF; // store the id of next ready thread with sjf policy
 void* scheduler_stack;
 
 
