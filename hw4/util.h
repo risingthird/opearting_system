@@ -1,14 +1,14 @@
 #ifndef __UTIL_H_
 #define __UTIL_H_
 
-#include <queue>
-#include <list>
-#include <string>
-#include <ucontext> 
-#include <stdio>
-#include <time>
-#include <sys/time>
-#include <unistd> 
+#include <queue.h>
+#include <list.h>
+#include <string.h>
+#include <ucontext.h> 
+#include <stdio.h>
+#include <time.h>
+#include <sys/time.h>
+#include <unistd.h> 
 
 
 #define QUANTA 0.001 // the length of a quanta is set to be 100ms
