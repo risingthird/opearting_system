@@ -46,6 +46,16 @@ typedef struct ThreadList{
 	ucontext_t context; 
 } myThread;
 
+typedef struct temp2
+{
+	int id;
+	int priority;
+		friend bool operator < (struct temp2 a, struct temp2 b)  
+    {  
+        return a.priority > b.priority;  //threads with smaller priority has a higher priority 
+    }
+} thread_PRI_SJF_FIFO;
+
 static int thread_count;
 static int schedule_policy;
 static myThread* main_thread;
@@ -62,15 +72,7 @@ void* scheduler_stack;
 
 
 
-typedef struct temp2
-{
-	int id;
-	int priority;
-		friend bool operator < (struct temp2 a, struct temp2 b)  
-    {  
-        return a.priority > b.priority;  //threads with smaller priority has a higher priority 
-    }
-} thread_PRI_SJF_FIFO;
+
 
 int choose_next_thread_FIFO();
 thread_PRI_SJF_FIFO* choose_next_thread_SJF();
