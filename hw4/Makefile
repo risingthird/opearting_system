@@ -4,7 +4,7 @@ SHELL:=/bin/bash -O extglob
 
 
 userthread.o : userthread.cpp util.h
-	g++ -Wall -pedantic -fpic -g -c userthread.cpp util.cpp
+	g++ -Wall -pedantic -fpic -g -c userthread.cpp
 
 libuserthread.so : userthread.o util.o
 	g++ -o libuserthread.so userthread.o util.o -shared -g
