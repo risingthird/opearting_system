@@ -77,11 +77,11 @@ int util_terminate() {
 		clear_up(&thread_list_head);
 		clear_up_FIFOqueue(&ready_FIFO);
 	}
-	else if (schedule_policy == SJF) {
+	else if (schedule_policy == _SJF) {
 		clear_up(&thread_list_head);
 		clear_up_SJFqueue(&ready_SJF);
 	}
-	else if (schedule_policy == PRIORITY) {
+	else if (schedule_policy == _PRIORITY) {
 		clear_up(&thread_list_head);
 		clear_up_PRIqueue(&ready_queue_first);
 		clear_up_PRIqueue(&ready_queue_second);
