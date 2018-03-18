@@ -15,10 +15,6 @@ static priority_queue<thread_PRI_SJF_FIFO*> ready_SJF; // store the id of next r
 void clear_up(list<myThread*> *ll) {
 	while(!ll->empty()) {
 		if(ll->front() != NULL) {
-			if (ll->front()->wait_tid != NULL) {
-				delete(ll->front()->wait_tid);
-				ll->front()->wait_tid = NULL;
-			}
 			if (ll->front()->stack != NULL) {
 				free(ll->front()->stack);
 				ll->front()->stack = NULL;
@@ -241,8 +237,7 @@ myThread* find_by_tid(int tid) {
 int choose_next_thread_FIFO() {
 	int toReturn = NOT_FOUND;
 	if (ready_FIFO.empty()) {
-		printf("No runnable threads!\n");
-		return NULL;
+		return NOT_FOUND;
 	}
 	else {
 		toReturn = ready_FIFO.front();
@@ -254,7 +249,6 @@ int choose_next_thread_FIFO() {
 thread_PRI_SJF_FIFO* choose_next_thread_SJF() {
 	thread_PRI_SJF_FIFO* toReturn = NULL;
 	if (ready_SJF.empty()) {
-		printf("No runnable threads!\n");
 		return NULL;
 	}
 	else {
@@ -270,8 +264,19 @@ int choose_next_thread_PRI() {
 	int lucky = rand() % 19;
 	if (lucky < 4) {
 		if (ready_queue_third.empty()) {
-			printf("No runnable threads!\n");
-			return NULL;
+			if (ready_queue_second.empty()) {
+				if (ready_queue_first.empty()) {
+					return NOT_FOUND;
+				}
+				else {
+					toReturn = ready_queue_first.front();
+					ready_queue_first.pop_front();
+				}
+			}
+			else {
+				toReturn = ready_queue_second.front();
+				ready_queue_second.pop_front();
+			}
 		}
 		else {
 			toReturn = ready_queue_third.front();
@@ -280,8 +285,19 @@ int choose_next_thread_PRI() {
 	}
 	else if (lucky < 10) {
 		if (ready_queue_second.empty()) {
-			printf("No runnable threads!\n");
-			return NULL;
+			if (ready_queue_first.empty()) {
+				if (ready_queue_third.empty()) {
+					return NOT_FOUND;
+				}
+				else {
+					toReturn = ready_queue_third.front();
+					ready_queue_third.pop_front();
+				}
+			}
+			else {
+				toReturn = ready_queue_first.front();
+				ready_queue_first.pop_front();
+			}
 		}
 		else {
 			toReturn = ready_queue_second.front();
@@ -290,8 +306,19 @@ int choose_next_thread_PRI() {
 	}
 	else {
 		if (ready_queue_third.empty()) {
-			printf("No runnable threads!\n");
-			return NULL;
+			if (ready_queue_first.empty()) {
+				if (ready_queue_second.empty()) {
+					return NOT_FOUND;
+				}
+				else {
+					toReturn = ready_queue_second.front();
+					ready_queue_second.pop_front();
+				}
+			}
+			else {
+				toReturn = ready_queue_first.front();
+				ready_queue_first.pop_front();
+			}
 		}
 		else {
 			toReturn = ready_queue_third.front();
@@ -337,8 +364,8 @@ int set_estimated_time(myThread* a_thread) {
 void thread_wrapper(void (*func)(void *), void *arg) {
 	func(arg);
 	current_active->status = FINISHED;
-	makecontext(scheduler_context, my_scheduler, 0);
-	swapcontext(current_active->context, scheduler_context);
+	makecontext(&scheduler_context, my_scheduler, 0);
+	swapcontext(&current_active->context, &scheduler_context);
 }
 
 void my_scheduler() {
@@ -348,11 +375,11 @@ void my_scheduler() {
 	myThread* current_thread;
 	myThread* next_thread;
 	myThread* wait_thread;
-	activeID = current_active->tid;
 	current_thread = current_active;
-	current_thread->active = FALSE;
 	// put threads in suspended queue back to ready queue
 	if (current_thread != NULL) {
+		activeID = current_active->tid;
+		current_thread->active = FALSE;
 		if (current_thread->status == FINISHED) {
 			if (schedule_policy == FIFO) {
 				while (!current_thread->suspended_queue.empty()) {
@@ -361,7 +388,8 @@ void my_scheduler() {
 				}
 				nextID = choose_next_thread_FIFO();
 				if (nextID == NOT_FOUND) {
-					return EXIT_WITH_ERROR;
+					makecontext(&scheduler_context, my_scheduler, 0);
+					swapcontext(&scheduler_context, &(main_thread->context));
 				}
 			}
 			else if (schedule_policy == SJF) {
@@ -373,13 +401,14 @@ void my_scheduler() {
 					ready_SJF.push(temp);
 					current_thread->suspended_queue.pop();
 				}
-				thread_PRI_SJF_FIFO* temp = NULL;
-				temp = choose_next_thread_SJF();
-				if (temp == NULL) {
-					return EXIT_WITH_ERROR;
+				thread_PRI_SJF_FIFO* temp3 = NULL;
+				temp3 = choose_next_thread_SJF();
+				if (temp3 == NULL) {
+					makecontext(&scheduler_context, my_scheduler, 0);
+					swapcontext(&scheduler_context, &(main_thread->context));
 				}
-				nextID = temp->id;
-				delete(temp);
+				nextID = temp3->id;
+				delete(temp3);
 			}
 			else if (schedule_policy == PRIORITY) {
 				while (!current_thread->suspended_queue.empty()) {
@@ -397,7 +426,8 @@ void my_scheduler() {
 				}
 				nextID = choose_next_thread_PRI();
 				if (nextID == NOT_FOUND) {
-					return EXIT_WITH_ERROR;
+					makecontext(&scheduler_context, my_scheduler, 0);
+					swapcontext(&scheduler_context, &(main_thread->context));
 				}
 			}
 		}
@@ -406,7 +436,8 @@ void my_scheduler() {
 				ready_FIFO.push(activeID);
 				nextID = choose_next_thread_FIFO();
 				if (nextID == NOT_FOUND) {
-					return EXIT_WITH_ERROR;
+					makecontext(&scheduler_context, my_scheduler, 0);
+					swapcontext(&scheduler_context, &(main_thread->context));
 				}
 			}
 			else if (schedule_policy == SJF) {
@@ -418,7 +449,8 @@ void my_scheduler() {
 				temp = choose_next_thread_SJF();
 				if (temp == NULL) {
 					delete(temp2);
-					return EXIT_WITH_ERROR;
+					makecontext(&scheduler_context, my_scheduler, 0);
+					swapcontext(&scheduler_context, &(main_thread->context));
 				}
 				delete(temp);
 				temp2->id = current_thread->tid;
@@ -433,7 +465,8 @@ void my_scheduler() {
 			if (schedule_policy == FIFO) {
 				nextID = choose_next_thread_FIFO();
 				if (nextID == NOT_FOUND) {
-					return EXIT_WITH_ERROR;
+					makecontext(&scheduler_context, my_scheduler, 0);
+					swapcontext(&scheduler_context, &(main_thread->context));
 				}
 				wait_thread = find_by_tid(current_thread->wait_tid);
 				wait_thread->suspended_queue.push(activeID);
@@ -445,7 +478,8 @@ void my_scheduler() {
 				thread_PRI_SJF_FIFO* temp = NULL;
 				temp = choose_next_thread_SJF();
 				if (temp == NULL) {
-					return EXIT_WITH_ERROR;
+					makecontext(&scheduler_context, my_scheduler, 0);
+					swapcontext(&scheduler_context, &(main_thread->context));
 				}
 				delete(temp);
 				wait_thread = find_by_tid(current_thread->wait_tid);
@@ -460,14 +494,16 @@ void my_scheduler() {
 		if (schedule_policy == FIFO) {
 			nextID = choose_next_thread_FIFO();
 			if (nextID == NOT_FOUND) {
-				return EXIT_WITH_ERROR;
+				makecontext(&scheduler_context, my_scheduler, 0);
+				swapcontext(&scheduler_context, &(main_thread->context));
 			}
 		}
 		else if (schedule_policy == SJF) {
 			thread_PRI_SJF_FIFO* temp = NULL;
 			temp = choose_next_thread_SJF();
 			if (temp == NULL) {
-				return EXIT_WITH_ERROR;
+				makecontext(&scheduler_context, my_scheduler, 0);
+				swapcontext(&scheduler_context, &(main_thread->context));
 			}
 			nextID = temp->id;
 			delete(temp);
@@ -475,7 +511,8 @@ void my_scheduler() {
 		else {
 			nextID = choose_next_thread_PRI();
 			if (nextID == NOT_FOUND) {
-				return EXIT_WITH_ERROR;
+				makecontext(&scheduler_context, my_scheduler, 0);
+				swapcontext(&scheduler_context, &(main_thread->context));
 			}
 		}
 	}
@@ -487,6 +524,9 @@ void my_scheduler() {
 	makecontext(&scheduler_context, my_scheduler, 0);
 	swapcontext(&scheduler_context, &next_thread->context);
 }
+
+
+
 
 
 
