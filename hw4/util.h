@@ -64,9 +64,9 @@ typedef struct temp2
     }
 } thread_PRI_SJF_FIFO;
 
-thread_PRI_SJF_FIFO* choose_next_thread_FIFO();
+int choose_next_thread_FIFO();
 thread_PRI_SJF_FIFO* choose_next_thread_SJF();
-thread_PRI_SJF_FIFO* choose_next_thread_PRI();
+int choose_next_thread_PRI();
 myThread* choose_by_tid(int tid);
 myThread* find_by_tid(int tid);
 myThread* choose_next_thread(int policy);
