@@ -10,10 +10,10 @@ libuserthread.so : userthread.o util.o
 	g++ -o libuserthread.so userthread.o util.o -shared -g
 
 basic_fifo: basic_fifo.c libuserthread.so
-	g++ basic_fifo basic_fifo.c libuserthread.so -L -luserthread -g
+	g++ basic_fifo basic_fifo.c libuserthread.so -L. -luserthread -g
 
 test_128_threads: test_128_threads.c libuserthread.so
-	g++ test_128_threads test_128_threads.c libuserthread.so -L -luserthread -g
+	g++ test_128_threads test_128_threads.c libuserthread.so -L. -luserthread -g
 
 test_join_chain: test_join_chain.c libuserthread.so
 	g++ test_join_chain test_join_chain.c libuserthread.so -L -luserthread -g
