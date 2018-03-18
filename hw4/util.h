@@ -76,7 +76,7 @@ int util_terminate();
 int set_start_time(myThread* a_thread);
 int set_end_time(myThread* a_thread);
 int set_estimated_time(myThread* a_thread);
-void clear_up(list<myThread*> ll);
+void clear_up(list<myThread*> *ll);
 void clear_up_PRIqueue(list<thread_PRI_SJF_FIFO*> *ll);
 void clear_up_FIFOqueue(queue<thread_PRI_SJF_FIFO*> *ll);
 void clear_up_SJFqueue(priority_queue<thread_PRI_SJF_FIFO*> *ll); 
