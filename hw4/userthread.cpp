@@ -38,7 +38,7 @@ int thread_libterminate() {
 
 int thread_create(void (*func)(void *), void *arg, int priority) {
 	void* stack = malloc(STACKSIZE);
-	ucontext current_context;
+	ucontext_t current_context;
 	getcontext(&current_context);
 	
 	current_context.uc_link = 0;

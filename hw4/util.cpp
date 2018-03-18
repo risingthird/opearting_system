@@ -4,7 +4,7 @@
 using namespace std;
 
 
-static list<myThread*> thread_list_head; // keep all created threads
+//static list<myThread*> thread_list_head; // keep all created threads
 static list<int> ready_queue_first;
 static list<int> ready_queue_second;
 static list<int> ready_queue_third;

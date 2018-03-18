@@ -51,6 +51,7 @@ static int schedule_policy;
 static myThread* main_thread;
 static myThread* current_active;
 static ucontext_t scheduler_context;
+static list<myThread*> thread_list_head;
 void* scheduler_stack;
 
 
