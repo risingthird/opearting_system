@@ -50,7 +50,7 @@ int thread_create(void (*func)(void *), void *arg, int priority) {
 	}
 
 	current_context.uc_stack.ss_flags = 0;
-	makecontext(&current_context, thread_wrapper, 2, func, arg);  // wrap the called function
+	makecontext(&current_context, thread_wrapper, 2, *func, arg);  // wrap the called function
 	myThread* current_thread = new myThread();
 	current_thread->tid = ++thread_count;
 	current_thread->yield_count = 0;
