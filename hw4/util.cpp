@@ -103,8 +103,8 @@ int util_terminate() {
 int find_active() {
 	list<myThread*> :: iterator it;
 	for(it = thread_list_head.begin(); it != thread_list_head.end(); ++it) {
-		if (*it->active == TRUE) {
-			return *it->tid;
+		if ((*it)->active == TRUE) {
+			return (*it)->tid;
 		}
 	}
 	return NOT_FOUND;
@@ -355,7 +355,7 @@ int set_estimated_time(myThread* a_thread) {
 	}
 
 	if (a_thread->time_first != 0 && a_thread->time_second != 0 && a_thread->time_third != 0) {
-		a_thread->estimated_time = (a_thread->time_first + a_thread->time_second + a_thread->time_third) / 3;
+		a_thread->estimated_runtime = (a_thread->time_first + a_thread->time_second + a_thread->time_third) / 3;
 	}
 
 	return EXIT_SUCCESS;
