@@ -77,7 +77,7 @@ int thread_create(void (*func)(void *), void *arg, int priority) {
 		toAdd->priority = QUANTA / 2;
 		ready_SJF.push(toAdd);
 	}
-	else if (schedule_policy == _PRI) {
+	else if (schedule_policy == _PRIORITY) {
 		if (priority == FIRST-1) {
 			ready_queue_first.push_back(thread_count);
 		}
