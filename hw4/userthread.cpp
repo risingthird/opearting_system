@@ -68,16 +68,16 @@ int thread_create(void (*func)(void *), void *arg, int priority) {
 	current_thread->context = current_context;
 	current_thread->suspended_queue = queue<int> ();
 	thread_list_head.push_back(current_thread);
-	if (schedule_policy == FIFO) {
+	if (schedule_policy == _FIFO) {
 		ready_FIFO.push(thread_count);
 	}
-	else if (schedule_policy == SJF) {
+	else if (schedule_policy == _SJF) {
 		thread_PRI_SJF_FIFO* toAdd = new thread_PRI_SJF_FIFO();
 		toAdd->id = thread_count;
 		toAdd->priority = QUANTA / 2;
 		ready_SJF.push(toAdd);
 	}
-	else if (schedule_policy == PRI) {
+	else if (schedule_policy == _PRI) {
 		if (priority == FIRST-1) {
 			ready_queue_first.push_back(thread_count);
 		}

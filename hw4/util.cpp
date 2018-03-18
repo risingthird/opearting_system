@@ -47,7 +47,7 @@ void clear_up_SJFqueue(priority_queue<thread_PRI_SJF_FIFO*> *ll) {
 int util_init(int policy) {
 	schedule_policy = policy;
 	current_active = NULL;
-	if (schedule_policy == FIFO) {
+	if (schedule_policy == _FIFO) {
 		ready_FIFO = queue<int> ();
 		thread_list_head = list<myThread*> ();
 		thread_count = FIRST_THREAD;
@@ -73,7 +73,7 @@ int util_init(int policy) {
 }
 
 int util_terminate() {
-	if (schedule_policy == FIFO) {
+	if (schedule_policy == _FIFO) {
 		clear_up(&thread_list_head);
 		clear_up_FIFOqueue(&ready_FIFO);
 	}
@@ -376,7 +376,7 @@ void my_scheduler() {
 		activeID = current_active->tid;
 		current_thread->active = FALSE;
 		if (current_thread->status == FINISHED) {
-			if (schedule_policy == FIFO) {
+			if (schedule_policy == _FIFO) {
 				while (!current_thread->suspended_queue.empty()) {
 					ready_FIFO.push(current_thread->suspended_queue.front());
 					current_thread->suspended_queue.pop();
@@ -387,7 +387,7 @@ void my_scheduler() {
 					swapcontext(&scheduler_context, &(main_thread->context));
 				}
 			}
-			else if (schedule_policy == SJF) {
+			else if (schedule_policy == _SJF) {
 				while (!current_thread->suspended_queue.empty()) {
 					thread_PRI_SJF_FIFO* temp = new thread_PRI_SJF_FIFO();
 					temp->id = current_thread->suspended_queue.front();
@@ -405,7 +405,7 @@ void my_scheduler() {
 				nextID = temp3->id;
 				delete(temp3);
 			}
-			else if (schedule_policy == PRIORITY) {
+			else if (schedule_policy == _PRIORITY) {
 				while (!current_thread->suspended_queue.empty()) {
 					myThread* temp1 = find_by_tid(current_thread->suspended_queue.front());
 					if (temp1->priority == FIRST-1) {
@@ -435,7 +435,7 @@ void my_scheduler() {
 					swapcontext(&scheduler_context, &(main_thread->context));
 				}
 			}
-			else if (schedule_policy == SJF) {
+			else if (schedule_policy == _SJF) {
 				set_end_time(current_thread);
 				set_estimated_time(current_thread);
 				current_thread->yield_count++;
@@ -457,7 +457,7 @@ void my_scheduler() {
 			}
 		}
 		else if (current_thread->status == STOPPED){
-			if (schedule_policy == FIFO) {
+			if (schedule_policy == _FIFO) {
 				nextID = choose_next_thread_FIFO();
 				if (nextID == NOT_FOUND) {
 					makecontext(&scheduler_context, my_scheduler, 0);
@@ -466,7 +466,7 @@ void my_scheduler() {
 				wait_thread = find_by_tid(current_thread->wait_tid);
 				wait_thread->suspended_queue.push(activeID);
 			}
-			else if (schedule_policy == SJF) {
+			else if (schedule_policy == _SJF) {
 				set_end_time(current_thread);
 				set_estimated_time(current_thread);
 				current_thread->yield_count++;
@@ -486,14 +486,14 @@ void my_scheduler() {
 		}
 	}
 	else {
-		if (schedule_policy == FIFO) {
+		if (schedule_policy == _FIFO) {
 			nextID = choose_next_thread_FIFO();
 			if (nextID == NOT_FOUND) {
 				makecontext(&scheduler_context, my_scheduler, 0);
 				swapcontext(&scheduler_context, &(main_thread->context));
 			}
 		}
-		else if (schedule_policy == SJF) {
+		else if (schedule_policy == _SJF) {
 			thread_PRI_SJF_FIFO* temp = NULL;
 			temp = choose_next_thread_SJF();
 			if (temp == NULL) {

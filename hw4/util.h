@@ -24,7 +24,7 @@ using namespace std;
 enum {FALSE, TRUE};
 enum {FIRST, SECOND, THIRD}; // the enum value for each priority, 0, 1, 2 respectively
 enum {CREATED, SCHEDULED, STOPPED, FINISHED, YIELD};
-enum {FIFO, SJF, PRIORITY};
+enum {_FIFO, _SJF, _PRIORITY};
 
 
 typedef struct ThreadList{
