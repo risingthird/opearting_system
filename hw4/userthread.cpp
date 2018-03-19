@@ -452,6 +452,7 @@ void my_scheduler() {
 		}
 		else if (current_thread->status == YIELD){
 			if (schedule_policy == _FIFO) {
+				printf("I am fucking here\n");
 				ready_FIFO.push(activeID);
 				nextID = choose_next_thread_FIFO();
 				if (nextID == NOT_FOUND) {
