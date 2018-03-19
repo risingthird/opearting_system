@@ -30,5 +30,8 @@ test_misuse: test_misuse.c libuserthread.so
 nested_fifo_test: nested_fifo_test.c libuserthread.so
 	g++ -o nested_fifo_test nested_fifo_test.c libuserthread.so -L -luserthread -g
 
+test_create_within_thread: test_create_within_thread.c libuserthread.so
+	g++ -o test_create_within_thread test_create_within_thread.c libuserthread.so -L -luserthread -g
+
 clean:
 	@rm -f !(*.cpp|Makefile|README.md|*.h|BMC-CS355|*.c)
