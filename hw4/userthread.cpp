@@ -213,7 +213,7 @@ int util_init(int policy) {
 		thread_count = FIRST_THREAD; 
 	}
 	else {
-		printf("from line 213\n");
+		printf("from line 213, current policy %d\n", schedule_policy);
 		return EXIT_WITH_ERROR;
 	}
 	return EXIT_SUCCESS;
