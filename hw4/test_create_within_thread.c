@@ -1,4 +1,4 @@
-#include <stdio.h>
+c#include <stdio.h>
 #include <stdlib.h>
 #include <poll.h>
 #include "userthread.h"
@@ -7,7 +7,7 @@ int idx = 0;
 int created_tids[3] = { -1, -1, -1 };
 
 void foo(void* args) {}
-void foo_create() {
+void foo_create(void* args) {
   created_tids[idx] = thread_create(foo, NULL, 1);
   thread_join(created_tids[idx++]);
 }
