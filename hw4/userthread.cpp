@@ -489,7 +489,7 @@ void my_scheduler() {
 				delete(temp);
 				temp2->id = current_thread->tid;
 				temp2->priority = current_thread->estimated_runtime;
-				printf("We have run time of %lf\n", current_thread->estimated_runtime);
+				printf("We have run time of %lf for thread %d\n", current_thread->estimated_runtime, current_thread->tid);
 				ready_SJF.push(temp2);
 			}
 			else {
