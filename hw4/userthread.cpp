@@ -274,6 +274,7 @@ thread_PRI_SJF_FIFO* choose_next_thread_SJF() {
 	else {
 		toReturn = ready_SJF.top();
 		ready_SJF.pop();
+		printf("The ready queue has %d threads\n", ready_SJF.size());
 	}
 	return toReturn;	
 }
