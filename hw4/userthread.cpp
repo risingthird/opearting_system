@@ -132,7 +132,7 @@ int thread_join(int tid) {
 	current_thread = current_active;
 	ucontext_t save_context;
 	myThread* toWait = find_by_tid(tid);
-	if (toWait == NULL) {
+	if (thread_count != 0 && toWait == NULL) {
 		printf("from line 130\n");
 		return EXIT_WITH_ERROR;
 	}
