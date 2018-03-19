@@ -117,6 +117,7 @@ int thread_yield() {
 int thread_join(int tid) {
 	if (current_active != NULL) {
 		printf("%d\n", current_active->tid);
+		printf("%d\n", tid);
 	}
 	myThread* current_thread;
 	current_thread = current_active;
