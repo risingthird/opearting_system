@@ -124,14 +124,13 @@ int thread_join(int tid) {
 	ucontext_t save_context;
 	myThread* toWait = find_by_tid(tid);
 	if (toWait == NULL) {
-		printf("%d\n", tid);
 		return EXIT_WITH_ERROR;
 	}
 	getcontext(&save_context);
-	if (current_thread != NULL) {
-		current_thread->status = STOPPED;
-		current_thread->context = save_context;
-		current_thread->wait_tid = tid;
+	if (current_active != NULL) {
+		current_active->status = STOPPED;
+		current_active->context = save_context;
+		current_active->wait_tid = tid;
 	}
 
 	swapcontext(&save_context, &scheduler_context);
