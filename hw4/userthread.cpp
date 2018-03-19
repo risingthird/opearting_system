@@ -48,7 +48,7 @@ int thread_create(void (*func)(void *), void *arg, int priority) {
 	void* stack = malloc(STACKSIZE);
 	ucontext_t current_context;
 	getcontext(&current_context);
-	
+	thread_count++;
 	current_context.uc_link = 0;
 	current_context.uc_stack.ss_sp = stack;
 	current_context.uc_stack.ss_size = STACKSIZE;
@@ -61,7 +61,7 @@ int thread_create(void (*func)(void *), void *arg, int priority) {
 	current_context.uc_stack.ss_flags = 0;
 	makecontext(&current_context, (void(*)())thread_wrapper, 2, func, arg);  // wrap the called function
 	myThread* current_thread = new myThread();
-	current_thread->tid = ++thread_count;
+	current_thread->tid = thread_count;
 	current_thread->yield_count = 0;
 	current_thread->start_time = 0;
 	current_thread->end_time = 0;
