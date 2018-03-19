@@ -42,6 +42,7 @@ int main(void) {
     }
   }
 
+  printf("I am fucking here\n");
   printf(" * Testing thread_create within thread routines\n");
   printf(" * Threads should end in this order ");
   printf(" %d -> %d -> %d", created_tids[0], created_tids[1], created_tids[2]);
