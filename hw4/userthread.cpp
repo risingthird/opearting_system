@@ -485,6 +485,7 @@ void my_scheduler() {
 					makecontext(&scheduler_context, my_scheduler, 0);
 					swapcontext(&scheduler_context, &(main_thread->context));
 				}
+				nextID = temp->id;
 				delete(temp);
 				temp2->id = current_thread->tid;
 				temp2->priority = current_thread->estimated_runtime;
@@ -515,6 +516,7 @@ void my_scheduler() {
 					makecontext(&scheduler_context, my_scheduler, 0);
 					swapcontext(&scheduler_context, &(main_thread->context));
 				}
+				nextID = temp->id;
 				delete(temp);
 				wait_thread = find_by_tid(current_thread->wait_tid);
 				wait_thread->suspended_queue.push(activeID);
