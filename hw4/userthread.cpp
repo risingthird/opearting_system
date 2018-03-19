@@ -424,7 +424,6 @@ void my_scheduler() {
 				}
 			}
 			else if (schedule_policy == _SJF) {
-									printf("I am fucking here\n");
 				while (!current_thread->suspended_queue.empty()) {
 					thread_PRI_SJF_FIFO* temp = new thread_PRI_SJF_FIFO();
 					temp->id = current_thread->suspended_queue.front();
@@ -440,6 +439,7 @@ void my_scheduler() {
 					swapcontext(&scheduler_context, &(main_thread->context));
 				}
 				nextID = temp3->id;
+				printf("The next to arrive is %d\n", nextID);
 				delete(temp3);
 			}
 			else if (schedule_policy == _PRIORITY) {
