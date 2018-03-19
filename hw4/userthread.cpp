@@ -478,6 +478,7 @@ void my_scheduler() {
 				thread_PRI_SJF_FIFO* temp2 = new thread_PRI_SJF_FIFO();
 				temp = choose_next_thread_SJF();
 				if (temp == NULL) {
+					printf("I am fucking here\n");
 					delete(temp2);
 					makecontext(&scheduler_context, my_scheduler, 0);
 					swapcontext(&scheduler_context, &(main_thread->context));
