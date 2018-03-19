@@ -4,6 +4,8 @@
 
 using namespace std;
 
+static int schedule_policy;
+
 int thread_libinit(int policy) {
 	scheduler_stack = malloc(STACKSIZE);
 	if (scheduler_stack == NULL) {

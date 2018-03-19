@@ -61,7 +61,7 @@ typedef struct cmp{
 
     bool operator ()(thread_PRI_SJF_FIFO *a,thread_PRI_SJF_FIFO *b)
     {
-        return a->priority>b->priority;// 按照value从小到大排列
+        return a->priority > b->priority;// 按照value从小到大排列
     }
 } compare;
 
