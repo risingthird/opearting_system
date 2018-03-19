@@ -176,7 +176,7 @@ void clear_up_FIFOqueue(queue<int> *ll) {
 	}
 }
 
-void clear_up_SJFqueue(priority_queue<thread_PRI_SJF_FIFO*> *ll) {
+void clear_up_SJFqueue(priority_queue<thread_PRI_SJF_FIFO*, list<thread_PRI_SJF_FIFO*>, compare> *ll) {
 	while(!ll->empty()) {
 		if(ll->top() != NULL) {
 			delete(ll->top());
