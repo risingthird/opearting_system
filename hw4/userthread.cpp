@@ -1,5 +1,6 @@
 #include "userthread.h"
 #include "util.h"
+#include "valgrind.h"
 
 using namespace std;
 
@@ -387,6 +388,7 @@ void my_scheduler() {
 		activeID = current_active->tid;
 		current_thread->active = FALSE;
 		if (current_thread->status == FINISHED) {
+			printf("%d\n", current_thread->tid);
 			if (schedule_policy == _FIFO) {
 				while (!current_thread->suspended_queue.empty()) {
 					ready_FIFO.push(current_thread->suspended_queue.front());
