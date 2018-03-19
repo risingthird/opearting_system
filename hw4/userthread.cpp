@@ -402,8 +402,8 @@ void my_scheduler() {
 			if (schedule_policy == _FIFO) {
 				while (!current_thread->suspended_queue.empty()) {
 					ready_FIFO.push(current_thread->suspended_queue.front());
+					printf("thread %d is clearing its suspended queue. Thread %d is now in queue\n", current_thread->tid, current_thread->suspended_queue.front());
 					current_thread->suspended_queue.pop();
-					printf("thread %d is clearing its suspended queue\n", current_thread->tid);
 				}
 				nextID = choose_next_thread_FIFO();
 				if (nextID == NOT_FOUND) {
