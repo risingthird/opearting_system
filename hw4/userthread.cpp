@@ -376,6 +376,7 @@ int set_estimated_time(myThread* a_thread) {
 
 	if (a_thread->time_first != 0 && a_thread->time_second != 0 && a_thread->time_third != 0) {
 		a_thread->estimated_runtime = (a_thread->time_first + a_thread->time_second + a_thread->time_third) / 3;
+		printf("We are estimating thread %d\n", a_thread->tid);
 	}
 
 	return EXIT_SUCCESS;
@@ -549,7 +550,7 @@ void my_scheduler() {
 	next_thread->active = TRUE;
 	next_thread->status = SCHEDULED;
 	current_active = next_thread;
-	printf("%d\n", current_active->tid);
+	//printf("%d\n", current_active->tid);
 	set_start_time(next_thread);
 	makecontext(&scheduler_context, my_scheduler, 0);
 	swapcontext(&scheduler_context, &(next_thread->context));
