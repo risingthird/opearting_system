@@ -110,6 +110,7 @@ int thread_yield() {
 		current_thread->status = YIELD;
 		current_thread->context = save_context;
 	}
+	makecontext(&scheduler_context, my_scheduler, 0);
 	swapcontext(&save_context, &scheduler_context);
 	return EXIT_SUCCESS;
 }
