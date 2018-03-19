@@ -128,8 +128,8 @@ int thread_join(int tid) {
 		current_thread->context = save_context;
 		current_thread->wait_tid = tid;
 	}
-	swapcontext(&save_context, &scheduler_context);
 	printf("%d\n", current_thread->tid);
+	swapcontext(&save_context, &scheduler_context);
 	return EXIT_SUCCESS;
 }
 
