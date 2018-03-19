@@ -29,13 +29,17 @@ int main(void) {
   }
 
   for (int i = 0; i < n; i++)  {
-    if (thread_join(tids[i]) == -1)
+    if (thread_join(tids[i]) == -1){
+      printf("I am fucking here  again\n");
       exit(EXIT_FAILURE);
+    }
   }
 
   for (int i = 0; i < 3; i++)  {
-    if (created_tids[i] == -1)
+    if (created_tids[i] == -1) {
+      printf("I am fucking here\n");
       exit(EXIT_FAILURE);
+    }
   }
 
   printf(" * Testing thread_create within thread routines\n");
