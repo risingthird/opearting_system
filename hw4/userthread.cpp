@@ -479,6 +479,7 @@ void my_scheduler() {
 		else if (current_thread->status == STOPPED){
 			if (schedule_policy == _FIFO) {
 				nextID = choose_next_thread_FIFO();
+				printf("In scheduler stopped, next to run %d\n", nextID);
 				if (nextID == NOT_FOUND) {
 					makecontext(&scheduler_context, my_scheduler, 0);
 					swapcontext(&scheduler_context, &(main_thread->context));
