@@ -66,7 +66,7 @@ typedef struct cmp{
 } compare;
 
 static int thread_count;
-
+static int schedule_policy;
 static myThread* main_thread;
 static myThread* current_active;
 static ucontext_t scheduler_context;
@@ -90,7 +90,7 @@ myThread* choose_by_tid(int tid);
 myThread* find_by_tid(int tid);
 myThread* choose_next_thread(int policy);
 int find_active(); // return tid of current active thread
-int util_init(int policy);
+int util_init();
 int util_terminate();
 int set_start_time(myThread* a_thread);
 int set_end_time(myThread* a_thread);

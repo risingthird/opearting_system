@@ -4,10 +4,11 @@
 
 using namespace std;
 
-static int schedule_policy;
+
 
 int thread_libinit(int policy) {
 	scheduler_stack = malloc(STACKSIZE);
+	schedule_policy = policy;
 	if (scheduler_stack == NULL) {
 		printf("from line 10\n");
 		return EXIT_WITH_ERROR;
@@ -33,7 +34,7 @@ int thread_libinit(int policy) {
 	main_thread->context.uc_stack.ss_size = STACKSIZE;
 	main_thread->context.uc_stack.ss_flags = 0;
 
-	return util_init(policy);
+	return util_init();
 }
 
 int thread_libterminate() {
@@ -193,8 +194,8 @@ void clear_up_SJFqueue(priority_queue<thread_PRI_SJF_FIFO*, vector<thread_PRI_SJ
 	}
 }
 
-int util_init(int policy) {
-	schedule_policy = policy;
+int util_init() {
+	//schedule_policy = policy;
 	current_active = NULL;
 	if (schedule_policy == _FIFO) {
 		ready_FIFO = queue<int> ();
