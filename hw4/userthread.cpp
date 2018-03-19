@@ -375,7 +375,7 @@ int set_estimated_time(myThread* a_thread) {
 		a_thread->time_third = a_thread->end_time - a_thread->start_time;
 	}
 
-	if (a_thread->time_first != 0 && a_thread->time_second != 0 && a_thread->time_third != 0) {
+	if (a_thread->yield_count > 2) {
 		a_thread->estimated_runtime = (a_thread->time_first + a_thread->time_second + a_thread->time_third) / 3;
 		printf("We are estimating thread %d\n", a_thread->tid);
 	}
