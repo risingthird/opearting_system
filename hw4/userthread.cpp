@@ -359,6 +359,7 @@ int set_end_time(myThread* a_thread) {
 	struct timeval tv;
  	gettimeofday(&tv,NULL);
  	a_thread->end_time = tv.tv_sec*1000 + tv.tv_usec/1000;
+ 	printf("END TIME IS %ld\n", a_thread->end_time);
  	return EXIT_SUCCESS;
 }
 
