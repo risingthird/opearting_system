@@ -71,7 +71,6 @@ int thread_create(void (*func)(void *), void *arg, int priority) {
 	current_thread->context = current_context;
 	current_thread->suspended_queue = queue<int> ();
 	thread_list_head.push_back(current_thread);
-	printf("%d\n", thread_count);
 	if (schedule_policy == _FIFO) {
 		ready_FIFO.push(thread_count);
 	}
@@ -116,6 +115,7 @@ int thread_yield() {
 }
 
 int thread_join(int tid) {
+	printf("%d\n", thread_count);
 	myThread* current_thread;
 	current_thread = current_active;
 	ucontext_t save_context;
