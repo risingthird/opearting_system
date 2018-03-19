@@ -115,6 +115,9 @@ int thread_yield() {
 }
 
 int thread_join(int tid) {
+	if (current_active != NULL) {
+		printf("%d\n", current_active->tid);
+	}
 	myThread* current_thread;
 	current_thread = current_active;
 	ucontext_t save_context;
@@ -127,7 +130,7 @@ int thread_join(int tid) {
 		current_thread->status = STOPPED;
 		current_thread->context = save_context;
 		current_thread->wait_tid = tid;
-		printf("%d\n", current_active->tid);
+
 	}
 	swapcontext(&save_context, &scheduler_context);
 	return EXIT_SUCCESS;
