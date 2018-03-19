@@ -71,6 +71,7 @@ int thread_create(void (*func)(void *), void *arg, int priority) {
 	current_thread->context = current_context;
 	current_thread->suspended_queue = queue<int> ();
 	thread_list_head.push_back(current_thread);
+	printf("%d\n", current_thread->tid);
 	if (schedule_policy == _FIFO) {
 		ready_FIFO.push(thread_count);
 	}
@@ -525,7 +526,6 @@ void my_scheduler() {
 			}
 		}
 	}
-	printf("%d\n", nextID);
 	next_thread = find_by_tid(nextID);
 	next_thread->active = TRUE;
 	next_thread->status = SCHEDULED;
