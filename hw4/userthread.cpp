@@ -71,7 +71,6 @@ int thread_create(void (*func)(void *), void *arg, int priority) {
 	current_thread->context = current_context;
 	current_thread->suspended_queue = queue<int> ();
 	thread_list_head.push_back(current_thread);
-	printf("%d\n", current_thread->tid);
 	if (schedule_policy == _FIFO) {
 		ready_FIFO.push(thread_count);
 	}
@@ -119,6 +118,10 @@ int thread_join(int tid) {
 	myThread* current_thread;
 	current_thread = current_active;
 	ucontext_t save_context;
+	myThread* toWait = find_by_tid(tid);
+	if (toWait == NULL) {
+		return EXIT_WITH_ERROR
+	}
 	getcontext(&save_context);
 	if (current_thread != NULL) {
 		current_thread->status = STOPPED;
@@ -193,7 +196,6 @@ int util_init(int policy) {
 		thread_count = FIRST_THREAD; 
 	}
 	else {
-		printf("Wrong policy number\n");
 		return EXIT_WITH_ERROR;
 	}
 	return EXIT_SUCCESS;
@@ -215,7 +217,6 @@ int util_terminate() {
 		clear_up_PRIqueue(&ready_queue_third);
 	}
 	else {
-		printf("Wrong policy number\n");
 		return EXIT_WITH_ERROR;
 	}
 	return EXIT_SUCCESS;
@@ -390,7 +391,6 @@ void my_scheduler() {
 		activeID = current_active->tid;
 		current_thread->active = FALSE;
 		if (current_thread->status == FINISHED) {
-			printf("%d\n", current_thread->tid);
 			if (schedule_policy == _FIFO) {
 				while (!current_thread->suspended_queue.empty()) {
 					ready_FIFO.push(current_thread->suspended_queue.front());
