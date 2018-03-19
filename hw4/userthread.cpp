@@ -393,7 +393,7 @@ void my_scheduler() {
 	current_thread = current_active;
 	// put threads in suspended queue back to ready queue
 	if (current_active != NULL) {
-		printf("active id %d\n", activeID);
+		printf("active id %d\n", current_active->tid);
 	}
 
 	if (current_thread != NULL) {
