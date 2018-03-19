@@ -6,8 +6,8 @@ SHELL:=/bin/bash -O extglob
 userthread.o : userthread.cpp util.h
 	g++ -Wall -pedantic -fpic -g -c userthread.cpp
 
-libuserthread.so : userthread.o util.o
-	g++ -o libuserthread.so userthread.o util.o -shared -g
+libuserthread.so : userthread.o
+	g++ -o libuserthread.so userthread.o -shared -g
 
 basic_fifo: basic_fifo.c libuserthread.so
 	g++ -o basic_fifo basic_fifo.c libuserthread.so -L. -luserthread -g
