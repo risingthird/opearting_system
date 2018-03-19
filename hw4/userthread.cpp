@@ -116,10 +116,6 @@ int thread_yield() {
 }
 
 int thread_join(int tid) {
-	if (current_active != NULL) {
-		printf("%d\n", current_active->tid);
-		printf("%d\n", tid);
-	}
 	myThread* current_thread;
 	current_thread = current_active;
 	ucontext_t save_context;
@@ -379,6 +375,9 @@ int set_estimated_time(myThread* a_thread) {
 void thread_wrapper(void (*func)(void *), void *arg) {
 	func(arg);
 	current_active->status = FINISHED;
+	if (current_active != NULL) {
+		printf("FINISHED %d\n", current_active->tid);
+	}
 	makecontext(&scheduler_context, my_scheduler, 0);
 	swapcontext(&current_active->context, &scheduler_context);
 }
