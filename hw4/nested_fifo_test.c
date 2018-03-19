@@ -14,7 +14,7 @@ void foo(void *arg) {
   for (int i = 0; i < 5; ++i)
   {
     int tid = thread_create(inner_foo, NULL, 1);
-    printf("asd\n");
+    
     if (tid < 0) 
       exit(EXIT_FAILURE);
 
