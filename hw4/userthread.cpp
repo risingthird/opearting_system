@@ -403,6 +403,7 @@ void my_scheduler() {
 				while (!current_thread->suspended_queue.empty()) {
 					ready_FIFO.push(current_thread->suspended_queue.front());
 					current_thread->suspended_queue.pop();
+					printf("thread %d is clearing its suspended queue\n", current_thread->tid);
 				}
 				nextID = choose_next_thread_FIFO();
 				if (nextID == NOT_FOUND) {
