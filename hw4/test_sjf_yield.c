@@ -4,14 +4,14 @@
 #include "userthread.h"
 
 void foo1(void* args) {
-  for (int i = 0; i < 4; i++) {
+  for (int i = 0; i < 5; i++) {
     poll(NULL, 0, 1);
     thread_yield();
   }
 }
 
 void foo200(void* args) {
-  for (int i = 0; i < 4; i++) {
+  for (int i = 0; i < 5; i++) {
     poll(NULL, 0, 200);
     thread_yield();
   }
