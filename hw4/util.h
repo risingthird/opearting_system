@@ -12,7 +12,7 @@
 #include <unistd.h> 
 
 
-#define QUANTA 0.001 // the length of a quanta is set to be 100ms
+#define QUANTA 100 // the length of a quanta is set to be 100ms
 #define DEFAULT_RUNTIME 50  // the length of a default run time is set to be 50
 #define FIRST_THREAD 0
 #define EXIT_SUCCESS 0
@@ -56,6 +56,14 @@ typedef struct temp2
     }
 } thread_PRI_SJF_FIFO;
 
+typedef struct cmp{
+
+    bool operator ()(thread_PRI_SJF_FIFO *a,thread_PRI_SJF_FIFO *b)
+    {
+        return a->priority>b.priority;// 按照value从小到大排列
+    }
+} compare;
+
 static int thread_count;
 static int schedule_policy;
 static myThread* main_thread;
@@ -67,7 +75,7 @@ static list<int> ready_queue_first;
 static list<int> ready_queue_second;
 static list<int> ready_queue_third;
 static queue<int> ready_FIFO; 
-static priority_queue<thread_PRI_SJF_FIFO*> ready_SJF; // store the id of next ready thread with sjf policy
+static priority_queue<thread_PRI_SJF_FIFO*, list<thread_PRI_SJF_FIFO*>, compare> ready_SJF; // store the id of next ready thread with sjf policy
 void* scheduler_stack;
 
 
