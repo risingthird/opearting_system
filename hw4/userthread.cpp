@@ -7,6 +7,7 @@ using namespace std;
 int thread_libinit(int policy) {
 	scheduler_stack = malloc(STACKSIZE);
 	if (scheduler_stack == NULL) {
+		printf("from line 10\n");
 		return EXIT_WITH_ERROR;
 	}
 	getcontext(&scheduler_context);
@@ -21,6 +22,7 @@ int thread_libinit(int policy) {
 	main_thread->tid = NOT_FOUND;
 	main_thread->stack = malloc(STACKSIZE);	
 	if (main_thread->stack == NULL) {
+		printf("from line 25\n");
 		return EXIT_WITH_ERROR;
 	}
 	getcontext(&(main_thread->context));
@@ -49,6 +51,7 @@ int thread_create(void (*func)(void *), void *arg, int priority) {
 	current_context.uc_stack.ss_size = STACKSIZE;
 	
 	if(current_context.uc_stack.ss_sp == NULL) {
+		printf("from line 54\n");
 		return EXIT_WITH_ERROR;
 	}
 
@@ -91,10 +94,12 @@ int thread_create(void (*func)(void *), void *arg, int priority) {
 			ready_queue_third.push_back(thread_count);
 		}
 		else {
+			printf("from line 94\n");
 			return EXIT_WITH_ERROR;
 		}
 	}
 	else {
+		printf("from line 99\n");
 		return EXIT_WITH_ERROR; // error message skipped
 	}
 	return thread_count;
@@ -125,7 +130,7 @@ int thread_join(int tid) {
 	ucontext_t save_context;
 	myThread* toWait = find_by_tid(tid);
 	if (toWait == NULL) {
-		printf("Exit from toWait here\n");
+		printf("from line 130\n");
 		return EXIT_WITH_ERROR;
 	}
 	//getcontext(&save_context);
@@ -208,6 +213,7 @@ int util_init(int policy) {
 		thread_count = FIRST_THREAD; 
 	}
 	else {
+		printf("from line 213\n");
 		return EXIT_WITH_ERROR;
 	}
 	return EXIT_SUCCESS;
@@ -229,6 +235,7 @@ int util_terminate() {
 		clear_up_PRIqueue(&ready_queue_third);
 	}
 	else {
+		printf("from line 235\n");
 		return EXIT_WITH_ERROR;
 	}
 	return EXIT_SUCCESS;
