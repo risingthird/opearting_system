@@ -115,7 +115,9 @@ int thread_yield() {
 }
 
 int thread_join(int tid) {
-	printf("%d\n", thread_count);
+	if (current_active != NULL) {
+		printf("%d\n", current_active->tid);
+	}
 	myThread* current_thread;
 	current_thread = current_active;
 	ucontext_t save_context;
