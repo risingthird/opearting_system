@@ -131,6 +131,7 @@ int thread_join(int tid) {
 		current_active->status = STOPPED;
 		current_active->context = save_context;
 		current_active->wait_tid = tid;
+		printf("%d\n", tid);
 	}
 
 	swapcontext(&save_context, &scheduler_context);
