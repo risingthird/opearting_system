@@ -452,7 +452,6 @@ void my_scheduler() {
 		}
 		else if (current_thread->status == YIELD){
 			if (schedule_policy == _FIFO) {
-				printf("I am fucking here\n");
 				ready_FIFO.push(activeID);
 				nextID = choose_next_thread_FIFO();
 				if (nextID == NOT_FOUND) {
@@ -540,7 +539,7 @@ void my_scheduler() {
 	next_thread->active = TRUE;
 	next_thread->status = SCHEDULED;
 	current_active = next_thread;
-	//printf("%d\n", current_active->tid);
+	printf("%d\n", current_active->tid);
 	set_start_time(next_thread);
 	makecontext(&scheduler_context, my_scheduler, 0);
 	swapcontext(&scheduler_context, &next_thread->context);
