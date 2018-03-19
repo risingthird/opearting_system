@@ -8,7 +8,6 @@
 #define N 128
 
 void foo(void* args) {
-  printf("aaa\n");
   poll(NULL, 0, 1);
 }
 
