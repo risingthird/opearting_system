@@ -65,7 +65,7 @@ int thread_create(void (*func)(void *), void *arg, int priority) {
 	current_thread->status = CREATED;
 	current_thread->policy = schedule_policy;
 	current_thread->priority = priority;
-	current_thread->estimated_runtime = QUANTA / 2;
+	current_thread->estimated_runtime = DEFAULT_RUNTIME;
 	current_thread->wait_tid = NOT_FOUND;
 	current_thread->stack = stack;
 	current_thread->context = current_context;
