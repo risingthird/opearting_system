@@ -13,6 +13,7 @@ int thread_libinit(int policy) {
 		printf("from line 10\n");
 		return EXIT_WITH_ERROR;
 	}
+	int i = util_init();
 	getcontext(&scheduler_context);
 	scheduler_context.uc_link = 0;
 	scheduler_context.uc_stack.ss_sp = scheduler_stack;
@@ -34,7 +35,7 @@ int thread_libinit(int policy) {
 	main_thread->context.uc_stack.ss_size = STACKSIZE;
 	main_thread->context.uc_stack.ss_flags = 0;
 
-	return util_init();
+	return i;
 }
 
 int thread_libterminate() {
