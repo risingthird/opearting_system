@@ -26,5 +26,6 @@ int main(void) {
   if (thread_libterminate() == -1)
     exit(EXIT_FAILURE);
 
+  printf("exit success\n");
   exit(EXIT_SUCCESS);
 }
