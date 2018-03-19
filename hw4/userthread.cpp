@@ -478,7 +478,6 @@ void my_scheduler() {
 				thread_PRI_SJF_FIFO* temp2 = new thread_PRI_SJF_FIFO();
 				temp = choose_next_thread_SJF();
 				if (temp == NULL) {
-					printf("I am fucking here\n");
 					delete(temp2);
 					makecontext(&scheduler_context, my_scheduler, 0);
 					swapcontext(&scheduler_context, &(main_thread->context));
@@ -486,6 +485,7 @@ void my_scheduler() {
 				delete(temp);
 				temp2->id = current_thread->tid;
 				temp2->priority = current_thread->estimated_runtime;
+				printf("We have run time of %ld\n", current_thread->estimated_runtime);
 				ready_SJF.push(temp2);
 			}
 			else {
