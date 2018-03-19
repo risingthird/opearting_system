@@ -120,7 +120,7 @@ int thread_join(int tid) {
 	ucontext_t save_context;
 	myThread* toWait = find_by_tid(tid);
 	if (toWait == NULL) {
-		return EXIT_WITH_ERROR
+		return EXIT_WITH_ERROR;
 	}
 	getcontext(&save_context);
 	if (current_thread != NULL) {
