@@ -384,9 +384,11 @@ void my_scheduler() {
 	myThread* wait_thread;
 	current_thread = current_active;
 	// put threads in suspended queue back to ready queue
+
 	if (current_thread != NULL) {
 		activeID = current_active->tid;
 		current_thread->active = FALSE;
+		printf("%d\n", current_thread->tid);
 		if (current_thread->status == FINISHED) {
 			printf("%d\n", current_thread->tid);
 			if (schedule_policy == _FIFO) {
