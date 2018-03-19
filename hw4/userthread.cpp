@@ -431,11 +431,11 @@ void my_scheduler() {
 					temp->priority = temp1->estimated_runtime;
 					ready_SJF.push(temp);
 					current_thread->suspended_queue.pop();
-					printf("I am fucking here\n");
 				}
 				thread_PRI_SJF_FIFO* temp3 = NULL;
 				temp3 = choose_next_thread_SJF();
 				if (temp3 == NULL) {
+										printf("I am fucking here\n");
 					makecontext(&scheduler_context, my_scheduler, 0);
 					swapcontext(&scheduler_context, &(main_thread->context));
 				}
