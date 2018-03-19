@@ -119,6 +119,7 @@ int thread_join(int tid) {
 	current_thread = current_active;
 	ucontext_t save_context;
 	myThread* toWait = find_by_tid(tid);
+	printf("%d\n", thread_count);
 	if (toWait == NULL) {
 		return EXIT_WITH_ERROR;
 	}
@@ -127,7 +128,6 @@ int thread_join(int tid) {
 		current_thread->status = STOPPED;
 		current_thread->context = save_context;
 		current_thread->wait_tid = tid;
-		printf("%d\n", current_thread->tid);
 	}
 	swapcontext(&save_context, &scheduler_context);
 	return EXIT_SUCCESS;
