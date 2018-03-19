@@ -108,10 +108,14 @@ int thread_yield() {
 	getcontext(&save_context);
 	if (current_thread != NULL) {
 		current_thread->status = YIELD;
-		current_thread->context = save_context;
+		//current_thread->context = save_context;
+		makecontext(&scheduler_context, my_scheduler, 0);
+		swapcontext(&current_thread->context, &scheduler_context);
 	}
-	makecontext(&scheduler_context, my_scheduler, 0);
-	swapcontext(&save_context, &scheduler_context);
+	else{
+		makecontext(&scheduler_context, my_scheduler, 0);
+		swapcontext(&save_context, &scheduler_context);
+	}
 	return EXIT_SUCCESS;
 }
 
@@ -123,14 +127,19 @@ int thread_join(int tid) {
 	if (toWait == NULL) {
 		return EXIT_WITH_ERROR;
 	}
-	getcontext(&save_context);
+	//getcontext(&save_context);
 	if (current_active != NULL) {
 		current_active->status = STOPPED;
-		current_active->context = save_context;
+		//current_active->context = save_context;
 		current_active->wait_tid = tid;
+		makecontext(&scheduler_context, my_scheduler, 0);
+		swapcontext(&current_active->context, &scheduler_context);
 	}
-	makecontext(&scheduler_context, my_scheduler, 0);
-	swapcontext(&save_context, &scheduler_context);
+	else {
+		makecontext(&scheduler_context, my_scheduler, 0);
+		swapcontext(&save_context, &scheduler_context);
+	}
+
 	return EXIT_SUCCESS;
 }
 
