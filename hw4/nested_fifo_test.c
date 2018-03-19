@@ -4,6 +4,7 @@
 #include "userthread.h"
 
 void inner_foo(void *arg) {
+  printf("asd\n");
   thread_yield();
 }
 
