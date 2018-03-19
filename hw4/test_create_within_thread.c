@@ -9,6 +9,7 @@ int created_tids[3] = { -1, -1, -1 };
 void foo(void* args) {}
 void foo_create(void* args) {
   created_tids[idx] = thread_create(foo, NULL, 1);
+  printf("I am here with thread id %d\n", created_tids[idx]);
   thread_join(created_tids[idx++]);
 }
 
