@@ -66,7 +66,7 @@ typedef struct cmp{
 } compare;
 
 static int thread_count;
-static int schedule_policy;
+
 static myThread* main_thread;
 static myThread* current_active;
 static ucontext_t scheduler_context;
