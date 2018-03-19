@@ -3,6 +3,7 @@
 
 #include <queue>
 #include <list>
+#include <vector>
 #include <string.h>
 #include <ucontext.h> 
 #include <stdio.h>
@@ -75,7 +76,7 @@ static list<int> ready_queue_first;
 static list<int> ready_queue_second;
 static list<int> ready_queue_third;
 static queue<int> ready_FIFO; 
-static priority_queue<thread_PRI_SJF_FIFO*, list<thread_PRI_SJF_FIFO*>, compare> ready_SJF; // store the id of next ready thread with sjf policy
+static priority_queue<thread_PRI_SJF_FIFO*, vector<thread_PRI_SJF_FIFO*>, compare> ready_SJF; // store the id of next ready thread with sjf policy
 void* scheduler_stack;
 
 
@@ -97,7 +98,7 @@ int set_estimated_time(myThread* a_thread);
 void clear_up(list<myThread*> *ll);
 void clear_up_PRIqueue(list<thread_PRI_SJF_FIFO*> *ll);
 void clear_up_FIFOqueue(queue<thread_PRI_SJF_FIFO*> *ll);
-void clear_up_SJFqueue(priority_queue<thread_PRI_SJF_FIFO*, list<thread_PRI_SJF_FIFO*>, compare> *ll); 
+void clear_up_SJFqueue(priority_queue<thread_PRI_SJF_FIFO*, vector<thread_PRI_SJF_FIFO*>, compare> *ll); 
 void thread_wrapper(void (*func)(void *), void *arg);
 void my_scheduler();
 

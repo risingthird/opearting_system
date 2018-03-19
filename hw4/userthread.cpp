@@ -176,7 +176,7 @@ void clear_up_FIFOqueue(queue<int> *ll) {
 	}
 }
 
-void clear_up_SJFqueue(priority_queue<thread_PRI_SJF_FIFO*, list<thread_PRI_SJF_FIFO*>, compare> *ll) {
+void clear_up_SJFqueue(priority_queue<thread_PRI_SJF_FIFO*, vector<thread_PRI_SJF_FIFO*>, compare> *ll) {
 	while(!ll->empty()) {
 		if(ll->top() != NULL) {
 			delete(ll->top());
@@ -196,7 +196,7 @@ int util_init(int policy) {
 	}
 	else if (schedule_policy == _SJF) {
 		thread_list_head = list<myThread*> ();
-		ready_SJF = priority_queue<thread_PRI_SJF_FIFO*, list<thread_PRI_SJF_FIFO*>, compare> ();
+		ready_SJF = priority_queue<thread_PRI_SJF_FIFO*, vector<thread_PRI_SJF_FIFO*>, compare> ();
 		thread_count = FIRST_THREAD;
 	}
 	else if (schedule_policy == _PRIORITY) {
