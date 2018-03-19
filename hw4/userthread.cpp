@@ -97,7 +97,6 @@ int thread_create(void (*func)(void *), void *arg, int priority) {
 	else {
 		return EXIT_WITH_ERROR; // error message skipped
 	}
-	printf("%d\n", thread_count);
 	return thread_count;
 
 }
@@ -531,7 +530,7 @@ void my_scheduler() {
 	next_thread->active = TRUE;
 	next_thread->status = SCHEDULED;
 	current_active = next_thread;
-	printf("%d\n", current_active->tid);
+	//printf("%d\n", current_active->tid);
 	set_start_time(next_thread);
 	makecontext(&scheduler_context, my_scheduler, 0);
 	swapcontext(&scheduler_context, &next_thread->context);
