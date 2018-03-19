@@ -406,6 +406,7 @@ void my_scheduler() {
 					current_thread->suspended_queue.pop();
 				}
 				nextID = choose_next_thread_FIFO();
+				printf("Thread %d is to be run. Since thread %d is done", nextID, current_thread->tid);
 				if (nextID == NOT_FOUND) {
 					makecontext(&scheduler_context, my_scheduler, 0);
 					swapcontext(&scheduler_context, &(main_thread->context));
