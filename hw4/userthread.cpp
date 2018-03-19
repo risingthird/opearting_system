@@ -388,7 +388,6 @@ void my_scheduler() {
 	if (current_thread != NULL) {
 		activeID = current_active->tid;
 		current_thread->active = FALSE;
-		printf("%d\n", current_thread->tid);
 		if (current_thread->status == FINISHED) {
 			printf("%d\n", current_thread->tid);
 			if (schedule_policy == _FIFO) {
@@ -526,6 +525,7 @@ void my_scheduler() {
 			}
 		}
 	}
+	printf("%d\n", nextID);
 	next_thread = find_by_tid(nextID);
 	next_thread->active = TRUE;
 	next_thread->status = SCHEDULED;
