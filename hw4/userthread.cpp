@@ -130,6 +130,7 @@ int thread_join(int tid) {
 		current_thread->wait_tid = tid;
 
 	}
+	printf("%d\n", thread_count);
 	swapcontext(&save_context, &scheduler_context);
 	return EXIT_SUCCESS;
 }
