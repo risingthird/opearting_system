@@ -132,7 +132,7 @@ int thread_join(int tid) {
 		current_active->context = save_context;
 		current_active->wait_tid = tid;
 	}
-
+	makecontext(&scheduler_context, my_scheduler, 0);
 	swapcontext(&save_context, &scheduler_context);
 	return EXIT_SUCCESS;
 }
