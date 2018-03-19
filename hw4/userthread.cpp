@@ -97,6 +97,7 @@ int thread_create(void (*func)(void *), void *arg, int priority) {
 	else {
 		return EXIT_WITH_ERROR; // error message skipped
 	}
+	printf("%d\n", thread_count);
 	return thread_count;
 
 }
@@ -119,7 +120,6 @@ int thread_join(int tid) {
 	current_thread = current_active;
 	ucontext_t save_context;
 	myThread* toWait = find_by_tid(tid);
-	printf("%d\n", thread_count);
 	if (toWait == NULL) {
 		return EXIT_WITH_ERROR;
 	}
