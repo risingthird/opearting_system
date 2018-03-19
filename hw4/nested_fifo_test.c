@@ -16,12 +16,14 @@ void foo(void *arg) {
     int tid = thread_create(inner_foo, NULL, 1);
 
     if (tid < 0) {
-      
+      printf("as\n");
       exit(EXIT_FAILURE);
     }
 
-    if (thread_join(tid) < 0) 
+    if (thread_join(tid) < 0) {
+      printf("a\n");
       exit(EXIT_FAILURE);
+    }
   }
 
 }
