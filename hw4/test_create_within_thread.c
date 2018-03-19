@@ -30,7 +30,7 @@ int main(void) {
 
   for (int i = 0; i < n; i++)  {
     if (thread_join(tids[i]) == -1){
-      printf("I am fucking here  again\n");
+      printf("I am fucking here  again with %d\n", i);
       exit(EXIT_FAILURE);
     }
   }
@@ -42,7 +42,7 @@ int main(void) {
     }
   }
 
-  printf("I am fucking here\n");
+
   printf(" * Testing thread_create within thread routines\n");
   printf(" * Threads should end in this order ");
   printf(" %d -> %d -> %d", created_tids[0], created_tids[1], created_tids[2]);
