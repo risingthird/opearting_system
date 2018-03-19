@@ -125,6 +125,7 @@ int thread_join(int tid) {
 	ucontext_t save_context;
 	myThread* toWait = find_by_tid(tid);
 	if (toWait == NULL) {
+		printf("Exit from toWait here\n");
 		return EXIT_WITH_ERROR;
 	}
 	//getcontext(&save_context);
