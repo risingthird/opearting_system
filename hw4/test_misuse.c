@@ -2,8 +2,8 @@
 #include <stdlib.h>
 #include "userthread.h"
 
-void foo() {}
-void bar() {}
+void foo(void* args) {}
+void bar(void* args) {}
 
 int main(void) {
   printf(" * Testing a basic FIFO with some misuse of the userthread library\n");
