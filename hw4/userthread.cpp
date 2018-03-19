@@ -131,7 +131,6 @@ int thread_join(int tid) {
 		current_active->status = STOPPED;
 		current_active->context = save_context;
 		current_active->wait_tid = tid;
-		printf("%d\n", tid);
 	}
 
 	swapcontext(&save_context, &scheduler_context);
@@ -395,6 +394,7 @@ void my_scheduler() {
 
 	if (current_thread != NULL) {
 		activeID = current_active->tid;
+		printf("active id %d\n", activeID);
 		current_thread->active = FALSE;
 		if (current_thread->status == FINISHED) {
 			if (schedule_policy == _FIFO) {
