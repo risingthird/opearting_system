@@ -4,6 +4,7 @@
 #include <queue>
 #include <list>
 #include <vector>
+#include <fstream>
 #include <string.h>
 #include <ucontext.h> 
 #include <stdio.h>
@@ -82,6 +83,7 @@ static priority_queue<thread_PRI_SJF_FIFO*, vector<thread_PRI_SJF_FIFO*>, compar
 static void* scheduler_stack;
 static struct itimerval priority_timer;
 static sigset_t thread_mask;
+static fstream log_file;
 
 
 
