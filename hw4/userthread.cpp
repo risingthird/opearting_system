@@ -68,7 +68,7 @@ int thread_libinit(int policy) {
 		return EXIT_WITH_ERROR;
 	}
 	getcontext(&(main_thread->context));
-	makecontext(&(main_thread->context), NULL, 0);
+	makecontext(&(main_thread->context), donothing, 0);
 	main_thread->context.uc_link = 0;
 	main_thread->context.uc_stack.ss_sp = main_thread->stack;
 	main_thread->context.uc_stack.ss_size = STACKSIZE;
@@ -758,6 +758,10 @@ void sigalarm_handler(int sig) {
 		makecontext(&scheduler_context, my_scheduler, 0);
 		swapcontext(&save_context, &scheduler_context);
 	}
+}
+
+void donothing() {
+	return;
 }
 
 
