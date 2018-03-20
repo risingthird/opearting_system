@@ -51,12 +51,11 @@ int thread_libinit(int policy) {
 	main_thread->context.uc_stack.ss_size = STACKSIZE;
 	main_thread->context.uc_stack.ss_flags = 0;
 
-
+	printf("I died here\n");
 	return i;
 }
 
 int thread_libterminate() {
-	printf("I died here you mother fucker ");
 	log_file.close();
 	free(scheduler_stack);
 	free(main_thread->stack);
