@@ -307,7 +307,10 @@ thread_PRI_SJF_FIFO* choose_next_thread_SJF() {
 
 int choose_next_thread_PRI() {
 	int toReturn = NOT_FOUND;
-	srand(time(NULL));
+	struct timeval tv;
+ 	gettimeofday(&tv, NULL);
+ 	unsigned int seed = tv.tv_usec;
+	srand(seed);
 	int lucky = rand() % 19;
 	if (lucky < 4) {
 		if (ready_queue_third.empty()) {
