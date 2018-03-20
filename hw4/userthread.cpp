@@ -318,7 +318,6 @@ int choose_next_thread_PRI() {
  	unsigned int seed = tv.tv_usec;
 	srand(seed);
 	int lucky = rand() % 19;
-	printf("Lucky number is %d\n", lucky);
 	if (lucky < 4) {
 		if (ready_queue_third.empty()) {
 			if (ready_queue_first.empty()) {
@@ -327,12 +326,12 @@ int choose_next_thread_PRI() {
 				}
 				else {
 					toReturn = ready_queue_second.front();
-					ready_queue_first.pop_front();
+					ready_queue_second.pop_front();
 				}
 			}
 			else {
 				toReturn = ready_queue_first.front();
-				ready_queue_second.pop_front();
+				ready_queue_first.pop_front();
 			}
 		}
 		else {
@@ -362,24 +361,24 @@ int choose_next_thread_PRI() {
 		}		
 	}
 	else {
-		if (ready_queue_third.empty()) {
-			if (ready_queue_first.empty()) {
-				if (ready_queue_second.empty()) {
+		if (ready_queue_first.empty()) {
+			if (ready_queue_second.empty()) {
+				if (ready_queue_third.empty()) {
 					return NOT_FOUND;
 				}
 				else {
-					toReturn = ready_queue_second.front();
-					ready_queue_second.pop_front();
+					toReturn = ready_queue_third.front();
+					ready_queue_third.pop_front();
 				}
 			}
 			else {
-				toReturn = ready_queue_first.front();
-				ready_queue_first.pop_front();
+				toReturn = ready_queue_second.front();
+				ready_queue_second.pop_front();
 			}
 		}
 		else {
-			toReturn = ready_queue_third.front();
-			ready_queue_third.pop_front();
+			toReturn = ready_queue_first.front();
+			ready_queue_first.pop_front();
 		}			
 	}
 	printf("The chosen one is %d, with a lucky number of %d\n", toReturn, lucky);
