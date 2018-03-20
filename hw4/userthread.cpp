@@ -516,6 +516,7 @@ void my_scheduler() {
 					makecontext(&scheduler_context, my_scheduler, 0);
 					current_active = NULL;
 					swapcontext(&scheduler_context, &main_context);
+				}
 			}
 			else if (schedule_policy == _SJF) {
 				//log_file << "[ticks]" << " \t " << "FINISHED" << " \t " << current_thread->tid << " \t " << current_thread->priority << endl;
@@ -750,7 +751,7 @@ void sigalarm_handler(int sig) {
 		makecontext(&scheduler_context, my_scheduler, 0);
 		swapcontext(&save_context, &scheduler_context);
 	}
-}}
+}
 
 
 
