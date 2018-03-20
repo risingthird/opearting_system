@@ -7,6 +7,8 @@ using namespace std;
 
 
 int thread_libinit(int policy) {
+	sigemptyset(&thread_mask);
+	sigaddset(&thread_mask, SIGALRM);
 	scheduler_stack = malloc(STACKSIZE);
 	schedule_policy = policy;
 	if (scheduler_stack == NULL) {
@@ -14,6 +16,16 @@ int thread_libinit(int policy) {
 		return EXIT_WITH_ERROR;
 	}
 	int i = util_init();
+	if (schedule_policy == _PRIORITY) {
+		signal(SIGALRM, sigalarm_handler);
+		priority_timer.it_value.tv_sec = 0;    
+		priority_timer.it_value.tv_usec = QUANTA * MICRO_TO_MILI;  
+		priority_timer.it_interval.tv_sec = 0;  
+		priority_timer.it_interval.tv_usec = QUANTA * MICRO_TO_MILI; 
+		if (setitimer(ITIMER_REAL, &priority_timer, NULL) < 0) {
+			return EXIT_WITH_ERROR;	
+		}
+	}
 	getcontext(&scheduler_context);
 	scheduler_context.uc_link = 0;
 	scheduler_context.uc_stack.ss_sp = scheduler_stack;
@@ -415,6 +427,9 @@ void my_scheduler() {
 	myThread* next_thread;
 	myThread* wait_thread;
 	current_thread = current_active;
+	if (schedule_policy == _PRIORITY) {
+		sigprocmask(SIG_BLOCK, &thread_mask, NULL);
+	}
 	// put threads in suspended queue back to ready queue
 	if (current_active != NULL) {
 		printf("active id %d\n", current_active->tid);
@@ -473,6 +488,7 @@ void my_scheduler() {
 				nextID = choose_next_thread_PRI();
 				if (nextID == NOT_FOUND) {
 					makecontext(&scheduler_context, my_scheduler, 0);
+					sigprocmask(SIG_UNBLOCK, &thread_mask, NULL);
 					swapcontext(&scheduler_context, &(main_thread->context));
 				}
 			}
@@ -507,6 +523,25 @@ void my_scheduler() {
 			}
 			else {
 				/*To do here*/
+				if (current_thread->priority == FIRST-1) {
+					ready_queue_first.push(current_thread->tid);
+				}
+				else if (current_thread->priority == SECOND-1) {
+					ready_queue_second.push(current_thread->tid);
+				}
+				else if (current_thread->priority == THIRD-1) {
+					ready_queue_third.push(current_thread->tid);
+				}
+				else {
+					makecontext(&scheduler_context, my_scheduler, 0);
+					swapcontext(&scheduler_context, &(main_thread->context));
+				}
+				nextID = choose_next_thread_PRI();
+				if (nextID == NOT_FOUND) {
+					makecontext(&scheduler_context, my_scheduler, 0);
+					sigprocmask(SIG_UNBLOCK, &thread_mask, NULL);
+					swapcontext(&scheduler_context, &(main_thread->context));
+				}
 			}
 		}
 		else if (current_thread->status == STOPPED){
@@ -536,6 +571,13 @@ void my_scheduler() {
 			}
 			else {
 				/*To do here*/
+				nextID = choose_next_thread_PRI();
+				if (nextID == NOT_FOUND) {
+					makecontext(&scheduler_context, my_scheduler, 0);
+					swapcontext(&scheduler_context, &(main_thread->context));
+				}
+				wait_thread = find_by_tid(current_thread->wait_tid);
+				wait_thread->suspended_queue.push(activeID);								
 			}	
 		}
 	}
@@ -561,6 +603,7 @@ void my_scheduler() {
 			nextID = choose_next_thread_PRI();
 			if (nextID == NOT_FOUND) {
 				makecontext(&scheduler_context, my_scheduler, 0);
+				sigprocmask(SIG_UNBLOCK, &thread_mask, NULL);
 				swapcontext(&scheduler_context, &(main_thread->context));
 			}
 		}
@@ -571,12 +614,39 @@ void my_scheduler() {
 	current_active = next_thread;
 	//printf("%d\n", current_active->tid);
 	set_start_time(next_thread);
+
+	if (schedule_policy == _PRIORITY) {
+		priority_timer.it_value.tv_sec = 0;    
+		priority_timer.it_value.tv_usec = QUANTA * MICRO_TO_MILI;  
+		priority_timer.it_interval.tv_sec = 0;  
+		priority_timer.it_interval.tv_usec = QUANTA * MICRO_TO_MILI; 
+		if (setitimer(ITIMER_REAL, &priority_timer, NULL) < 0) {
+			makecontext(&scheduler_context, my_scheduler, 0);
+			swapcontext(&scheduler_context, &(main_thread->context));		
+		}
+		sigprocmask(SIG_UNBLOCK, &thread_mask, NULL);
+	}
+
 	makecontext(&scheduler_context, my_scheduler, 0);
 	swapcontext(&scheduler_context, &(next_thread->context));
 }
 
-
-
+void sigalarm_handler(int sig) {
+	myThread* current_thread;
+	ucontext_t save_context;
+	current_thread = current_active;
+	getcontext(&save_context);
+	if (current_thread != NULL) {
+		current_thread->status = YIELD;
+		//current_thread->context = save_context;
+		makecontext(&scheduler_context, my_scheduler, 0);
+		swapcontext(&current_thread->context, &scheduler_context);
+	}
+	else{
+		makecontext(&scheduler_context, my_scheduler, 0);
+		swapcontext(&save_context, &scheduler_context);
+	}
+}
 
 
 

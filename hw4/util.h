@@ -19,6 +19,7 @@
 #define EXIT_SUCCESS 0
 #define EXIT_WITH_ERROR -1
 #define NOT_FOUND -1
+#define MICRO_TO_MILI 1000
 
 using namespace std;
 
@@ -77,8 +78,9 @@ static list<int> ready_queue_second;
 static list<int> ready_queue_third;
 static queue<int> ready_FIFO; 
 static priority_queue<thread_PRI_SJF_FIFO*, vector<thread_PRI_SJF_FIFO*>, compare> ready_SJF; // store the id of next ready thread with sjf policy
-void* scheduler_stack;
-
+static void* scheduler_stack;
+static struct itimerval priority_timer;
+static sigset_t thread_mask;
 
 
 
@@ -101,6 +103,7 @@ void clear_up_FIFOqueue(queue<thread_PRI_SJF_FIFO*> *ll);
 void clear_up_SJFqueue(priority_queue<thread_PRI_SJF_FIFO*, vector<thread_PRI_SJF_FIFO*>, compare> *ll); 
 void thread_wrapper(void (*func)(void *), void *arg);
 void my_scheduler();
+void sigalarm_handler(int sig);
 
 
 #endif
