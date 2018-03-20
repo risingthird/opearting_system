@@ -68,14 +68,18 @@ int thread_libinit(int policy) {
 	main_context.uc_stack.ss_sp = main_stack;
 	main_context.uc_stack.ss_size = STACKSIZE;
 
-	printf("I died here\n");
+	//printf("I died here\n");
 	return EXIT_SUCCESS;
 }
 
 int thread_libterminate() {
 	log_file.close();
-	free(scheduler_stack);
-	free(main_stack);
+	if (scheduler_stack != NULL) {
+		free(scheduler_stack);
+	}
+	if (main_stack != NULL) {
+		free(main_stack);
+	}
 	return util_terminate();
 }
 

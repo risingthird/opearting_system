@@ -9,7 +9,7 @@ int created_tids[3] = { -1, -1, -1 };
 void foo(void* args) {}
 void foo_create(void* args) {
   created_tids[idx] = thread_create(foo, NULL, 1);
-  printf("I am here with thread id %d\n", created_tids[idx]);
+  //printf("I am here with thread id %d\n", created_tids[idx]);
   thread_join(created_tids[idx++]);
 }
 
@@ -31,14 +31,14 @@ int main(void) {
 
   for (int i = 0; i < n; i++)  {
     if (thread_join(tids[i]) == -1){
-      printf("I am fucking here  again with %d\n", i);
+      //printf("I am fucking here  again with %d\n", i);
       exit(EXIT_FAILURE);
     }
   }
 
   for (int i = 0; i < 3; i++)  {
     if (created_tids[i] == -1) {
-      printf("I am fucking here\n");
+      //printf("I am fucking here\n");
       exit(EXIT_FAILURE);
     }
   }
