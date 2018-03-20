@@ -135,7 +135,7 @@ int thread_create(void (*func)(void *), void *arg, int priority) {
 
 	struct timeval current_time;
 	gettimeofday(&current_time, NULL);
-	log_file << "[" <<(current_time.tv_sec*1000 + current_time.tv_usec/1000) -  start_time << "]" <<" \t " << "CREATED" << " \t " << current_thread->tid << " \t " << current_thread->priority << endl;
+	//log_file << "[" <<(current_time.tv_sec*1000 + current_time.tv_usec/1000) -  start_time << "]" <<" \t " << "CREATED" << " \t " << current_thread->tid << " \t " << current_thread->priority << endl;
 	return thread_count;
 
 }
@@ -158,7 +158,7 @@ int thread_yield() {
 		makecontext(&scheduler_context, my_scheduler, 0);
 		struct timeval current_time;
 		gettimeofday(&current_time, NULL);
-		log_file << "[" <<(current_time.tv_sec*1000 + current_time.tv_usec/1000) -  start_time << "]" << " \t " << "STOPPED" << " \t " << current_thread->tid << " \t " << current_thread->priority << endl;
+		//log_file << "[" <<(current_time.tv_sec*1000 + current_time.tv_usec/1000) -  start_time << "]" << " \t " << "STOPPED" << " \t " << current_thread->tid << " \t " << current_thread->priority << endl;
 		swapcontext(&current_thread->context, &scheduler_context);
 	}
 	else{
@@ -192,7 +192,7 @@ int thread_join(int tid) {
 		makecontext(&scheduler_context, my_scheduler, 0);
 		struct timeval current_time;
 		gettimeofday(&current_time, NULL);
-		log_file << "[" <<(current_time.tv_sec*1000 + current_time.tv_usec/1000) -  start_time << "]" << " \t " << "STOPPED" << " \t " << current_thread->tid << " \t " << current_thread->priority << endl;
+		//log_file << "[" <<(current_time.tv_sec*1000 + current_time.tv_usec/1000) -  start_time << "]" << " \t " << "STOPPED" << " \t " << current_thread->tid << " \t " << current_thread->priority << endl;
 		if (schedule_policy == _PRIORITY) {
 			sigprocmask(SIG_UNBLOCK, &thread_mask, NULL);
 		}
@@ -465,7 +465,7 @@ void thread_wrapper(void (*func)(void *), void *arg) {
 		//printf("FINISHED %d\n", current_active->tid);
 		struct timeval current_time;
 		gettimeofday(&current_time, NULL);
-		log_file << "[" <<(current_time.tv_sec*1000 + current_time.tv_usec/1000) -  start_time << "]" << " \t " << "FINISHED" << " \t " << current_active->tid << " \t " << current_active->priority << endl;
+		//log_file << "[" <<(current_time.tv_sec*1000 + current_time.tv_usec/1000) -  start_time << "]" << " \t " << "FINISHED" << " \t " << current_active->tid << " \t " << current_active->priority << endl;
 	}
 	makecontext(&scheduler_context, my_scheduler, 0);
 	swapcontext(&current_active->context, &scheduler_context);
@@ -681,7 +681,7 @@ void my_scheduler() {
 	next_thread->status = SCHEDULED;
 	struct timeval current_time;
 	gettimeofday(&current_time, NULL);
-	log_file << "[" <<(current_time.tv_sec*1000 + current_time.tv_usec/1000) -  start_time << "]" << " \t " << "SCHEDULED" << " \t " << next_thread->tid << " \t " << next_thread->priority << endl;
+	//log_file << "[" <<(current_time.tv_sec*1000 + current_time.tv_usec/1000) -  start_time << "]" << " \t " << "SCHEDULED" << " \t " << next_thread->tid << " \t " << next_thread->priority << endl;
 	current_active = next_thread;
 	//printf("%d\n", current_active->tid);
 	set_start_time(next_thread);
@@ -716,7 +716,7 @@ void sigalarm_handler(int sig) {
 		//current_thread->context = save_context;
 		struct timeval current_time;
 		gettimeofday(&current_time, NULL);
-		log_file << "[" <<(current_time.tv_sec*1000 + current_time.tv_usec/1000) -  start_time << "]" << " \t " << "STOPPED" << " \t " << current_thread->tid << " \t " << current_thread->priority << endl;
+		//log_file << "[" <<(current_time.tv_sec*1000 + current_time.tv_usec/1000) -  start_time << "]" << " \t " << "STOPPED" << " \t " << current_thread->tid << " \t " << current_thread->priority << endl;
 		makecontext(&scheduler_context, my_scheduler, 0);
 		if (schedule_policy == _PRIORITY) {
 			sigprocmask(SIG_UNBLOCK, &thread_mask, NULL);
