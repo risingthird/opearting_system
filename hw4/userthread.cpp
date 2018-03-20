@@ -46,6 +46,7 @@ int thread_libinit(int policy) {
 	main_thread->context.uc_stack.ss_sp = main_thread->stack;
 	main_thread->context.uc_stack.ss_size = STACKSIZE;
 	main_thread->context.uc_stack.ss_flags = 0;
+	printf("fuck everything\n");
 
 	return i;
 }
