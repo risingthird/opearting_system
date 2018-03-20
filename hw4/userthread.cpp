@@ -51,7 +51,7 @@ int thread_libinit(int policy) {
 }
 
 int thread_libterminate() {
-	printf("current tid calling %d\n", current_active->tid);
+	printf("I am exiting from 54\n");
 	free(scheduler_stack);
 	free(main_thread->stack);
 	delete(main_thread);
@@ -68,7 +68,7 @@ int thread_create(void (*func)(void *), void *arg, int priority) {
 	current_context.uc_stack.ss_size = STACKSIZE;
 	
 	if(current_context.uc_stack.ss_sp == NULL) {
-		printf("from line 54\n");
+		printf("from line 71\n");
 		return EXIT_WITH_ERROR;
 	}
 
@@ -177,6 +177,7 @@ int thread_join(int tid) {
 
 
 void clear_up(list<myThread*> *ll) {
+	printf("I am exiting from 180\n");
 	while(!ll->empty()) {
 		if(ll->front() != NULL) {
 			if (ll->front()->stack != NULL) {
@@ -192,6 +193,7 @@ void clear_up(list<myThread*> *ll) {
 }
 
 void clear_up_PRIqueue(list<int> *ll) {
+	printf("I am exiting from 180\n");
 	while(!ll->empty()) {
 		ll->pop_front();
 	}
