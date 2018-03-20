@@ -51,6 +51,7 @@ int thread_libinit(int policy) {
 }
 
 int thread_libterminate() {
+	printf("current tid calling %d\n", current_active->tid);
 	free(scheduler_stack);
 	free(main_thread->stack);
 	delete(main_thread);
@@ -432,7 +433,7 @@ void my_scheduler() {
 	}
 	// put threads in suspended queue back to ready queue
 	if (current_active != NULL) {
-		printf("active id %d\n", current_active->tid);
+		//printf("active id %d\n", current_active->tid);
 	}
 
 	if (current_thread != NULL) {
