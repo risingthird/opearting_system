@@ -467,9 +467,6 @@ void my_scheduler() {
 		sigprocmask(SIG_BLOCK, &thread_mask, NULL);
 	}
 	// put threads in suspended queue back to ready queue
-	if (current_active != NULL) {
-		//printf("active id %d\n", current_active->tid);
-	}
 
 	if (current_thread != NULL) {
 		activeID = current_active->tid;
@@ -485,6 +482,7 @@ void my_scheduler() {
 				//printf("Thread %d is to be run. Since thread %d is done", nextID, current_thread->tid);
 				if (nextID == NOT_FOUND) {
 					makecontext(&scheduler_context, my_scheduler, 0);
+					current_active = NULL;
 					swapcontext(&scheduler_context, &(main_thread->context));
 				}
 			}
@@ -502,6 +500,7 @@ void my_scheduler() {
 				temp3 = choose_next_thread_SJF();
 				if (temp3 == NULL) {
 					makecontext(&scheduler_context, my_scheduler, 0);
+					current_active = NULL;
 					swapcontext(&scheduler_context, &(main_thread->context));
 				}
 				nextID = temp3->id;
@@ -528,6 +527,7 @@ void my_scheduler() {
 					makecontext(&scheduler_context, my_scheduler, 0);
 					sigprocmask(SIG_UNBLOCK, &thread_mask, NULL);
 					//printf("I am going to return from 504 to main_context\n");
+					current_active = NULL;
 					swapcontext(&scheduler_context, &(main_thread->context));
 				}
 			}
@@ -539,6 +539,7 @@ void my_scheduler() {
 				nextID = choose_next_thread_FIFO();
 				if (nextID == NOT_FOUND) {
 					makecontext(&scheduler_context, my_scheduler, 0);
+					current_active = NULL;
 					swapcontext(&scheduler_context, &(main_thread->context));
 				}
 			}
@@ -552,6 +553,7 @@ void my_scheduler() {
 				if (temp == NULL) {
 					delete(temp2);
 					makecontext(&scheduler_context, my_scheduler, 0);
+					current_active = NULL;
 					swapcontext(&scheduler_context, &(main_thread->context));
 				}
 				nextID = temp->id;
@@ -574,6 +576,7 @@ void my_scheduler() {
 				}
 				else {
 					makecontext(&scheduler_context, my_scheduler, 0);
+					current_active = NULL;
 					swapcontext(&scheduler_context, &(main_thread->context));
 				}
 				nextID = choose_next_thread_PRI();
@@ -581,6 +584,7 @@ void my_scheduler() {
 					makecontext(&scheduler_context, my_scheduler, 0);
 					sigprocmask(SIG_UNBLOCK, &thread_mask, NULL);
 					//printf("I am going to return from 556 to main_context\n");
+					current_active = NULL;
 					swapcontext(&scheduler_context, &(main_thread->context));
 				}
 			}
@@ -590,6 +594,7 @@ void my_scheduler() {
 				nextID = choose_next_thread_FIFO();
 				if (nextID == NOT_FOUND) {
 					makecontext(&scheduler_context, my_scheduler, 0);
+					current_active = NULL;
 					swapcontext(&scheduler_context, &(main_thread->context));
 				}
 				wait_thread = find_by_tid(current_thread->wait_tid);
@@ -603,6 +608,7 @@ void my_scheduler() {
 				temp = choose_next_thread_SJF();
 				if (temp == NULL) {
 					makecontext(&scheduler_context, my_scheduler, 0);
+					current_active = NULL;
 					swapcontext(&scheduler_context, &(main_thread->context));
 				}
 				nextID = temp->id;
@@ -615,6 +621,7 @@ void my_scheduler() {
 				nextID = choose_next_thread_PRI();
 				if (nextID == NOT_FOUND) {
 					makecontext(&scheduler_context, my_scheduler, 0);
+					current_active = NULL;
 					//printf("I am going to return from 591 to main_context\n");
 					swapcontext(&scheduler_context, &(main_thread->context));
 				}
@@ -628,6 +635,7 @@ void my_scheduler() {
 			nextID = choose_next_thread_FIFO();
 			if (nextID == NOT_FOUND) {
 				makecontext(&scheduler_context, my_scheduler, 0);
+				current_active = NULL;
 				swapcontext(&scheduler_context, &(main_thread->context));
 			}
 		}
@@ -636,6 +644,7 @@ void my_scheduler() {
 			temp = choose_next_thread_SJF();
 			if (temp == NULL) {
 				makecontext(&scheduler_context, my_scheduler, 0);
+				current_active = NULL;
 				swapcontext(&scheduler_context, &(main_thread->context));
 			}
 			nextID = temp->id;
@@ -646,6 +655,7 @@ void my_scheduler() {
 			if (nextID == NOT_FOUND) {
 				makecontext(&scheduler_context, my_scheduler, 0);
 				sigprocmask(SIG_UNBLOCK, &thread_mask, NULL);
+				current_active = NULL;
 				//printf("I am going to return from 621 to main_context\n");
 				swapcontext(&scheduler_context, &(main_thread->context));
 			}
@@ -666,6 +676,7 @@ void my_scheduler() {
 		priority_timer.it_interval.tv_usec = QUANTA * MICRO_TO_MILI; 
 		if (setitimer(ITIMER_REAL, &priority_timer, NULL) < 0) {
 			makecontext(&scheduler_context, my_scheduler, 0);
+			current_active = NULL;
 			swapcontext(&scheduler_context, &(main_thread->context));		
 		}
 		sigprocmask(SIG_UNBLOCK, &thread_mask, NULL);
