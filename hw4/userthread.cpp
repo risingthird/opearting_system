@@ -499,9 +499,9 @@ void my_scheduler() {
 				}
 				nextID = choose_next_thread_PRI();
 				if (nextID == NOT_FOUND) {
-					printf("I am fucking here\n");
 					makecontext(&scheduler_context, my_scheduler, 0);
 					sigprocmask(SIG_UNBLOCK, &thread_mask, NULL);
+					printf("I am going to return from 504 to main_context\n");
 					swapcontext(&scheduler_context, &(main_thread->context));
 				}
 			}
@@ -553,6 +553,7 @@ void my_scheduler() {
 				if (nextID == NOT_FOUND) {
 					makecontext(&scheduler_context, my_scheduler, 0);
 					sigprocmask(SIG_UNBLOCK, &thread_mask, NULL);
+					printf("I am going to return from 556 to main_context\n");
 					swapcontext(&scheduler_context, &(main_thread->context));
 				}
 			}
@@ -587,6 +588,7 @@ void my_scheduler() {
 				nextID = choose_next_thread_PRI();
 				if (nextID == NOT_FOUND) {
 					makecontext(&scheduler_context, my_scheduler, 0);
+					printf("I am going to return from 591 to main_context\n");
 					swapcontext(&scheduler_context, &(main_thread->context));
 				}
 				wait_thread = find_by_tid(current_thread->wait_tid);
@@ -617,6 +619,7 @@ void my_scheduler() {
 			if (nextID == NOT_FOUND) {
 				makecontext(&scheduler_context, my_scheduler, 0);
 				sigprocmask(SIG_UNBLOCK, &thread_mask, NULL);
+				printf("I am going to return from 621 to main_context\n");
 				swapcontext(&scheduler_context, &(main_thread->context));
 			}
 		}
