@@ -683,10 +683,12 @@ void sigalarm_handler(int sig) {
 	if (current_thread != NULL) {
 		current_thread->status = YIELD;
 		//current_thread->context = save_context;
+		log_file << "[ticks]" << " \t " << "YIELD" << " \t " << current_thread->tid << " \t " << current_thread->priority << endl;
 		makecontext(&scheduler_context, my_scheduler, 0);
 		swapcontext(&current_thread->context, &scheduler_context);
 	}
 	else{
+		log_file << "[ticks]" << " \t " << "YIELD" << " \t " << current_thread->tid << " \t " << current_thread->priority << endl;
 		makecontext(&scheduler_context, my_scheduler, 0);
 		swapcontext(&save_context, &scheduler_context);
 	}
