@@ -36,5 +36,11 @@ test_create_within_thread: test_create_within_thread.c libuserthread.so
 intensive_priority: intensive_priority.c libuserthread.so
 	g++ -o intensive_priority intensive_priority.c libuserthread.so -L -luserthread -g
 
+priority_long_time: priority_long_time.c libuserthread.so
+	g++ -o priority_long_time priority_long_time.c libuserthread.so -L -luserthread -g
+
+fifo_join_nonexisting: fifo_join_nonexisting.c libuserthread.so
+	g++ -o fifo_join_nonexisting fifo_join_nonexisting.c libuserthread.so -L -luserthread -g
+
 clean:
 	@rm -f !(*.cpp|Makefile|README.md|*.h|BMC-CS355|*.c|*.txt)
