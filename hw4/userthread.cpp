@@ -59,19 +59,14 @@ int thread_libinit(int policy) {
 	scheduler_context.uc_stack.ss_flags = 0;
 	makecontext(&scheduler_context, my_scheduler, 0);
 
-	main_thread = new myThread();
-	main_thread->status = CREATED;
-	main_thread->tid = NOT_FOUND;
-	main_thread->stack = malloc(STACKSIZE);	
-	if (main_thread->stack == NULL) {
+	main_stack = malloc(STACKSIZE);	
+	if (main_stack == NULL) {
 		//printf("from line 25\n");
 		return EXIT_WITH_ERROR;
 	}
-	getcontext(&(main_thread->context));
-	main_thread->context.uc_link = 0;
-	main_thread->context.uc_stack.ss_sp = main_thread->stack;
-	main_thread->context.uc_stack.ss_size = STACKSIZE;
-	main_thread->context.uc_stack.ss_flags = 0;
+	getcontext(&main_context);
+	main_context.uc_stack.ss_sp = main_stack;
+	main_context.uc_stack.ss_size = STACKSIZE;
 
 	printf("I died here\n");
 	return EXIT_SUCCESS;
@@ -80,8 +75,7 @@ int thread_libinit(int policy) {
 int thread_libterminate() {
 	log_file.close();
 	free(scheduler_stack);
-	free(main_thread->stack);
-	delete(main_thread);
+	free(main_stack);
 	return util_terminate();
 }
 
@@ -521,8 +515,7 @@ void my_scheduler() {
 				if (nextID == NOT_FOUND) {
 					makecontext(&scheduler_context, my_scheduler, 0);
 					current_active = NULL;
-					swapcontext(&scheduler_context, &(main_thread->context));
-				}
+					swapcontext(&scheduler_context, &main_context);
 			}
 			else if (schedule_policy == _SJF) {
 				//log_file << "[ticks]" << " \t " << "FINISHED" << " \t " << current_thread->tid << " \t " << current_thread->priority << endl;
@@ -543,7 +536,7 @@ void my_scheduler() {
 					//printf("I am fucking here with current tid of %d\n", current_active->tid);
 					current_active = NULL;
 					
-					swapcontext(&scheduler_context, &(main_thread->context));
+					swapcontext(&scheduler_context, &main_context);
 				}
 
 				nextID = temp3->id;
@@ -570,7 +563,7 @@ void my_scheduler() {
 					sigprocmask(SIG_UNBLOCK, &thread_mask, NULL);
 					//printf("I am going to return from 504 to main_context\n");
 					current_active = NULL;
-					swapcontext(&scheduler_context, &(main_thread->context));
+					swapcontext(&scheduler_context, &main_context);
 				}
 			}
 
@@ -582,7 +575,7 @@ void my_scheduler() {
 				if (nextID == NOT_FOUND) {
 					makecontext(&scheduler_context, my_scheduler, 0);
 					current_active = NULL;
-					swapcontext(&scheduler_context, &(main_thread->context));
+					swapcontext(&scheduler_context, &main_context);
 				}
 			}
 			else if (schedule_policy == _SJF) {
@@ -596,7 +589,7 @@ void my_scheduler() {
 					delete(temp2);
 					makecontext(&scheduler_context, my_scheduler, 0);
 					current_active = NULL;
-					swapcontext(&scheduler_context, &(main_thread->context));
+					swapcontext(&scheduler_context, &main_context);
 				}
 				nextID = temp->id;
 				delete(temp);
@@ -619,7 +612,7 @@ void my_scheduler() {
 				else {
 					makecontext(&scheduler_context, my_scheduler, 0);
 					current_active = NULL;
-					swapcontext(&scheduler_context, &(main_thread->context));
+					swapcontext(&scheduler_context, &main_context);
 				}
 				nextID = choose_next_thread_PRI();
 				if (nextID == NOT_FOUND) {
@@ -627,7 +620,7 @@ void my_scheduler() {
 					sigprocmask(SIG_UNBLOCK, &thread_mask, NULL);
 					//printf("I am going to return from 556 to main_context\n");
 					current_active = NULL;
-					swapcontext(&scheduler_context, &(main_thread->context));
+					swapcontext(&scheduler_context, &main_context);
 				}
 			}
 		}
@@ -637,7 +630,7 @@ void my_scheduler() {
 				if (nextID == NOT_FOUND) {
 					makecontext(&scheduler_context, my_scheduler, 0);
 					current_active = NULL;
-					swapcontext(&scheduler_context, &(main_thread->context));
+					swapcontext(&scheduler_context, &main_context);
 				}
 				wait_thread = find_by_tid(current_thread->wait_tid);
 				wait_thread->suspended_queue.push(activeID);
@@ -651,7 +644,7 @@ void my_scheduler() {
 				if (temp == NULL) {
 					makecontext(&scheduler_context, my_scheduler, 0);
 					current_active = NULL;
-					swapcontext(&scheduler_context, &(main_thread->context));
+					swapcontext(&scheduler_context, &main_context);
 				}
 				nextID = temp->id;
 				delete(temp);
@@ -666,7 +659,7 @@ void my_scheduler() {
 					sigprocmask(SIG_UNBLOCK, &thread_mask, NULL);
 					current_active = NULL;
 					//printf("I am going to return from 591 to main_context\n");
-					swapcontext(&scheduler_context, &(main_thread->context));
+					swapcontext(&scheduler_context, &main_context);
 				}
 				wait_thread = find_by_tid(current_thread->wait_tid);
 				wait_thread->suspended_queue.push(activeID);								
@@ -679,7 +672,7 @@ void my_scheduler() {
 			if (nextID == NOT_FOUND) {
 				makecontext(&scheduler_context, my_scheduler, 0);
 				current_active = NULL;
-				swapcontext(&scheduler_context, &(main_thread->context));
+				swapcontext(&scheduler_context, &main_context);
 			}
 		}
 		else if (schedule_policy == _SJF) {
@@ -688,7 +681,7 @@ void my_scheduler() {
 			if (temp == NULL) {
 				makecontext(&scheduler_context, my_scheduler, 0);
 				current_active = NULL;
-				swapcontext(&scheduler_context, &(main_thread->context));
+				swapcontext(&scheduler_context, &main_context);
 			}
 			nextID = temp->id;
 			delete(temp);
@@ -700,7 +693,7 @@ void my_scheduler() {
 				sigprocmask(SIG_UNBLOCK, &thread_mask, NULL);
 				current_active = NULL;
 				//printf("I am going to return from 621 to main_context\n");
-				swapcontext(&scheduler_context, &(main_thread->context));
+				swapcontext(&scheduler_context, &main_context);
 			}
 		}
 	}
@@ -723,7 +716,7 @@ void my_scheduler() {
 			makecontext(&scheduler_context, my_scheduler, 0);
 			current_active = NULL;
 			sigprocmask(SIG_UNBLOCK, &thread_mask, NULL);
-			swapcontext(&scheduler_context, &(main_thread->context));		
+			swapcontext(&scheduler_context, &main_context);		
 		}
 		sigprocmask(SIG_UNBLOCK, &thread_mask, NULL);
 	}
