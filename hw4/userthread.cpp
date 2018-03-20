@@ -64,6 +64,11 @@ int thread_libterminate() {
 }
 
 int thread_create(void (*func)(void *), void *arg, int priority) {
+	
+	if (func == NULL) {
+		return EXIT_WITH_ERROR;
+	}
+
 	void* stack = malloc(STACKSIZE);
 	ucontext_t current_context;
 	getcontext(&current_context);
