@@ -19,7 +19,30 @@ int thread_libinit(int policy) {
 		//printf("from line 10\n");
 		return EXIT_WITH_ERROR;
 	}
-	int i = util_init();
+	current_active = NULL;
+	if (schedule_policy == _FIFO) {
+		ready_FIFO = queue<int> ();
+		thread_list_head = list<myThread*> ();
+		thread_count = FIRST_THREAD;
+
+	}
+	else if (schedule_policy == _SJF) {
+		thread_list_head = list<myThread*> ();
+		ready_SJF = priority_queue<thread_PRI_SJF_FIFO*, vector<thread_PRI_SJF_FIFO*>, compare> ();
+		thread_count = FIRST_THREAD;
+	}
+	else if (schedule_policy == _PRIORITY) {
+		thread_list_head = list<myThread*> ();
+		ready_queue_first = list<int> ();
+		ready_queue_second = list<int> (); 
+		ready_queue_third = list<int> (); 
+		thread_count = FIRST_THREAD; 
+	}
+	else {
+		//printf("from line 213, current policy %d\n", schedule_policy);
+		return EXIT_WITH_ERROR;
+	}
+	return EXIT_SUCCESS;
 	if (schedule_policy == _PRIORITY) {
 		signal(SIGALRM, sigalarm_handler);
 		priority_timer.it_value.tv_sec = 0;    
@@ -52,7 +75,7 @@ int thread_libinit(int policy) {
 	main_thread->context.uc_stack.ss_flags = 0;
 
 	printf("I died here\n");
-	return i;
+	return EXIT_SUCCESS;
 }
 
 int thread_libterminate() {
