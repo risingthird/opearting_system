@@ -338,7 +338,7 @@ int choose_next_thread_PRI() {
 			ready_queue_third.pop_front();
 		}		
 	}
-	else if (lucky < 10 && lucky > 3) {
+	else if (lucky < 10) {
 		if (ready_queue_second.empty()) {
 			if (ready_queue_first.empty()) {
 				if (ready_queue_third.empty()) {
