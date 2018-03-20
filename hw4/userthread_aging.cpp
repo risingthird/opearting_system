@@ -464,7 +464,7 @@ int set_end_time(myThread* a_thread) {
 int set_estimated_time(myThread* a_thread) {
 	long runtime = a_thread->end_time - a_thread->start_time;
 
-	a_thread->estimated_runtime = (a_thread->estimated_runtime) / 2 + runtime;
+	a_thread->estimated_runtime = (a_thread->estimated_runtime) /  ALPHA + runtime * ALPHA;
 		//printf("We are estimating thread %d\n", a_thread->tid);
 	
 

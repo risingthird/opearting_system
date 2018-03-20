@@ -22,6 +22,7 @@
 #define EXIT_WITH_ERROR -1
 #define NOT_FOUND -1
 #define MICRO_TO_MILI 1000
+#define ALPHA 0.5
 
 using namespace std;
 
