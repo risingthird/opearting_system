@@ -131,6 +131,9 @@ int thread_create(void (*func)(void *), void *arg, int priority) {
 }
 
 int thread_yield() {
+	if (schedule_policy == _PRIORITY) {
+		sigprocmask(SIG_BLOCK, &thread_mask, NULL);
+	}
 	myThread* current_thread;
 	ucontext_t save_context;
 	current_thread = current_active;
@@ -139,11 +142,17 @@ int thread_yield() {
 		current_thread->status = YIELD;
 		//printf("Thread %d is calling yield\n", current_thread->tid);
 		//current_thread->context = save_context;
+		if (schedule_policy == _PRIORITY) {
+			sigprocmask(SIG_UNBLOCK, &thread_mask, NULL);
+		}
 		makecontext(&scheduler_context, my_scheduler, 0);
-		log_file << "[ticks]" << " \t " << "STOPPED" << " \t " << current_thread->tid << " \t " << current_thread->priority << endl;
+		log_file << "[ticks]" << " \t " << "YIELD" << " \t " << current_thread->tid << " \t " << current_thread->priority << endl;
 		swapcontext(&current_thread->context, &scheduler_context);
 	}
 	else{
+		if (schedule_policy == _PRIORITY) {
+			sigprocmask(SIG_UNBLOCK, &thread_mask, NULL);
+		}
 		makecontext(&scheduler_context, my_scheduler, 0);
 		swapcontext(&save_context, &scheduler_context);
 	}
@@ -151,6 +160,9 @@ int thread_yield() {
 }
 
 int thread_join(int tid) {
+	if (schedule_policy == _PRIORITY) {
+		sigprocmask(SIG_BLOCK, &thread_mask, NULL);
+	}
 	myThread* current_thread;
 	current_thread = current_active;
 	ucontext_t save_context;
@@ -166,10 +178,16 @@ int thread_join(int tid) {
 		//current_active->context = save_context;
 		current_active->wait_tid = tid;
 		makecontext(&scheduler_context, my_scheduler, 0);
-		log_file << "[ticks]" << " \t " << "STOPPED" << " \t " << current_thread->tid << " \t " << current_thread->priority << endl;
+		log_file << "[ticks]" << " \t " << "JOIN" << " \t " << current_thread->tid << " \t " << current_thread->priority << endl;
+		if (schedule_policy == _PRIORITY) {
+			sigprocmask(SIG_UNBLOCK, &thread_mask, NULL);
+		}
 		swapcontext(&current_active->context, &scheduler_context);
 	}
 	else {
+		if (schedule_policy == _PRIORITY) {
+			sigprocmask(SIG_UNBLOCK, &thread_mask, NULL);
+		}
 		makecontext(&scheduler_context, my_scheduler, 0);
 		swapcontext(&save_context, &scheduler_context);
 	}
