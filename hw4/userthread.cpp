@@ -326,19 +326,16 @@ int choose_next_thread_PRI() {
 				else {
 					toReturn = ready_queue_second.front();
 					ready_queue_first.pop_front();
-					return toReturn;
 				}
 			}
 			else {
 				toReturn = ready_queue_first.front();
 				ready_queue_second.pop_front();
-				return toReturn;
 			}
 		}
 		else {
 			toReturn = ready_queue_third.front();
 			ready_queue_third.pop_front();
-			return toReturn;
 		}		
 	}
 	else if (lucky < 10 && lucky > 3) {
@@ -350,19 +347,16 @@ int choose_next_thread_PRI() {
 				else {
 					toReturn = ready_queue_third.front();
 					ready_queue_third.pop_front();
-					return toReturn;
 				}
 			}
 			else {
 				toReturn = ready_queue_first.front();
 				ready_queue_first.pop_front();
-				return toReturn;
 			}
 		}
 		else {
 			toReturn = ready_queue_second.front();
 			ready_queue_second.pop_front();
-			return toReturn;
 		}		
 	}
 	else {
@@ -374,21 +368,19 @@ int choose_next_thread_PRI() {
 				else {
 					toReturn = ready_queue_second.front();
 					ready_queue_second.pop_front();
-					return toReturn;
 				}
 			}
 			else {
 				toReturn = ready_queue_first.front();
 				ready_queue_first.pop_front();
-				return toReturn;
 			}
 		}
 		else {
 			toReturn = ready_queue_third.front();
 			ready_queue_third.pop_front();
-			return toReturn;
 		}			
 	}
+	printf("The chosen one is %d!!!!!!!!!!!!\n", toReturn);
 	return toReturn;
 }
 
