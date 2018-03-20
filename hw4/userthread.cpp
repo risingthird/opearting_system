@@ -102,12 +102,15 @@ int thread_create(void (*func)(void *), void *arg, int priority) {
 	}
 	else if (schedule_policy == _PRIORITY) {
 		if (priority == FIRST-1) {
+			printf("Priorit is %d!!!!!!!!!!!!!!!!!!!!!!!     Thread id is %d\n", priority, thread_count);
 			ready_queue_first.push_back(thread_count);
 		}
 		else if (priority == SECOND-1) {
+			printf("Priorit is %d!!!!!!!!!!!!!!!!!!!!!!!     Thread id is %d\n", priority, thread_count);
 			ready_queue_second.push_back(thread_count);
 		}
 		else if (priority == THIRD-1) {
+			printf("Priorit is %d!!!!!!!!!!!!!!!!!!!!!!!     Thread id is %d\n", priority, thread_count);
 			ready_queue_third.push_back(thread_count);
 		}
 		else {
