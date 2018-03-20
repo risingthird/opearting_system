@@ -457,6 +457,7 @@ void my_scheduler() {
 		current_thread->active = FALSE;
 		if (current_thread->status == FINISHED) {
 			if (schedule_policy == _FIFO) {
+				log_file << "[ticks]" << " \t " << "FINISHED" << " \t " << current_thread->tid << " \t " << current_thread->priority << endl;
 				while (!current_thread->suspended_queue.empty()) {
 					ready_FIFO.push(current_thread->suspended_queue.front());
 					printf("thread %d is clearing its suspended queue. Thread %d is now in queue\n", current_thread->tid, current_thread->suspended_queue.front());
@@ -470,6 +471,7 @@ void my_scheduler() {
 				}
 			}
 			else if (schedule_policy == _SJF) {
+				log_file << "[ticks]" << " \t " << "FINISHED" << " \t " << current_thread->tid << " \t " << current_thread->priority << endl;
 				while (!current_thread->suspended_queue.empty()) {
 					thread_PRI_SJF_FIFO* temp = new thread_PRI_SJF_FIFO();
 					temp->id = current_thread->suspended_queue.front();
@@ -489,6 +491,7 @@ void my_scheduler() {
 				delete(temp3);
 			}
 			else if (schedule_policy == _PRIORITY) {
+				log_file << "[ticks]" << " \t " << "FINISHED" << " \t " << current_thread->tid << " \t " << current_thread->priority << endl;
 				while (!current_thread->suspended_queue.empty()) {
 					myThread* temp1 = find_by_tid(current_thread->suspended_queue.front());
 					if (temp1->priority == FIRST-1) {
@@ -510,7 +513,7 @@ void my_scheduler() {
 					swapcontext(&scheduler_context, &(main_thread->context));
 				}
 			}
-			log_file << "[ticks]" << " \t " << "FINISHED" << " \t " << current_thread->tid << " \t " << current_thread->priority << endl;
+
 		}
 		else if (current_thread->status == YIELD){
 			if (schedule_policy == _FIFO) {
