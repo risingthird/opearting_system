@@ -191,7 +191,7 @@ void clear_up_PRIqueue(list<int> *ll) {
 	while(!ll->empty()) {
 		ll->pop_front();
 	}
-	ll->clear();
+	//ll->clear();
 }
 
 void clear_up_FIFOqueue(queue<int> *ll) {
