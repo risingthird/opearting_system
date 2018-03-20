@@ -7,7 +7,7 @@ using namespace std;
 
 
 int thread_libinit(int policy) {
-	log_file.open ("log_file.txt", std::fstream::in | std::fstream::out);
+	log_file.open ("log_file.txt", std::fstream::in | std::fstream::out | std::fstream::trunc);
 	sigemptyset(&thread_mask);
 	sigaddset(&thread_mask, SIGALRM);
 	scheduler_stack = malloc(STACKSIZE);
