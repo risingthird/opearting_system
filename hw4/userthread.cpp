@@ -687,6 +687,9 @@ void my_scheduler() {
 }
 
 void sigalarm_handler(int sig) {
+	if (schedule_policy == _PRIORITY) {
+		sigprocmask(SIG_BLOCK, &thread_mask, NULL);
+	}
 	myThread* current_thread;
 	ucontext_t save_context;
 	current_thread = current_active;
@@ -696,6 +699,9 @@ void sigalarm_handler(int sig) {
 		//current_thread->context = save_context;
 		log_file << "[ticks]" << " \t " << "STOPPED" << " \t " << current_thread->tid << " \t " << current_thread->priority << endl;
 		makecontext(&scheduler_context, my_scheduler, 0);
+		if (schedule_policy == _PRIORITY) {
+			sigprocmask(SIG_UNBLOCK, &thread_mask, NULL);
+		}
 		swapcontext(&current_thread->context, &scheduler_context);
 	}
 	else{
