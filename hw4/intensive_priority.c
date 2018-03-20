@@ -22,6 +22,7 @@ void low (void* arg) {
   for(int i = 0; i < 100; i++){
     printf("running thread has priority 1\n");
     thread_yield();
+  }
 }
 /**
  PRIORITY scheudling test 
