@@ -39,10 +39,8 @@ int thread_libinit(int policy) {
 		thread_count = FIRST_THREAD; 
 	}
 	else {
-		//printf("from line 213, current policy %d\n", schedule_policy);
 		return EXIT_WITH_ERROR;
 	}
-	printf("I died here line 45\n");
 
 	if (schedule_policy == _PRIORITY) {
 		signal(SIGALRM, sigalarm_handler);
@@ -70,6 +68,7 @@ int thread_libinit(int policy) {
 		return EXIT_WITH_ERROR;
 	}
 	getcontext(&(main_thread->context));
+	makecontext(&(main_thread->context), NULL, 0);
 	main_thread->context.uc_link = 0;
 	main_thread->context.uc_stack.ss_sp = main_thread->stack;
 	main_thread->context.uc_stack.ss_size = STACKSIZE;
