@@ -130,7 +130,7 @@ int thread_yield() {
 	myThread* current_thread;
 	ucontext_t save_context;
 	current_thread = current_active;
-	getcontext(&save_context);
+	//getcontext(&save_context);
 	if (current_thread != NULL) {
 		current_thread->status = YIELD;
 		printf("Thread %d is calling yield\n", current_thread->tid);
