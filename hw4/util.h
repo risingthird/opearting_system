@@ -11,6 +11,7 @@
 #include <time.h>
 #include <sys/time.h>
 #include <unistd.h> 
+#include <signal.h>
 
 
 #define QUANTA 100 // the length of a quanta is set to be 100ms
