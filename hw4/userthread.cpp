@@ -56,6 +56,7 @@ int thread_libinit(int policy) {
 }
 
 int thread_libterminate() {
+	printf("I died here you mother fucker ");
 	log_file.close();
 	free(scheduler_stack);
 	free(main_thread->stack);
@@ -518,7 +519,7 @@ void my_scheduler() {
 				temp3 = choose_next_thread_SJF();
 				if (temp3 == NULL) {
 					makecontext(&scheduler_context, my_scheduler, 0);
-					printf("I am fucking here with current tid of %d\n", current_active->tid);
+					//printf("I am fucking here with current tid of %d\n", current_active->tid);
 					current_active = NULL;
 					
 					swapcontext(&scheduler_context, &(main_thread->context));
