@@ -37,4 +37,4 @@ intensive_priority: intensive_priority.c libuserthread.so
 	g++ -o intensive_priority intensive_priority.c libuserthread.so -L -luserthread -g
 
 clean:
-	@rm -f !(*.cpp|Makefile|README.md|*.h|BMC-CS355|*.c)
+	@rm -f !(*.cpp|Makefile|README.md|*.h|BMC-CS355|*.c|*.txt)
