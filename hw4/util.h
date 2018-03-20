@@ -70,6 +70,7 @@ typedef struct cmp{
 
 static int thread_count;
 static int schedule_policy;
+static long start_time;
 static myThread* main_thread;
 static myThread* current_active;
 static ucontext_t scheduler_context;
@@ -84,6 +85,7 @@ static void* scheduler_stack;
 static struct itimerval priority_timer;
 static sigset_t thread_mask;
 static fstream log_file;
+
 
 
 
