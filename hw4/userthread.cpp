@@ -312,6 +312,7 @@ int choose_next_thread_PRI() {
  	unsigned int seed = tv.tv_usec;
 	srand(seed);
 	int lucky = rand() % 19;
+	printf("Lucky number is %d\n", lucky);
 	if (lucky < 4) {
 		if (ready_queue_third.empty()) {
 			if (ready_queue_first.empty()) {
