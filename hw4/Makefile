@@ -9,6 +9,13 @@ userthread.o : userthread.cpp util.h
 libuserthread.so : userthread.o
 	g++ -o libuserthread.so userthread.o -shared -g
 
+
+userthread_aging.o : userthread_aging.cpp util.h
+	g++ -Wall -pedantic -fpic -g -c userthread_aging.cpp
+
+libuserthread.so : userthread.o
+	g++ -o libuserthread.so userthread.o -shared -g
+
 basic_fifo: basic_fifo.c libuserthread.so
 	g++ -o basic_fifo basic_fifo.c libuserthread.so -L. -luserthread -g
 

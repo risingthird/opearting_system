@@ -6,6 +6,9 @@ using namespace std;
 
 
 
+
+
+
 int thread_libinit(int policy) {
 	log_file.open ("log_file.txt", std::fstream::in | std::fstream::out | std::fstream::trunc);
 	struct timeval tv;
@@ -459,21 +462,11 @@ int set_end_time(myThread* a_thread) {
 }
 
 int set_estimated_time(myThread* a_thread) {
-	int count = (a_thread->yield_count) % 3;
-	if (count == FIRST) {
-		a_thread->time_first = a_thread->end_time - a_thread->start_time;
-	}
-	else if (count == SECOND) {
-		a_thread->time_second = a_thread->end_time - a_thread->start_time;
-	}
-	else {
-		a_thread->time_third = a_thread->end_time - a_thread->start_time;
-	}
+	long runtime = a_thread->end_time - a_thread->start_time;
 
-	if (a_thread->yield_count > 2) {
-		a_thread->estimated_runtime = (a_thread->time_first + a_thread->time_second + a_thread->time_third) / 3;
+	a_thread->estimated_runtime = (a_thread->estimated_runtime) / 2 + runtime;
 		//printf("We are estimating thread %d\n", a_thread->tid);
-	}
+	
 
 	return EXIT_SUCCESS;
 }
