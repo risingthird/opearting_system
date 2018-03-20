@@ -310,17 +310,17 @@ int choose_next_thread_PRI() {
 	int lucky = rand() % 19;
 	if (lucky < 4) {
 		if (ready_queue_third.empty()) {
-			if (ready_queue_second.empty()) {
-				if (ready_queue_first.empty()) {
+			if (ready_queue_first.empty()) {
+				if (ready_queue_second.empty()) {
 					return NOT_FOUND;
 				}
 				else {
-					toReturn = ready_queue_first.front();
+					toReturn = ready_queue_second.front();
 					ready_queue_first.pop_front();
 				}
 			}
 			else {
-				toReturn = ready_queue_second.front();
+				toReturn = ready_queue_first.front();
 				ready_queue_second.pop_front();
 			}
 		}
@@ -329,7 +329,7 @@ int choose_next_thread_PRI() {
 			ready_queue_third.pop_front();
 		}		
 	}
-	else if (lucky < 10) {
+	else if (lucky < 10 && lucky > 3) {
 		if (ready_queue_second.empty()) {
 			if (ready_queue_first.empty()) {
 				if (ready_queue_third.empty()) {
