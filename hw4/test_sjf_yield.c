@@ -46,8 +46,10 @@ int main(void) {
   }
 
   for (int i = 0; i < n; i++)  {
-    if (thread_join(tids[i]) == -1)
+    if (thread_join(tids[i]) == -1){
+      printf("I am fucking here ");
       exit(EXIT_FAILURE);
+    }
   }
   printf("I am fucking here ");
   if (thread_libterminate() == -1)
