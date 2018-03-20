@@ -524,13 +524,13 @@ void my_scheduler() {
 			else {
 				/*To do here*/
 				if (current_thread->priority == FIRST-1) {
-					ready_queue_first.push(current_thread->tid);
+					ready_queue_first.push_back(current_thread->tid);
 				}
 				else if (current_thread->priority == SECOND-1) {
-					ready_queue_second.push(current_thread->tid);
+					ready_queue_second.push_back(current_thread->tid);
 				}
 				else if (current_thread->priority == THIRD-1) {
-					ready_queue_third.push(current_thread->tid);
+					ready_queue_third.push_back(current_thread->tid);
 				}
 				else {
 					makecontext(&scheduler_context, my_scheduler, 0);
