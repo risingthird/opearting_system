@@ -380,7 +380,7 @@ int choose_next_thread_PRI() {
 			ready_queue_third.pop_front();
 		}			
 	}
-	printf("The chosen one is %d!!!!!!!!!!!!\n", toReturn);
+	printf("The chosen one is %d, with a lucky number of %d\n", toReturn, lucky);
 	return toReturn;
 }
 
