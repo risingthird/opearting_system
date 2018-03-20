@@ -489,7 +489,7 @@ void my_scheduler() {
 				}
 			}
 			else if (schedule_policy == _SJF) {
-				log_file << "[ticks]" << " \t " << "FINISHED" << " \t " << current_thread->tid << " \t " << current_thread->priority << endl;
+				//log_file << "[ticks]" << " \t " << "FINISHED" << " \t " << current_thread->tid << " \t " << current_thread->priority << endl;
 				while (!current_thread->suspended_queue.empty()) {
 					thread_PRI_SJF_FIFO* temp = new thread_PRI_SJF_FIFO();
 					temp->id = current_thread->suspended_queue.front();
