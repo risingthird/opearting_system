@@ -42,5 +42,8 @@ priority_long_time: priority_long_time.c libuserthread.so
 fifo_join_non-existing: fifo_join_non-existing.c libuserthread.so
 	g++ -o fifo_join_non-existing fifo_join_non-existing.c libuserthread.so -L -luserthread -g
 
+fifo_null_func: fifo_null_func.c libuserthread.so
+	g++ -o fifo_null_func fifo_null_func.c libuserthread.so -L -luserthread -g
+
 clean:
 	@rm -f !(*.cpp|Makefile|README.md|*.h|BMC-CS355|*.c|*.txt)
