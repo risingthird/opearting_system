@@ -46,7 +46,7 @@ int thread_libinit(int policy) {
 	main_thread->context.uc_stack.ss_sp = main_thread->stack;
 	main_thread->context.uc_stack.ss_size = STACKSIZE;
 	main_thread->context.uc_stack.ss_flags = 0;
-	printf("fuck everything\n");
+
 
 	return i;
 }
@@ -499,6 +499,7 @@ void my_scheduler() {
 				}
 				nextID = choose_next_thread_PRI();
 				if (nextID == NOT_FOUND) {
+					printf("I am fucking here\n");
 					makecontext(&scheduler_context, my_scheduler, 0);
 					sigprocmask(SIG_UNBLOCK, &thread_mask, NULL);
 					swapcontext(&scheduler_context, &(main_thread->context));
