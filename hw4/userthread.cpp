@@ -7,7 +7,7 @@ using namespace std;
 
 
 int thread_libinit(int policy) {
-	log_file.open ("log_file.txt", std::fstream::in | std::fstream::out | std::fstream::app);
+	log_file.open ("log_file.txt", std::fstream::in | std::fstream::out);
 	sigemptyset(&thread_mask);
 	sigaddset(&thread_mask, SIGALRM);
 	scheduler_stack = malloc(STACKSIZE);
@@ -140,7 +140,7 @@ int thread_yield() {
 		printf("Thread %d is calling yield\n", current_thread->tid);
 		//current_thread->context = save_context;
 		makecontext(&scheduler_context, my_scheduler, 0);
-		log_file << "[ticks]" << " \t " << "YIELD" << " \t " << current_thread->tid << " \t " << current_thread->priority << endl;
+		log_file << "[ticks]" << " \t " << "STOPPED" << " \t " << current_thread->tid << " \t " << current_thread->priority << endl;
 		swapcontext(&current_thread->context, &scheduler_context);
 	}
 	else{
@@ -430,7 +430,8 @@ void thread_wrapper(void (*func)(void *), void *arg) {
 	func(arg);
 	current_active->status = FINISHED;
 	if (current_active != NULL) {
-		printf("FINISHED %d\n", current_active->tid);
+		//printf("FINISHED %d\n", current_active->tid);
+		log_file << "[ticks]" << " \t " << "FINISHED" << " \t " << current_active->tid << " \t " << current_active->priority << endl;
 	}
 	makecontext(&scheduler_context, my_scheduler, 0);
 	swapcontext(&current_active->context, &scheduler_context);
@@ -457,7 +458,6 @@ void my_scheduler() {
 		current_thread->active = FALSE;
 		if (current_thread->status == FINISHED) {
 			if (schedule_policy == _FIFO) {
-				log_file << "[ticks]" << " \t " << "FINISHED" << " \t " << current_thread->tid << " \t " << current_thread->priority << endl;
 				while (!current_thread->suspended_queue.empty()) {
 					ready_FIFO.push(current_thread->suspended_queue.front());
 					printf("thread %d is clearing its suspended queue. Thread %d is now in queue\n", current_thread->tid, current_thread->suspended_queue.front());
