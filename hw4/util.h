@@ -109,6 +109,7 @@ void clear_up_SJFqueue(priority_queue<thread_PRI_SJF_FIFO*, vector<thread_PRI_SJ
 void thread_wrapper(void (*func)(void *), void *arg);
 void my_scheduler();
 void sigalarm_handler(int sig);
+void donoting();
 
 
 #endif
