@@ -13,7 +13,7 @@ int thread_libinit(int policy) {
 	scheduler_stack = malloc(STACKSIZE);
 	schedule_policy = policy;
 	if (scheduler_stack == NULL) {
-		printf("from line 10\n");
+		//printf("from line 10\n");
 		return EXIT_WITH_ERROR;
 	}
 	int i = util_init();
@@ -39,7 +39,7 @@ int thread_libinit(int policy) {
 	main_thread->tid = NOT_FOUND;
 	main_thread->stack = malloc(STACKSIZE);	
 	if (main_thread->stack == NULL) {
-		printf("from line 25\n");
+		//printf("from line 25\n");
 		return EXIT_WITH_ERROR;
 	}
 	getcontext(&(main_thread->context));
@@ -70,7 +70,7 @@ int thread_create(void (*func)(void *), void *arg, int priority) {
 	current_context.uc_stack.ss_size = STACKSIZE;
 	
 	if(current_context.uc_stack.ss_sp == NULL) {
-		printf("from line 71\n");
+		//printf("from line 71\n");
 		return EXIT_WITH_ERROR;
 	}
 
@@ -116,12 +116,12 @@ int thread_create(void (*func)(void *), void *arg, int priority) {
 			ready_queue_third.push_back(thread_count);
 		}
 		else {
-			printf("from line 94\n");
+			//printf("from line 94\n");
 			return EXIT_WITH_ERROR;
 		}
 	}
 	else {
-		printf("from line 99\n");
+		//printf("from line 99\n");
 		return EXIT_WITH_ERROR; // error message skipped
 	}
 
@@ -137,7 +137,7 @@ int thread_yield() {
 	//getcontext(&save_context);
 	if (current_thread != NULL) {
 		current_thread->status = YIELD;
-		printf("Thread %d is calling yield\n", current_thread->tid);
+		//printf("Thread %d is calling yield\n", current_thread->tid);
 		//current_thread->context = save_context;
 		makecontext(&scheduler_context, my_scheduler, 0);
 		log_file << "[ticks]" << " \t " << "STOPPED" << " \t " << current_thread->tid << " \t " << current_thread->priority << endl;
@@ -156,8 +156,8 @@ int thread_join(int tid) {
 	ucontext_t save_context;
 	myThread* toWait = find_by_tid(tid);
 	if (toWait == NULL) {
-		printf("thread_count is %d\n", thread_count);
-		printf("from line 130\n");
+		//printf("thread_count is %d\n", thread_count);
+		//printf("from line 130\n");
 		return EXIT_WITH_ERROR;
 	}
 	//getcontext(&save_context);
@@ -183,7 +183,7 @@ int thread_join(int tid) {
 
 
 void clear_up(list<myThread*> *ll) {
-	printf("I am exiting from 180\n");
+	//printf("I am exiting from 180\n");
 	while(!ll->empty()) {
 		if(ll->front() != NULL) {
 			if (ll->front()->stack != NULL) {
@@ -199,7 +199,7 @@ void clear_up(list<myThread*> *ll) {
 }
 
 void clear_up_PRIqueue(list<int> *ll) {
-	printf("I am exiting from 180\n");
+	//printf("I am exiting from 180\n");
 	while(!ll->empty()) {
 		ll->pop_front();
 	}
@@ -243,7 +243,7 @@ int util_init() {
 		thread_count = FIRST_THREAD; 
 	}
 	else {
-		printf("from line 213, current policy %d\n", schedule_policy);
+		//printf("from line 213, current policy %d\n", schedule_policy);
 		return EXIT_WITH_ERROR;
 	}
 	return EXIT_SUCCESS;
@@ -265,7 +265,7 @@ int util_terminate() {
 		clear_up_PRIqueue(&ready_queue_third);
 	}
 	else {
-		printf("from line 235\n");
+		//printf("from line 235\n");
 		return EXIT_WITH_ERROR;
 	}
 	return EXIT_SUCCESS;
@@ -312,7 +312,7 @@ thread_PRI_SJF_FIFO* choose_next_thread_SJF() {
 	else {
 		toReturn = ready_SJF.top();
 		ready_SJF.pop();
-		printf("The ready queue has %d threads\n", ready_SJF.size());
+		//printf("The ready queue has %d threads\n", ready_SJF.size());
 	}
 	return toReturn;	
 }
@@ -387,7 +387,7 @@ int choose_next_thread_PRI() {
 			ready_queue_first.pop_front();
 		}			
 	}
-	printf("The chosen one is %d, with a lucky number of %d\n", toReturn, lucky);
+	//printf("The chosen one is %d, with a lucky number of %d\n", toReturn, lucky);
 	return toReturn;
 }
 
@@ -402,7 +402,7 @@ int set_end_time(myThread* a_thread) {
 	struct timeval tv;
  	gettimeofday(&tv,NULL);
  	a_thread->end_time = tv.tv_sec*1000 + tv.tv_usec/1000;
- 	printf("END TIME IS %ld\n", a_thread->end_time);
+ 	//printf("END TIME IS %ld\n", a_thread->end_time);
  	return EXIT_SUCCESS;
 }
 
@@ -420,7 +420,7 @@ int set_estimated_time(myThread* a_thread) {
 
 	if (a_thread->yield_count > 2) {
 		a_thread->estimated_runtime = (a_thread->time_first + a_thread->time_second + a_thread->time_third) / 3;
-		printf("We are estimating thread %d\n", a_thread->tid);
+		//printf("We are estimating thread %d\n", a_thread->tid);
 	}
 
 	return EXIT_SUCCESS;
@@ -460,11 +460,11 @@ void my_scheduler() {
 			if (schedule_policy == _FIFO) {
 				while (!current_thread->suspended_queue.empty()) {
 					ready_FIFO.push(current_thread->suspended_queue.front());
-					printf("thread %d is clearing its suspended queue. Thread %d is now in queue\n", current_thread->tid, current_thread->suspended_queue.front());
+					//printf("thread %d is clearing its suspended queue. Thread %d is now in queue\n", current_thread->tid, current_thread->suspended_queue.front());
 					current_thread->suspended_queue.pop();
 				}
 				nextID = choose_next_thread_FIFO();
-				printf("Thread %d is to be run. Since thread %d is done", nextID, current_thread->tid);
+				//printf("Thread %d is to be run. Since thread %d is done", nextID, current_thread->tid);
 				if (nextID == NOT_FOUND) {
 					makecontext(&scheduler_context, my_scheduler, 0);
 					swapcontext(&scheduler_context, &(main_thread->context));
@@ -487,7 +487,7 @@ void my_scheduler() {
 					swapcontext(&scheduler_context, &(main_thread->context));
 				}
 				nextID = temp3->id;
-				printf("The next to arrive is %d\n", nextID);
+				//printf("The next to arrive is %d\n", nextID);
 				delete(temp3);
 			}
 			else if (schedule_policy == _PRIORITY) {
@@ -509,7 +509,7 @@ void my_scheduler() {
 				if (nextID == NOT_FOUND) {
 					makecontext(&scheduler_context, my_scheduler, 0);
 					sigprocmask(SIG_UNBLOCK, &thread_mask, NULL);
-					printf("I am going to return from 504 to main_context\n");
+					//printf("I am going to return from 504 to main_context\n");
 					swapcontext(&scheduler_context, &(main_thread->context));
 				}
 			}
@@ -540,7 +540,7 @@ void my_scheduler() {
 				delete(temp);
 				temp2->id = current_thread->tid;
 				temp2->priority = current_thread->estimated_runtime;
-				printf("We have run time of %lf for thread %d\n", current_thread->estimated_runtime, current_thread->tid);
+				//printf("We have run time of %lf for thread %d\n", current_thread->estimated_runtime, current_thread->tid);
 				ready_SJF.push(temp2);
 			}
 			else {
@@ -562,7 +562,7 @@ void my_scheduler() {
 				if (nextID == NOT_FOUND) {
 					makecontext(&scheduler_context, my_scheduler, 0);
 					sigprocmask(SIG_UNBLOCK, &thread_mask, NULL);
-					printf("I am going to return from 556 to main_context\n");
+					//printf("I am going to return from 556 to main_context\n");
 					swapcontext(&scheduler_context, &(main_thread->context));
 				}
 			}
@@ -597,7 +597,7 @@ void my_scheduler() {
 				nextID = choose_next_thread_PRI();
 				if (nextID == NOT_FOUND) {
 					makecontext(&scheduler_context, my_scheduler, 0);
-					printf("I am going to return from 591 to main_context\n");
+					//printf("I am going to return from 591 to main_context\n");
 					swapcontext(&scheduler_context, &(main_thread->context));
 				}
 				wait_thread = find_by_tid(current_thread->wait_tid);
@@ -628,7 +628,7 @@ void my_scheduler() {
 			if (nextID == NOT_FOUND) {
 				makecontext(&scheduler_context, my_scheduler, 0);
 				sigprocmask(SIG_UNBLOCK, &thread_mask, NULL);
-				printf("I am going to return from 621 to main_context\n");
+				//printf("I am going to return from 621 to main_context\n");
 				swapcontext(&scheduler_context, &(main_thread->context));
 			}
 		}
