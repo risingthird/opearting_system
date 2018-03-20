@@ -42,7 +42,8 @@ int thread_libinit(int policy) {
 		//printf("from line 213, current policy %d\n", schedule_policy);
 		return EXIT_WITH_ERROR;
 	}
-	return EXIT_SUCCESS;
+	printf("I died here line 45\n");
+
 	if (schedule_policy == _PRIORITY) {
 		signal(SIGALRM, sigalarm_handler);
 		priority_timer.it_value.tv_sec = 0;    
