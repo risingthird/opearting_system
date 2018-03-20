@@ -49,7 +49,7 @@ int main(void) {
     if (thread_join(tids[i]) == -1)
       exit(EXIT_FAILURE);
   }
-
+  printf("I am fucking here ");
   if (thread_libterminate() == -1)
     exit(EXIT_FAILURE);
 
