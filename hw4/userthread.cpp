@@ -130,7 +130,7 @@ int thread_yield() {
 	getcontext(&save_context);
 	if (current_thread != NULL) {
 		current_thread->status = YIELD;
-		printf("Thread %d is calling yield\n", );
+		printf("Thread %d is calling yield\n", current_thread->tid);
 		//current_thread->context = save_context;
 		makecontext(&scheduler_context, my_scheduler, 0);
 		swapcontext(&current_thread->context, &scheduler_context);
