@@ -39,7 +39,7 @@ intensive_priority: intensive_priority.c libuserthread.so
 priority_long_time: priority_long_time.c libuserthread.so
 	g++ -o priority_long_time priority_long_time.c libuserthread.so -L -luserthread -g
 
-fifo_join_non-existing: fifo_join_nonexisting.c libuserthread.so
+fifo_join_non-existing: fifo_join_non-existing.c libuserthread.so
 	g++ -o fifo_join_non-existing fifo_join_non-existing.c libuserthread.so -L -luserthread -g
 
 clean:
