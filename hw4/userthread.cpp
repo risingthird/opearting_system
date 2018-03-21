@@ -144,7 +144,7 @@ int thread_create(void (*func)(void *), void *arg, int priority) {
 	current_thread->status = CREATED;
 	current_thread->policy = schedule_policy;
 	current_thread->priority = priority;
-	current_thread->estimated_runtime = DEFAULT_RUNTIME;
+	current_thread->estimated_runtime = average_time_so_far();
 	current_thread->wait_tid = NOT_FOUND;
 	current_thread->stack = stack;
 	current_thread->context = current_context;
@@ -814,6 +814,19 @@ void sigalarm_handler(int sig) {
 		makecontext(&scheduler_context, my_scheduler, 0);
 		setcontext(&scheduler_context);
 	}
+}
+
+
+double average_time_so_far() {
+	if (thread_list_head.empty()) {
+		return DEFAULT_RUNTIME;
+	}
+	double result = 0;
+	for(list<myThread*>::iterator it = thread_list_head.begin(); it != thread_list_head.end(); it++) {
+		result = result + (*it)->estimated_runtime;
+	}
+
+	return result / thread_count;
 }
 
 
