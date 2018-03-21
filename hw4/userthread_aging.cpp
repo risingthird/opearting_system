@@ -10,12 +10,16 @@ using namespace std;
 
 
 int thread_libinit(int policy) {
+	if (policy != _FIFO && policy != _PRIORITY && policy != _SJF) {
+		return EXIT_WITH_ERROR;
+	}
 	log_file.open ("log_file.txt", std::fstream::in | std::fstream::out | std::fstream::trunc);
 	struct timeval tv;
 	gettimeofday(&tv, NULL);
 	start_time = tv.tv_sec*MICRO_TO_MILI + tv.tv_usec/MICRO_TO_MILI;
 	sigemptyset(&thread_mask);
 	sigaddset(&thread_mask, SIGALRM);
+
 	scheduler_stack = malloc(STACKSIZE);
 	schedule_policy = policy;
 	if (scheduler_stack == NULL) {
@@ -89,6 +93,10 @@ int thread_libterminate() {
 int thread_create(void (*func)(void *), void *arg, int priority) {
 	
 	if (func == NULL) {
+		return EXIT_WITH_ERROR;
+	}
+
+	if (priority != FIRST-1 && priority != SECOND-1 && priority != THIRD-1) {
 		return EXIT_WITH_ERROR;
 	}
 
