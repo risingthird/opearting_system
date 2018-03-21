@@ -13,8 +13,8 @@ libuserthread.so : userthread.o
 userthread_aging.o : userthread_aging.cpp util.h
 	g++ -Wall -pedantic -fpic -g -c userthread_aging.cpp
 
-libuserthread.so : userthread.o
-	g++ -o libuserthread.so userthread.o -shared -g
+libuserthread_aging.so : userthread_aging.o
+	g++ -o libuserthread_aging.so userthread_aging.o -shared -g
 
 basic_fifo: basic_fifo.c libuserthread.so
 	g++ -o basic_fifo basic_fifo.c libuserthread.so -L. -luserthread -g
@@ -51,6 +51,9 @@ fifo_join_non-existing: fifo_join_non-existing.c libuserthread.so
 
 fifo_null_func: fifo_null_func.c libuserthread.so
 	g++ -o fifo_null_func fifo_null_func.c libuserthread.so -L -luserthread -g
+
+fifo_join_each_other: fifo_join_each_other.c libuserthread.so
+	g++ -o fifo_join_each_other fifo_join_each_other.c libuserthread.so -L -luserthread -g
 
 clean:
 	@rm -f !(*.cpp|Makefile|README.md|*.h|BMC-CS355|*.c|*.txt)
