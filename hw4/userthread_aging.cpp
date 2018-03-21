@@ -85,9 +85,9 @@ int thread_libinit(int policy) {
 }
 
 int thread_libterminate() {
-	printf("died before 89\n");
+	//printf("died before 89\n");
 	if(initialized == FALSE) {
-		printf("Exit from line 89\n");
+		//printf("Exit from line 89\n");
 		return EXIT_WITH_ERROR;
 	}
 	log_file.close();
@@ -95,12 +95,12 @@ int thread_libterminate() {
 		free(scheduler_stack);
 		scheduler_stack = NULL;
 	}
-	printf("I am in line 96\n");
+	//printf("I am in line 96\n");
 	if (main_stack != NULL) {
 		free(main_stack);
 		main_stack = NULL;
 	}
-	printf("I am in line 101\n");
+	//printf("I am in line 101\n");
 	return util_terminate();
 }
 
@@ -280,23 +280,23 @@ int thread_join(int tid) {
 
 void clear_up(list<myThread*> *ll) {
 	//printf("I am exiting from 180\n");
-	// while(!ll->empty()) {
+	while(!ll->empty()) {
 		
-	// 	if(ll->front() != NULL) {
+		if(ll->front() != NULL) {
 			
-	// 		if (ll->front()->stack != NULL) {
+			if (ll->front()->stack != NULL) {
 				
-	// 			free(ll->front()->stack);
-	// 			ll->front()->stack = NULL;
+				free(ll->front()->stack);
+				ll->front()->stack = NULL;
 
-	// 		}
+			}
 
-	// 		delete(ll->front());
+			delete(ll->front());
 
-	// 		ll->front() = NULL;
-	// 	}
-	// 	ll->pop_front();
-	// }
+			ll->front() = NULL;
+		}
+		ll->pop_front();
+	}
 	ll->clear();
 }
 
@@ -357,9 +357,9 @@ int util_terminate() {
 	}
 	if (schedule_policy == _FIFO) {
 		clear_up(&thread_list_head);
-		printf("I diede from line 352\n");
+		//printf("I diede from line 352\n");
 		clear_up_FIFOqueue(&ready_FIFO);
-		printf("I diede from line 354\n");
+		//printf("I diede from line 354\n");
 	}
 	else if (schedule_policy == _SJF) {
 		clear_up(&thread_list_head);
@@ -516,16 +516,15 @@ int set_end_time(myThread* a_thread) {
 
 int set_estimated_time(myThread* a_thread) {
 	long time = a_thread->end_time - a_thread->start_time;
-	a_thread->estimated_runtime = a_thread->estimated_runtime / ALPHA + time * ALPHA;
-		//printf("We are estimating thread %d\n", a_thread->tid);
-	
+		a_thread->estimated_runtime = time * ALPHA + a_thread->estimated_runtime * ALPHA;
+
 
 	return EXIT_SUCCESS;
 }
 
 void thread_wrapper(void (*func)(void *), void *arg) {
 	func(arg);
-	printf("I am here\n");
+	//printf("I am here\n");
 	if (current_active != NULL) {
 		//printf("FINISHED %d\n", current_active->tid);
 		current_active->status = FINISHED;
