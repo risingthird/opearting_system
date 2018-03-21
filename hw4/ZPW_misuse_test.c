@@ -22,7 +22,7 @@ int main(void)
         exit(EXIT_FAILURE);
     if (thread_create(misuse, NULL, 0) != FAIL)
         exit(EXIT_FAILURE);
-    printf("I am here\n");
+
     if (thread_libinit(FIFO) == FAIL)
         exit(EXIT_FAILURE);
     int tid1 = thread_create(fool, NULL, -1);
@@ -47,7 +47,7 @@ int main(void)
     }
     if (thread_libterminate() == FAIL)
         exit(EXIT_FAILURE);
-
+    printf("I am here\n");
     thread_join(21938475); // shouldn't do anything
     thread_join(10293847);
     exit(EXIT_SUCCESS);
