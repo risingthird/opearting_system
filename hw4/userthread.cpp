@@ -255,6 +255,7 @@ int thread_join(int tid) {
 		if (schedule_policy == _PRIORITY) {
 			sigprocmask(SIG_UNBLOCK, &thread_mask, NULL);
 		}
+		printf("I am with id %d\n", current_active->tid);
 		swapcontext(&current_active->context, &scheduler_context);
 	}
 	else {
