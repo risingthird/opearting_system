@@ -97,7 +97,6 @@ int thread_libterminate() {
 		free(main_stack);
 		main_stack = NULL;
 	}
-	initialized = FALSE;
 	return util_terminate();
 }
 
@@ -342,6 +341,9 @@ int util_init() {
 }
 
 int util_terminate() {
+	if (initialized == FALSE) {
+		EXIT_WITH_ERROR;
+	}
 	if (schedule_policy == _FIFO) {
 		clear_up(&thread_list_head);
 		clear_up_FIFOqueue(&ready_FIFO);
