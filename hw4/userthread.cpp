@@ -255,7 +255,7 @@ int thread_join(int tid) {
 		if (schedule_policy == _PRIORITY) {
 			sigprocmask(SIG_UNBLOCK, &thread_mask, NULL);
 		}
-		printf("I am with id %d\n", current_active->tid);
+		//printf("I am with id %d\n", current_active->tid);
 		swapcontext(&current_active->context, &scheduler_context);
 	}
 	else {
@@ -530,9 +530,11 @@ void thread_wrapper(void (*func)(void *), void *arg) {
 		struct timeval current_time;
 		gettimeofday(&current_time, NULL);
 		log_file << "[" <<(current_time.tv_sec*MICRO_TO_MILI + current_time.tv_usec/MICRO_TO_MILI) -  start_time << "]" << " \t " << "FINISHED" << " \t " << current_active->tid << " \t " << current_active->priority << endl;
+		makecontext(&scheduler_context, my_scheduler, 0);
+		swapcontext(&current_active->context, &scheduler_context);
 	}
 	makecontext(&scheduler_context, my_scheduler, 0);
-	swapcontext(&current_active->context, &scheduler_context);
+	setcontext(&main_context);
 }
 
 void my_scheduler() {
