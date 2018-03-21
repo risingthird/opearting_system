@@ -219,7 +219,7 @@ int thread_yield() {
 			sigprocmask(SIG_UNBLOCK, &thread_mask, NULL);
 		}
 		makecontext(&scheduler_context, my_scheduler, 0);
-		swapcontext(&save_context, &scheduler_context);
+		setcontext(&scheduler_context);
 	}
 	return EXIT_SUCCESS;
 }
@@ -263,7 +263,7 @@ int thread_join(int tid) {
 			sigprocmask(SIG_UNBLOCK, &thread_mask, NULL);
 		}
 		makecontext(&scheduler_context, my_scheduler, 0);
-		swapcontext(&save_context, &scheduler_context);
+		setcontext(&scheduler_context);
 	}
 
 	return EXIT_SUCCESS;
@@ -794,7 +794,7 @@ void sigalarm_handler(int sig) {
 	else{
 		//log_file << "[ticks]" << " \t " << "STOPPED" << " \t " << current_thread->tid << " \t " << current_thread->priority << endl;
 		makecontext(&scheduler_context, my_scheduler, 0);
-		swapcontext(&save_context, &scheduler_context);
+		setcontext(&scheduler_context);
 	}
 }
 

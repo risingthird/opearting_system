@@ -73,6 +73,7 @@ static int thread_count;
 static int schedule_policy;
 static long start_time;
 static ucontext_t main_context;
+static ucontext_t temp_context;
 static myThread* current_active;
 static ucontext_t scheduler_context;
 static list<myThread*> thread_list_head;
@@ -84,6 +85,7 @@ static queue<int> ready_FIFO;
 static priority_queue<thread_PRI_SJF_FIFO*, vector<thread_PRI_SJF_FIFO*>, compare> ready_SJF; // store the id of next ready thread with sjf policy
 static void* scheduler_stack;
 static void* main_stack;
+static void* temp_stack;
 static struct itimerval priority_timer;
 static sigset_t thread_mask;
 static fstream log_file;
