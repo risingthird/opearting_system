@@ -533,6 +533,7 @@ void thread_wrapper(void (*func)(void *), void *arg) {
 		makecontext(&scheduler_context, my_scheduler, 0);
 		swapcontext(&current_active->context, &scheduler_context);
 	}
+	printf("I died here\n");
 	makecontext(&scheduler_context, my_scheduler, 0);
 	setcontext(&main_context);
 }
