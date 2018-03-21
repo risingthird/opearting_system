@@ -45,9 +45,10 @@ int main(void)
         if (thread_join(tids[i]) == FAIL)
             exit(EXIT_FAILURE);
     }
+    printf("I am here\n");
     if (thread_libterminate() == FAIL)
         exit(EXIT_FAILURE);
-    printf("I am here\n");
+
     thread_join(21938475); // shouldn't do anything
     thread_join(10293847);
     exit(EXIT_SUCCESS);
