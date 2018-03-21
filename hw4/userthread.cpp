@@ -93,10 +93,12 @@ int thread_libterminate() {
 		free(scheduler_stack);
 		scheduler_stack = NULL;
 	}
+	printf("I am in line 96\n");
 	if (main_stack != NULL) {
 		free(main_stack);
 		main_stack = NULL;
 	}
+	printf("I am in line 101\n");
 	return util_terminate();
 }
 
@@ -347,7 +349,9 @@ int util_terminate() {
 	}
 	if (schedule_policy == _FIFO) {
 		clear_up(&thread_list_head);
+		printf("I diede from line 352\n");
 		clear_up_FIFOqueue(&ready_FIFO);
+		printf("I diede from line 354\n");
 	}
 	else if (schedule_policy == _SJF) {
 		clear_up(&thread_list_head);
