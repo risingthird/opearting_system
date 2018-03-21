@@ -67,6 +67,7 @@ int thread_libinit(int policy) {
 		//printf("from line 25\n");
 		return EXIT_WITH_ERROR;
 	}
+	initialized = TRUE;
 	getcontext(&main_context);
 	main_context.uc_stack.ss_sp = main_stack;
 	main_context.uc_stack.ss_size = STACKSIZE;
@@ -93,6 +94,10 @@ int thread_create(void (*func)(void *), void *arg, int priority) {
 	}
 	
 	if (func == NULL) {
+		return EXIT_WITH_ERROR;
+	}
+
+	if (initialized == FALSE) {
 		return EXIT_WITH_ERROR;
 	}
 
@@ -171,6 +176,11 @@ int thread_yield() {
 	if (schedule_policy == _PRIORITY) {
 		sigprocmask(SIG_BLOCK, &thread_mask, NULL);
 	}
+
+	if (initialized == FALSE) {
+		return EXIT_WITH_ERROR;
+	}
+
 	myThread* current_thread;
 	ucontext_t save_context;
 	current_thread = current_active;
@@ -202,6 +212,11 @@ int thread_join(int tid) {
 	if (schedule_policy == _PRIORITY) {
 		sigprocmask(SIG_BLOCK, &thread_mask, NULL);
 	}
+
+	if (initialized == FALSE) {
+		return EXIT_WITH_ERROR;
+	}
+
 	myThread* current_thread;
 	current_thread = current_active;
 	ucontext_t save_context;

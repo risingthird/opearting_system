@@ -71,6 +71,7 @@ typedef struct cmp{
 
 static int thread_count;
 static int schedule_policy;
+static int initialized = FALSE;
 static long start_time;
 static ucontext_t main_context;
 static myThread* current_active;
