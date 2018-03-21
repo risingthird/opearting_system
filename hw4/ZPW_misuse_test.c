@@ -40,13 +40,14 @@ int main(void)
         if (tids[i] == FAIL)
             exit(EXIT_FAILURE);
     }
+    printf("I am with thread id\n" );
     for (int i = 0; i < THREAD_NUMBER; i++)
     {
         if (thread_join(tids[i]) == FAIL) {
 
             exit(EXIT_FAILURE);
         }
-        printf("I am with thread id %d\n", i);
+
     }
     printf("I am here\n");
     if (thread_libterminate() == FAIL)
