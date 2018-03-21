@@ -91,9 +91,11 @@ int thread_libterminate() {
 	log_file.close();
 	if (scheduler_stack != NULL) {
 		free(scheduler_stack);
+		scheduler_stack = NULL;
 	}
 	if (main_stack != NULL) {
 		free(main_stack);
+		main_stack = NULL;
 	}
 	return util_terminate();
 }
