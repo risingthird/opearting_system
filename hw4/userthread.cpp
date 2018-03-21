@@ -16,7 +16,7 @@ int thread_libinit(int policy) {
 		return EXIT_WITH_ERROR;
 	}
 
-	initialized = FALSE;
+	initialized = TRUE;
 
 	log_file.open ("log_file.txt", std::fstream::in | std::fstream::out | std::fstream::trunc);
 	struct timeval tv;
