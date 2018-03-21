@@ -343,7 +343,7 @@ int util_init() {
 
 int util_terminate() {
 	if (initialized == FALSE) {
-		EXIT_WITH_ERROR;
+		return EXIT_WITH_ERROR;
 	}
 	if (schedule_policy == _FIFO) {
 		clear_up(&thread_list_head);
@@ -363,6 +363,7 @@ int util_terminate() {
 		//printf("from line 235\n");
 		return EXIT_WITH_ERROR;
 	}
+	initialized = FALSE;
 	return EXIT_SUCCESS;
 
 }
@@ -523,7 +524,7 @@ int set_estimated_time(myThread* a_thread) {
 
 void thread_wrapper(void (*func)(void *), void *arg) {
 	func(arg);
-	
+	printf("I am here\n");
 	if (current_active != NULL) {
 		//printf("FINISHED %d\n", current_active->tid);
 		current_active->status = FINISHED;
@@ -533,7 +534,6 @@ void thread_wrapper(void (*func)(void *), void *arg) {
 		makecontext(&scheduler_context, my_scheduler, 0);
 		swapcontext(&current_active->context, &scheduler_context);
 	}
-	printf("I died here\n");
 	makecontext(&scheduler_context, my_scheduler, 0);
 	setcontext(&main_context);
 }
