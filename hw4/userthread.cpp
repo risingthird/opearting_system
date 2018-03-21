@@ -97,6 +97,7 @@ int thread_libterminate() {
 		free(main_stack);
 		main_stack = NULL;
 	}
+	initialized = FALSE;
 	return util_terminate();
 }
 
