@@ -85,6 +85,7 @@ int thread_libinit(int policy) {
 }
 
 int thread_libterminate() {
+	printf("died before 89\n");
 	if(initialized == FALSE) {
 		printf("Exit from line 89\n");
 		return EXIT_WITH_ERROR;
