@@ -86,6 +86,7 @@ int thread_libinit(int policy) {
 
 int thread_libterminate() {
 	if(initialized == FALSE) {
+		printf("Exit from line 89\n");
 		return EXIT_WITH_ERROR;
 	}
 	log_file.close();
