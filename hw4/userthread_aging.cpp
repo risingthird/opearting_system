@@ -89,7 +89,9 @@ int thread_libinit(int policy) {
 }
 
 int thread_libterminate() {
-	initialized = FALSE;
+	if (initialized == FALSE) {
+		return EXIT_WITH_ERROR;
+	}
 	log_file.close();
 	if (scheduler_stack != NULL) {
 		free(scheduler_stack);
@@ -102,6 +104,10 @@ int thread_libterminate() {
 
 int thread_create(void (*func)(void *), void *arg, int priority) {
 	
+	if (initialized == FALSE) {
+		return EXIT_WITH_ERROR;
+	}
+
 	if (func == NULL) {
 		return EXIT_WITH_ERROR;
 	}
@@ -110,9 +116,7 @@ int thread_create(void (*func)(void *), void *arg, int priority) {
 		return EXIT_WITH_ERROR;
 	}
 
-	if (initialized == FALSE) {
-		return EXIT_WITH_ERROR;
-	}
+	
 
 	void* stack = malloc(STACKSIZE);
 	ucontext_t current_context;
@@ -186,12 +190,12 @@ int thread_create(void (*func)(void *), void *arg, int priority) {
 }
 
 int thread_yield() {
-	if (schedule_policy == _PRIORITY) {
-		sigprocmask(SIG_BLOCK, &thread_mask, NULL);
-	}
-
 	if (initialized == FALSE) {
 		return EXIT_WITH_ERROR;
+	}
+
+	if (schedule_policy == _PRIORITY) {
+		sigprocmask(SIG_BLOCK, &thread_mask, NULL);
 	}
 
 	myThread* current_thread;
@@ -222,13 +226,16 @@ int thread_yield() {
 }
 
 int thread_join(int tid) {
+	if (initialized == FALSE) {
+		return EXIT_WITH_ERROR;
+	}
+
+
 	if (schedule_policy == _PRIORITY) {
 		sigprocmask(SIG_BLOCK, &thread_mask, NULL);
 	}
 
-	if (initialized == FALSE) {
-		return EXIT_WITH_ERROR;
-	}
+
 
 	myThread* current_thread;
 	current_thread = current_active;
