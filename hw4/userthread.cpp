@@ -279,8 +279,9 @@ int thread_join(int tid) {
 void clear_up(list<myThread*> *ll) {
 	//printf("I am exiting from 180\n");
 	while(!ll->empty()) {
-		printf("I am in line 288\n");
+		
 		if(ll->front() != NULL) {
+			printf("I am in line 288\n");
 			if (ll->front()->stack != NULL) {
 				free(ll->front()->stack);
 				ll->front()->stack = NULL;
