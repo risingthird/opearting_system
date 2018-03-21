@@ -285,7 +285,6 @@ void clear_up(list<myThread*> *ll) {
 			if (ll->front()->stack != NULL) {
 				
 				free(ll->front()->stack);
-				printf("I am in line 288\n");
 				ll->front()->stack = NULL;
 
 			}
@@ -545,8 +544,8 @@ void thread_wrapper(void (*func)(void *), void *arg) {
 		makecontext(&scheduler_context, my_scheduler, 0);
 		swapcontext(&current_active->context, &scheduler_context);
 	}
-	makecontext(&scheduler_context, my_scheduler, 0);
-	setcontext(&main_context);
+	//makecontext(&scheduler_context, my_scheduler, 0);
+	//setcontext(&main_context);
 }
 
 void my_scheduler() {
