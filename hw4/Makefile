@@ -58,5 +58,8 @@ fifo_join_each_other: fifo_join_each_other.c libuserthread.so
 fifo_join_oneself: fifo_join_oneself.c libuserthread.so
 	g++ -o fifo_join_oneself fifo_join_oneself.c libuserthread.so -L -luserthread -g
 
+ZPW_misuse_test: ZPW_misuse_test.c libuserthread.so
+	g++ -o ZPW_misuse_test ZPW_misuse_test.c libuserthread.so -L -luserthread -g
+
 clean:
 	@rm -f !(*.cpp|Makefile|README.md|*.h|BMC-CS355|*.c|*.txt)
