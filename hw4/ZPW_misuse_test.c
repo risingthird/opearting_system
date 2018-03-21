@@ -17,11 +17,12 @@ int main(void)
 {
     printf(" * Testing a simple FIFO with misuse of the userthread library\n.");
     printf(" * Shouldn't have segfault or memory leak. \n");
+
     if (thread_create(fool, NULL, 0) != FAIL)
         exit(EXIT_FAILURE);
     if (thread_create(misuse, NULL, 0) != FAIL)
         exit(EXIT_FAILURE);
-
+    printf("I am here\n");
     if (thread_libinit(FIFO) == FAIL)
         exit(EXIT_FAILURE);
     int tid1 = thread_create(fool, NULL, -1);
