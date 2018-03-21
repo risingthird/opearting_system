@@ -7,8 +7,6 @@ using namespace std;
 
 static int initialized = FALSE;
 
-
-
 int thread_libinit(int policy) {
 	if (policy != _FIFO && policy != _PRIORITY && policy != _SJF) {
 		return EXIT_WITH_ERROR;
@@ -20,14 +18,12 @@ int thread_libinit(int policy) {
 
 	initialized = TRUE;
 
-
 	log_file.open ("log_file.txt", std::fstream::in | std::fstream::out | std::fstream::trunc);
 	struct timeval tv;
 	gettimeofday(&tv, NULL);
 	start_time = tv.tv_sec*MICRO_TO_MILI + tv.tv_usec/MICRO_TO_MILI;
 	sigemptyset(&thread_mask);
 	sigaddset(&thread_mask, SIGALRM);
-
 	scheduler_stack = malloc(STACKSIZE);
 	schedule_policy = policy;
 	if (scheduler_stack == NULL) {
@@ -79,7 +75,7 @@ int thread_libinit(int policy) {
 		//printf("from line 25\n");
 		return EXIT_WITH_ERROR;
 	}
-	initialized = TRUE;
+	
 	getcontext(&main_context);
 	main_context.uc_stack.ss_sp = main_stack;
 	main_context.uc_stack.ss_size = STACKSIZE;
@@ -89,7 +85,9 @@ int thread_libinit(int policy) {
 }
 
 int thread_libterminate() {
-	if (initialized == FALSE) {
+	printf("died before 89\n");
+	if(initialized == FALSE) {
+		printf("Exit from line 89\n");
 		return EXIT_WITH_ERROR;
 	}
 	log_file.close();
@@ -97,28 +95,28 @@ int thread_libterminate() {
 		free(scheduler_stack);
 		scheduler_stack = NULL;
 	}
+	printf("I am in line 96\n");
 	if (main_stack != NULL) {
 		free(main_stack);
 		main_stack = NULL;
 	}
+	printf("I am in line 101\n");
 	return util_terminate();
 }
 
 int thread_create(void (*func)(void *), void *arg, int priority) {
 	
-	if (initialized == FALSE) {
+	if (priority != FIRST-1 && priority != SECOND-1 && priority != THIRD-1) {
 		return EXIT_WITH_ERROR;
 	}
-
+	
 	if (func == NULL) {
 		return EXIT_WITH_ERROR;
 	}
 
-	if (priority != FIRST-1 && priority != SECOND-1 && priority != THIRD-1) {
+	if (initialized == FALSE) {
 		return EXIT_WITH_ERROR;
 	}
-
-	
 
 	void* stack = malloc(STACKSIZE);
 	ucontext_t current_context;
@@ -193,12 +191,14 @@ int thread_create(void (*func)(void *), void *arg, int priority) {
 
 int thread_yield() {
 	if (initialized == FALSE) {
-		return EXIT_WITH_ERROR;
+	 	return EXIT_WITH_ERROR;
 	}
 
 	if (schedule_policy == _PRIORITY) {
 		sigprocmask(SIG_BLOCK, &thread_mask, NULL);
 	}
+
+	
 
 	myThread* current_thread;
 	ucontext_t save_context;
@@ -222,7 +222,7 @@ int thread_yield() {
 			sigprocmask(SIG_UNBLOCK, &thread_mask, NULL);
 		}
 		makecontext(&scheduler_context, my_scheduler, 0);
-		swapcontext(&save_context, &scheduler_context);
+		setcontext(&scheduler_context);
 	}
 	return EXIT_SUCCESS;
 }
@@ -232,12 +232,11 @@ int thread_join(int tid) {
 		return EXIT_WITH_ERROR;
 	}
 
-
 	if (schedule_policy == _PRIORITY) {
 		sigprocmask(SIG_BLOCK, &thread_mask, NULL);
 	}
 
-
+	
 
 	myThread* current_thread;
 	current_thread = current_active;
@@ -260,6 +259,7 @@ int thread_join(int tid) {
 		if (schedule_policy == _PRIORITY) {
 			sigprocmask(SIG_UNBLOCK, &thread_mask, NULL);
 		}
+		//printf("I am with id %d\n", current_active->tid);
 		swapcontext(&current_active->context, &scheduler_context);
 	}
 	else {
@@ -267,7 +267,7 @@ int thread_join(int tid) {
 			sigprocmask(SIG_UNBLOCK, &thread_mask, NULL);
 		}
 		makecontext(&scheduler_context, my_scheduler, 0);
-		swapcontext(&save_context, &scheduler_context);
+		setcontext(&scheduler_context);
 	}
 
 	return EXIT_SUCCESS;
@@ -280,17 +280,23 @@ int thread_join(int tid) {
 
 void clear_up(list<myThread*> *ll) {
 	//printf("I am exiting from 180\n");
-	while(!ll->empty()) {
-		if(ll->front() != NULL) {
-			if (ll->front()->stack != NULL) {
-				free(ll->front()->stack);
-				ll->front()->stack = NULL;
-			}			
-			delete(ll->front());
-			ll->front() = NULL;
-		}
-		ll->pop_front();
-	}
+	// while(!ll->empty()) {
+		
+	// 	if(ll->front() != NULL) {
+			
+	// 		if (ll->front()->stack != NULL) {
+				
+	// 			free(ll->front()->stack);
+	// 			ll->front()->stack = NULL;
+
+	// 		}
+
+	// 		delete(ll->front());
+
+	// 		ll->front() = NULL;
+	// 	}
+	// 	ll->pop_front();
+	// }
 	ll->clear();
 }
 
@@ -346,9 +352,14 @@ int util_init() {
 }
 
 int util_terminate() {
+	if (initialized == FALSE) {
+		return EXIT_WITH_ERROR;
+	}
 	if (schedule_policy == _FIFO) {
 		clear_up(&thread_list_head);
+		printf("I diede from line 352\n");
 		clear_up_FIFOqueue(&ready_FIFO);
+		printf("I diede from line 354\n");
 	}
 	else if (schedule_policy == _SJF) {
 		clear_up(&thread_list_head);
@@ -364,6 +375,7 @@ int util_terminate() {
 		//printf("from line 235\n");
 		return EXIT_WITH_ERROR;
 	}
+	initialized = FALSE;
 	return EXIT_SUCCESS;
 
 }
@@ -503,9 +515,8 @@ int set_end_time(myThread* a_thread) {
 }
 
 int set_estimated_time(myThread* a_thread) {
-	long runtime = a_thread->end_time - a_thread->start_time;
-
-	a_thread->estimated_runtime = (a_thread->estimated_runtime) /  ALPHA + runtime * ALPHA;
+	long time = a_thread->end_time - a_thread->start_time;
+	a_thread->estimated_runtime = a_thread->estimated_runtime / ALPHA + time * ALPHA;
 		//printf("We are estimating thread %d\n", a_thread->tid);
 	
 
@@ -514,15 +525,18 @@ int set_estimated_time(myThread* a_thread) {
 
 void thread_wrapper(void (*func)(void *), void *arg) {
 	func(arg);
-	current_active->status = FINISHED;
+	printf("I am here\n");
 	if (current_active != NULL) {
 		//printf("FINISHED %d\n", current_active->tid);
+		current_active->status = FINISHED;
 		struct timeval current_time;
 		gettimeofday(&current_time, NULL);
 		log_file << "[" <<(current_time.tv_sec*MICRO_TO_MILI + current_time.tv_usec/MICRO_TO_MILI) -  start_time << "]" << " \t " << "FINISHED" << " \t " << current_active->tid << " \t " << current_active->priority << endl;
+		makecontext(&scheduler_context, my_scheduler, 0);
+		swapcontext(&current_active->context, &scheduler_context);
 	}
-	makecontext(&scheduler_context, my_scheduler, 0);
-	swapcontext(&current_active->context, &scheduler_context);
+	//makecontext(&scheduler_context, my_scheduler, 0);
+	//setcontext(&main_context);
 }
 
 void my_scheduler() {
@@ -558,7 +572,7 @@ void my_scheduler() {
 			}
 			else if (schedule_policy == _SJF) {
 				//log_file << "[ticks]" << " \t " << "FINISHED" << " \t " << current_thread->tid << " \t " << current_thread->priority << endl;
-				printf("I am fucking here with current tid of %d\n", current_active->tid);
+				//printf("I am fucking here with current tid of %d\n", current_active->tid);
 				while (!current_thread->suspended_queue.empty()) {
 					thread_PRI_SJF_FIFO* temp = new thread_PRI_SJF_FIFO();
 					temp->id = current_thread->suspended_queue.front();
@@ -787,7 +801,7 @@ void sigalarm_handler(int sig) {
 	else{
 		//log_file << "[ticks]" << " \t " << "STOPPED" << " \t " << current_thread->tid << " \t " << current_thread->priority << endl;
 		makecontext(&scheduler_context, my_scheduler, 0);
-		swapcontext(&save_context, &scheduler_context);
+		setcontext(&scheduler_context);
 	}
 }
 
