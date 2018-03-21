@@ -520,9 +520,10 @@ int set_estimated_time(myThread* a_thread) {
 
 void thread_wrapper(void (*func)(void *), void *arg) {
 	func(arg);
-	current_active->status = FINISHED;
+	
 	if (current_active != NULL) {
 		//printf("FINISHED %d\n", current_active->tid);
+		current_active->status = FINISHED;
 		struct timeval current_time;
 		gettimeofday(&current_time, NULL);
 		log_file << "[" <<(current_time.tv_sec*MICRO_TO_MILI + current_time.tv_usec/MICRO_TO_MILI) -  start_time << "]" << " \t " << "FINISHED" << " \t " << current_active->tid << " \t " << current_active->priority << endl;
