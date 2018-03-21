@@ -85,6 +85,7 @@ int thread_libinit(int policy) {
 }
 
 int thread_libterminate() {
+	initialized = FALSE;
 	log_file.close();
 	if (scheduler_stack != NULL) {
 		free(scheduler_stack);

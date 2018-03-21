@@ -13,6 +13,14 @@ int thread_libinit(int policy) {
 	if (policy != _FIFO && policy != _PRIORITY && policy != _SJF) {
 		return EXIT_WITH_ERROR;
 	}
+
+	if (initialized == TRUE) {
+		return EXIT_WITH_ERROR;
+	}
+
+	initialized = TRUE;
+
+
 	log_file.open ("log_file.txt", std::fstream::in | std::fstream::out | std::fstream::trunc);
 	struct timeval tv;
 	gettimeofday(&tv, NULL);
@@ -81,6 +89,7 @@ int thread_libinit(int policy) {
 }
 
 int thread_libterminate() {
+	initialized = FALSE;
 	log_file.close();
 	if (scheduler_stack != NULL) {
 		free(scheduler_stack);
@@ -220,7 +229,7 @@ int thread_join(int tid) {
 	if (initialized == FALSE) {
 		return EXIT_WITH_ERROR;
 	}
-	
+
 	myThread* current_thread;
 	current_thread = current_active;
 	ucontext_t save_context;
