@@ -278,23 +278,23 @@ int thread_join(int tid) {
 
 void clear_up(list<myThread*> *ll) {
 	//printf("I am exiting from 180\n");
-	while(!ll->empty()) {
+	// while(!ll->empty()) {
 		
-		if(ll->front() != NULL) {
+	// 	if(ll->front() != NULL) {
 			
-			if (ll->front()->stack != NULL) {
+	// 		if (ll->front()->stack != NULL) {
 				
-				free(ll->front()->stack);
-				ll->front()->stack = NULL;
+	// 			free(ll->front()->stack);
+	// 			ll->front()->stack = NULL;
 
-			}
+	// 		}
 
-			delete(ll->front());
+	// 		delete(ll->front());
 
-			ll->front() = NULL;
-		}
-		ll->pop_front();
-	}
+	// 		ll->front() = NULL;
+	// 	}
+	// 	ll->pop_front();
+	// }
 	ll->clear();
 }
 
