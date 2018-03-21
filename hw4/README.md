@@ -13,4 +13,6 @@ Extra credit:  In userthread_aging.cpp, aging shortest job first policy is implm
 
 How to run: After linking testing file to user thread library, use ./xxxxx to run test file as usual. Remember to "export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:." before running test.
 
-Limitation: No time 
+Limitation: No time for memcheck, let's hope there's no mem errors or mem leaks, which is 99.999999999999% impossible.
+			Doesn't support multiple join (i.e a thread joining in more than one thread)
+			Doesn't support 

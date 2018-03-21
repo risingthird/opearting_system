@@ -55,5 +55,8 @@ fifo_null_func: fifo_null_func.c libuserthread.so
 fifo_join_each_other: fifo_join_each_other.c libuserthread.so
 	g++ -o fifo_join_each_other fifo_join_each_other.c libuserthread.so -L -luserthread -g
 
+fifo_join_oneself: fifo_join_oneself.c libuserthread.so
+	g++ -o fifo_join_oneself fifo_join_oneself.c libuserthread.so -L -luserthread -g
+
 clean:
 	@rm -f !(*.cpp|Makefile|README.md|*.h|BMC-CS355|*.c|*.txt)
