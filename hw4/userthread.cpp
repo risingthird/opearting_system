@@ -5,11 +5,19 @@
 using namespace std;
 
 
+static int initialized = FALSE;
 
 int thread_libinit(int policy) {
 	if (policy != _FIFO && policy != _PRIORITY && policy != _SJF) {
 		return EXIT_WITH_ERROR;
 	}
+
+	if (initialized == TRUE) {
+		return EXIT_WITH_ERROR;
+	}
+
+	initialized = FALSE;
+
 	log_file.open ("log_file.txt", std::fstream::in | std::fstream::out | std::fstream::trunc);
 	struct timeval tv;
 	gettimeofday(&tv, NULL);
@@ -67,7 +75,7 @@ int thread_libinit(int policy) {
 		//printf("from line 25\n");
 		return EXIT_WITH_ERROR;
 	}
-	//initialized = TRUE;
+	
 	getcontext(&main_context);
 	main_context.uc_stack.ss_sp = main_stack;
 	main_context.uc_stack.ss_size = STACKSIZE;
@@ -97,9 +105,9 @@ int thread_create(void (*func)(void *), void *arg, int priority) {
 		return EXIT_WITH_ERROR;
 	}
 
-	// if (initialized == FALSE) {
-	// 	return EXIT_WITH_ERROR;
-	// }
+	if (initialized == FALSE) {
+		return EXIT_WITH_ERROR;
+	}
 
 	void* stack = malloc(STACKSIZE);
 	ucontext_t current_context;
@@ -177,9 +185,9 @@ int thread_yield() {
 		sigprocmask(SIG_BLOCK, &thread_mask, NULL);
 	}
 
-	// if (initialized == FALSE) {
-	// 	return EXIT_WITH_ERROR;
-	// }
+	if (initialized == FALSE) {
+	 	return EXIT_WITH_ERROR;
+	}
 
 	myThread* current_thread;
 	ucontext_t save_context;
@@ -213,9 +221,9 @@ int thread_join(int tid) {
 		sigprocmask(SIG_BLOCK, &thread_mask, NULL);
 	}
 
-	// if (initialized == FALSE) {
-	// 	return EXIT_WITH_ERROR;
-	// }
+	if (initialized == FALSE) {
+		return EXIT_WITH_ERROR;
+	}
 
 	myThread* current_thread;
 	current_thread = current_active;

@@ -5,7 +5,7 @@
 using namespace std;
 
 
-
+static int initialized = FALSE;
 
 
 
