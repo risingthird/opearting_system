@@ -283,9 +283,10 @@ void clear_up(list<myThread*> *ll) {
 		if(ll->front() != NULL) {
 			
 			if (ll->front()->stack != NULL) {
-				printf("I am in line 288\n");
+				
 				free(ll->front()->stack);
 				ll->front()->stack = NULL;
+				printf("I am in line 288\n");
 			}
 
 			delete(ll->front());
