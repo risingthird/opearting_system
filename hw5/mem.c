@@ -2,6 +2,7 @@
 #include "mem.h"
 
 extern Head* global_head;
+int m_error;
 
 int Mem_Init(long sizeOfRegion) {
 	if (global_head != NULL) {
