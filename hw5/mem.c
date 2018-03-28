@@ -180,6 +180,9 @@ void Mem_Dump() {
 	while (temp != NULL) {
 		printf("Block is %s, and has %ld bytes memories\n", temp->status ? "allocated" : "free", get_block_size(temp));
 		temp = temp->next;
+		if (temp == NULL) {
+			printf("I died here\n");
+		}
 	}
 	return;
 }
