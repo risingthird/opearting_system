@@ -193,7 +193,7 @@ int Mem_delete_all() {
 
 
 long round_to(int val, int base) {
-	return ((val - 1 / base) * base + base);
+	return (((val - 1) / base) * base + base);
 }
 
 
