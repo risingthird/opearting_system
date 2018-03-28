@@ -207,7 +207,7 @@ void test_8_byte() {
 
 int main() {
   test_8_byte();
-  return EXIT_SUCCESS;
+  return RETURN_SUCCESS;
 }
 
 
