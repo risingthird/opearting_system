@@ -130,7 +130,7 @@ void test_8_byte() {
   Mem_Dump();
 
   printf("--------------8 byte allocation-----------------\n");
-  void* ptr0 = Mem_Alloc(8);
+  ptr0 = Mem_Alloc(8);
   if (ptr0 == NULL) {
     exit(EXIT_FAILURE);
   }
@@ -138,7 +138,7 @@ void test_8_byte() {
   printf("The pointer ptr0 is at address %p.\n", ptr0);
 
   printf("--------------1024 byte allocation-----------------\n");
-  void* ptr7 = Mem_Alloc(1024);
+  ptr7 = Mem_Alloc(1024);
   if (ptr7 == NULL) {
     exit(EXIT_FAILURE);
   }
