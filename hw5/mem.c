@@ -23,8 +23,7 @@ int Mem_Init(long sizeOfRegion) {
 	}
 
 	global_head->actual_size = to_alloc_with_global;
-	global_head->size_of_region = sizeOfRegion;
-	global_head->allocated_size = 0;
+	global_head->remaining_size = sizeOfRegion;
 	global_head->head = (Node*) ((char*) global_head + GLOBAL_SIZE);
 	global_head->head->next = NULL;
 	global_head->head->prev = NULL;
@@ -38,7 +37,7 @@ int Mem_Init(long sizeOfRegion) {
 }
 
 void *Mem_Alloc(long size) {
-	if (size > global_head->size_of_region - global_head->allocated_size) {
+	if (size > global_head->remaining_size) {
 		m_error = E_BAD_ARGS;
 		return NULL;
 	}
@@ -46,6 +45,7 @@ void *Mem_Alloc(long size) {
 	size = round_to(size, BLOCK_SIZE);
 
 	Node* curr = global_head->head_free;
+	Node* prev_free = NULL;
 	Node* temp1 = NULL;
 	Node* temp2 = NULL;
 	Node* next_to_allocate = NULL;
@@ -60,10 +60,10 @@ void *Mem_Alloc(long size) {
 
 		if (block_available > size && block_available > size_to_allocate) {
 			size_to_allocate = block_available;
-			temp1 = size_to_allocate;
+			prev_free = temp1;
 			next_to_allocate = curr;
 		}
-
+		temp1 = curr; // got some problems here
 		curr = curr->next_free;
 	}
 
@@ -85,23 +85,23 @@ void *Mem_Alloc(long size) {
 		new_next->status = FREE;
 		new_next->next_free = next_to_allocate->next_free;
 
-		if (temp1 != NULL) {
-			temp1->next_free = new_next;
+		if (prev_free != NULL) {
+			prev_free->next_free = new_next;
 		}
 		else {
 			global_head->head_free = new_next;
 		}
 	}
 	else {
-		if (temp1 == NULL) {
+		if (prev_free == NULL) {
 			global_head->head_free = new_next;
 		}
 	}
 
 	next_to_allocate->next_free = NULL;
 	next_to_allocate->status = ALLOCATED;
-	global_head->allocated_size += size;
-	return (void*) (next_to_allocate + BLOCK_HEADER);
+	global_head->remaining_size -= size;
+	return (void*) ((char*)next_to_allocate + BLOCK_HEADER);
 
 }
 
@@ -126,7 +126,7 @@ int Mem_Free(void *ptr, int coalesce) {
 		}
 
 		if (curr->status == ALLOCATED) {
-			global_head->allocated_size -= to_free_size;
+			global_head->remaining_size += to_free_size;
 		}
 		else {
 			RETURN_SUCCESS; // is already a free block, no need to free
