@@ -12,8 +12,8 @@ libusermem.so : mem.o
 simple_8_byte_allocation: simple_8_byte_allocation.c libusermem.so
 	gcc -o simple_8_byte_allocation simple_8_byte_allocation.c -L. -lusermem -g
 
-simple_8_byte_allocation: simple_8_byte_allocation.c libusermem.so
-	gcc -o simple_8_byte_allocation simple_8_byte_allocation.c -L. -lusermem -g
+check_for_8_byte_alignment: check_for_8_byte_alignment.c libusermem.so
+	gcc -o check_for_8_byte_alignment check_for_8_byte_alignment.c -L. -lusermem -g
 
 
 clean: 
