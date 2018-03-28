@@ -126,7 +126,7 @@ void test_8_byte() {
   Mem_Dump();
 
   printf("--------------512 byte free-----------------\n");
-  Mem_Free(ptr6 1);
+  Mem_Free(ptr6, 1);
   Mem_Dump();
 
 
