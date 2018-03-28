@@ -93,6 +93,7 @@ void *Mem_Alloc(long size) {
 		else {
 			global_head->head_free = new_next;
 		}
+		next_to_allocate->next = new_next;
 	}
 	else {
 		if (prev_free == NULL) {
