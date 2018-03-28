@@ -6,7 +6,7 @@
 #include <limits.h>
 #include <unistd.h>
 
-#define NUM_ALLOC 100
+#define NUM_ALLOC 10
 #define FREE_FREQ 100     // 1:100
 #define BYTE 8
 
@@ -17,24 +17,97 @@ static void print_execution_time(clock_t begin, clock_t end) {
   printf("Execution time: %.2f seconds\n", time_spent);
 }
 
-void test_simple_8_byte() {
-  int result = Mem_Init(40 * NUM_ALLOC);
+void test_8_byte() {
+  int result = Mem_Init(8504);
   assert(result == 0);
 
-  void **ptrs = malloc(sizeof(void*) * NUM_ALLOC);
-  for (int i = 0; i < NUM_ALLOC; i++) {
-    ptrs[i] = Mem_Alloc(BYTE);
-    assert(ptrs[i] != NULL);
-    Mem_Dump();
+  printf("--------------8 byte allocation-----------------\n");
+  void* ptr0 = Mem_Alloc(8);
+  if (ptr0 == NULL) {
+    exit(EXIT_FAILURE);
   }
+  Mem_Dump();
+  printf("The pointer ptr0 is at address %p.\n", ptr0);
+
+  printf("--------------16 byte allocation-----------------\n");
+  void* ptr1 = Mem_Alloc(16);
+  if (ptr1 == NULL) {
+    exit(EXIT_FAILURE);
+  }
+  Mem_Dump();
+  printf("The pointer ptr1 is at address %p.\n", ptr1);
+
+  printf("--------------32 byte allocation-----------------\n");
+  void* ptr2 = Mem_Alloc(32);
+  if (ptr2 == NULL) {
+    exit(EXIT_FAILURE);
+  }
+  Mem_Dump();
+  printf("The pointer ptr2 is at address %p.\n", ptr2);
+
+  printf("--------------64 byte allocation-----------------\n");
+  void* ptr3 = Mem_Alloc(64);
+  if (ptr3 == NULL) {
+    exit(EXIT_FAILURE);
+  }
+  Mem_Dump();
+  printf("The pointer ptr3 is at address %p.\n", ptr3);
+
+  printf("--------------128 byte allocation-----------------\n");
+  void* ptr4 = Mem_Alloc(128);
+  if (ptr4 == NULL) {
+    exit(EXIT_FAILURE);
+  }
+  Mem_Dump();
+  printf("The pointer ptr4 is at address %p.\n", ptr4);
+
+  printf("--------------256 byte allocation-----------------\n");
+  void* ptr5 = Mem_Alloc(256);
+  if (ptr5 == NULL) {
+    exit(EXIT_FAILURE);
+  }
+  Mem_Dump();
+  printf("The pointer ptr5 is at address %p.\n", ptr5);
+
+  printf("--------------512 byte allocation-----------------\n");
+  void* ptr6 = Mem_Alloc(512);
+  if (ptr6 == NULL) {
+    exit(EXIT_FAILURE);
+  }
+  Mem_Dump();
+  printf("The pointer ptr6 is at address %p.\n", ptr6);
+
+  printf("--------------1024 byte allocation-----------------\n");
+  void* ptr7 = Mem_Alloc(1024);
+  if (ptr7 == NULL) {
+    exit(EXIT_FAILURE);
+  }
+  Mem_Dump();
+  printf("The pointer ptr7 is at address %p.\n", ptr7);
+
+  printf("--------------2048 byte allocation-----------------\n");
+  void* ptr8 = Mem_Alloc(2048);
+  if (ptr8 == NULL) {
+    exit(EXIT_FAILURE);
+  }
+  Mem_Dump();
+  printf("The pointer ptr8 is at address %p.\n", ptr8);
+
+  printf("--------------4096 byte allocation-----------------\n");
+  void* ptr9 = Mem_Alloc(4096);
+  if (ptr9 == NULL) {
+    exit(EXIT_FAILURE);
+  }
+  Mem_Dump();
+  printf("The pointer ptr9 is at address %p.\n", ptr9);
 
   end = clock();
   print_execution_time(begin, end);
-  free(ptrs);
+  
 }
 
 
 int main() {
-  test_simple_8_byte();
+  test_8_byte();
   return EXIT_SUCCESS;
 }
