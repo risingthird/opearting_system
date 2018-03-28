@@ -190,7 +190,25 @@ int Mem_delete_all() {
 }
 
 
+void test_8_byte() {
+  int result = Mem_Init(8504);
+  assert(result == 0);
 
+  void **ptrs = malloc(sizeof(void*) * 10);
+  for (int i = 0; i < 10; i++) {
+    ptrs[i] = Mem_Alloc(8 << i);
+    assert(ptrs[i] != NULL);
+    Mem_Dump();
+  }
+
+  free(ptrs);
+}
+
+
+int main() {
+  test_8_byte();
+  return EXIT_SUCCESS;
+}
 
 
 
