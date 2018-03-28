@@ -138,11 +138,15 @@ int Mem_Free(void *ptr, int coalesce) {
 
 		long before = -1;
 		long after = -1;
+		int coalesce_flag = FALSE;
 		if (coalesce) {			
 			Node* temp = curr;
 			before = get_block_size(temp);
 			curr = my_coalesce(curr);
 			after = get_block_size(curr);
+			if (after - before == 0 || temp == curr) {
+				coalesce = TRUE;
+			}
 		}
 
 		curr->status = FREE;
@@ -157,13 +161,13 @@ int Mem_Free(void *ptr, int coalesce) {
 		}
 
 		if (prev_free != NULL) {
-			if (coalesce || (after - before != 0)) {
+			if (!coalesce || coalesce_flag == TRUE) {
 				curr->next_free = prev_free->next_free;
 			}
 			prev_free->next_free = curr;
 		}
 		else {
-			if (coalesce || (after - before != 0)) { 
+			if (!coalesce || coalesce_flag == TRUE) { 
 				curr->next_free = global_head->head_free;
 			}
 			global_head->head_free = curr;
