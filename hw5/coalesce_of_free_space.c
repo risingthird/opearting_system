@@ -102,27 +102,31 @@ void test_8_byte() {
   printf("The pointer ptr9 is at address %p.\n", ptr9);
 
   printf("--------------8 byte free-----------------\n");
-  Mem_Free(prt0, 1);
+  Mem_Free(ptr0, 1);
   Mem_Dump();
 
   printf("--------------16 byte free-----------------\n");
-  Mem_Free(prt1, 1);
+  Mem_Free(ptr1, 1);
   Mem_Dump();
 
   printf("--------------64 byte free-----------------\n");
-  Mem_Free(prt3, 1);
+  Mem_Free(ptr3, 1);
   Mem_Dump();
 
   printf("--------------256 byte free-----------------\n");
-  Mem_Free(prt5, 1);
+  Mem_Free(ptr5, 1);
   Mem_Dump();
 
   printf("--------------1024 byte free-----------------\n");
-  Mem_Free(prt7, 1);
+  Mem_Free(ptr7, 1);
   Mem_Dump();
 
   printf("--------------4096 byte free-----------------\n");
-  Mem_Free(prt9, 1);
+  Mem_Free(ptr9, 1);
+  Mem_Dump();
+
+  printf("--------------512 byte free-----------------\n");
+  Mem_Free(ptr6 1);
   Mem_Dump();
 
 
