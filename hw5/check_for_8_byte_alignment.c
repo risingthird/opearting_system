@@ -25,7 +25,7 @@ void test_8_byte() {
   for (int i = 0; i < NUM_ALLOC; i++) {
     ptrs[i] = Mem_Alloc(BYTE << i);
     assert(ptrs[i] != NULL);
-    Mem_dump();
+    Mem_Dump();
   }
 
   end = clock();
