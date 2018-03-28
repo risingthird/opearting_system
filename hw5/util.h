@@ -43,7 +43,7 @@ Head* global_head;
 
 long round_to(int val, int base);
 int is_valid_addr(void*);
-long get_block_size(void*);
+long get_block_size(Node*);
 Node* my_coalesce(Node*);
 Node* coalesce_all(Node*);
 Node* get_header(void*);

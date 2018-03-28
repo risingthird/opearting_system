@@ -15,7 +15,7 @@ int is_valid_addr(void* pointer) {
 	return FALSE;
 }
 
-long get_block_size(void* pointer) {
+long get_block_size(Node* pointer) {
 	long result = -1;
 	
 	if (pointer ==  NULL) {
