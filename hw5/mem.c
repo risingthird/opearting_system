@@ -69,6 +69,10 @@ void *Mem_Alloc(long size) {
 		curr = curr->next_free;
 	}
 
+	if (size == 39000) {
+		printf("I got free space enough for 39000 byte, and that is %ld bytes.\n", block_available);
+	}
+
 	if (size_to_allocate == -1) {
 		m_error = E_NO_SPACE;
 		return NULL;
