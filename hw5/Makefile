@@ -21,6 +21,9 @@ coalesce_of_free_space: coalesce_of_free_space.c libusermem.so
 two_mil_with_coalescing: two_mil_with_coalescing.c libusermem.so
 	gcc -o two_mil_with_coalescing two_mil_with_coalescing.c -L. -lusermem -g
 
+worstfit_allocation: worstfit_allocation.c libusermem.so
+	gcc -o worstfit_allocation worstfit_allocation.c -L. -lusermem -g
+
 
 clean: 
 	@rm -f !(*.cpp|Makefile|README.md|*.h|BMC-CS355|*.c|*.txt)
