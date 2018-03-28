@@ -18,6 +18,9 @@ check_for_8_byte_alignment: check_for_8_byte_alignment.c libusermem.so
 coalesce_of_free_space: coalesce_of_free_space.c libusermem.so
 	gcc -o coalesce_of_free_space coalesce_of_free_space.c -L. -lusermem -g
 
+two_mil_with_coalescing: two_mil_with_coalescing.c libusermem.so
+	gcc -o two_mil_with_coalescing two_mil_with_coalescing.c -L. -lusermem -g
+
 
 clean: 
 	@rm -f !(*.cpp|Makefile|README.md|*.h|BMC-CS355|*.c|*.txt)
