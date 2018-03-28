@@ -17,6 +17,7 @@ int Mem_Init(long sizeOfRegion) {
 
 	long to_alloc = round_to(sizeOfRegion, BLOCK_SIZE) / BLOCK_SIZE * BLOCK_HEADER + sizeOfRegion;
 	long to_alloc_with_global = round_to(to_alloc + GLOBAL_SIZE, getpagesize());
+	printf("The total size is %ld\n\n", to_alloc_with_global);
 
 	if ( (global_head = mmap(NULL, to_alloc_with_global, PROT_READ | PROT_WRITE,  MAP_PRIVATE | MAP_ANONYMOUS, -1, 0)) == MAP_FAILED) {
 		m_error = E_NO_SPACE;
@@ -181,9 +182,6 @@ void Mem_Dump() {
 	while (temp != NULL) {
 		printf("Block is %s, and has %ld bytes memories\n", temp->status ? "allocated" : "free", get_block_size(temp));
 		temp = temp->next;
-		if (temp == NULL) {
-			printf("I died here\n");
-		}
 	}
 	return;
 }
