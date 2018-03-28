@@ -1,10 +1,9 @@
 SHELL:=/bin/bash -O extglob
 
 
-util.o: util.c
-	gcc -Wall -pedantic -fpic -g -c util.c
 
-mem.o : mem.c util.o
+
+mem.o : mem.c util.h
 	gcc -Wall -pedantic -fpic -g -c mem.c
 
 libusermem.so : mem.o
