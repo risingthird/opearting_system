@@ -209,8 +209,15 @@ long round_to(int val, int base) {
 int is_valid_addr(void* pointer) {
 	char* temp = (char*) pointer;
 	if (temp > (char*) global_head->head && temp < (char*) global_head->head + global_head->actual_size) {
-		printf("I got here. Yay!\n");
-		return (pointer == (void*)(        (char*)((get_header(pointer))->status) + 7              ));
+		//printf("I got here. Yay!\n");
+		if (get_header(pointer)->status == ALLOCATED || get_header(pointer)->status == FREE) {
+			//printf("I got here!\n");
+			return TRUE;
+		}
+		else {
+			return FALSE;
+		}
+		
 	}
 	return FALSE;
 }
