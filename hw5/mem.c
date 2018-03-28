@@ -117,7 +117,7 @@ int Mem_Free(void *ptr, int coalesce) {
 
 	// how to check whether a ptr is valid 
 	if (is_valid_addr(ptr)) {
-		printf("I got here. Yay!\n");
+		//printf("I got here. Yay!\n");
 		Node* curr = get_header(ptr);
 		// if (curr->canary != STACK_CANARY) {
 		// 	m_error = E_CORRUPT_FREESPACE;
@@ -209,6 +209,7 @@ long round_to(int val, int base) {
 int is_valid_addr(void* pointer) {
 	char* temp = (char*) pointer;
 	if (temp > (char*) global_head->head && temp < (char*) global_head->head + global_head->actual_size) {
+		printf("I got here. Yay!\n");
 		return (pointer == (void*)(        (char*)((get_header(pointer))->status) + 7              ));
 	}
 	return FALSE;
