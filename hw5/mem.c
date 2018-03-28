@@ -111,6 +111,7 @@ void *Mem_Alloc(long size) {
 
 int Mem_Free(void *ptr, int coalesce) {
 	if (ptr == NULL) {
+		printf("I died here\n");
 		return RETURN_SUCCESS;
 	}
 
