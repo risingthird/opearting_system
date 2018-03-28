@@ -111,12 +111,13 @@ void *Mem_Alloc(long size) {
 
 int Mem_Free(void *ptr, int coalesce) {
 	if (ptr == NULL) {
-		printf("I died here\n");
+		//printf("I died here\n");
 		return RETURN_SUCCESS;
 	}
 
 	// how to check whether a ptr is valid 
 	if (is_valid_addr(ptr)) {
+		printf("I got here. Yay!\n");
 		Node* curr = get_header(ptr);
 		// if (curr->canary != STACK_CANARY) {
 		// 	m_error = E_CORRUPT_FREESPACE;
