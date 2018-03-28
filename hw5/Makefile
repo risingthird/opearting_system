@@ -5,10 +5,10 @@ mem.o : mem.c util.h
 	gcc -Wall -pedantic -fpic -g -c mem.c
 
 libusermem.so : mem.o
-	g++ -o libusermem.so mem.o -shared -g
+	gcc -o libusermem.so mem.o -shared -g
 
 simple_8_byte_allocation: simple_8_byte_allocation.c libusermem.so
-	g++ -o simple_8_byte_allocation simple_8_byte_allocation.c libusermem.so -L. -lusermem -g
+	gc -o simple_8_byte_allocation simple_8_byte_allocation.c libusermem.so -L. -lusermem -g
 
 
 clean: 
