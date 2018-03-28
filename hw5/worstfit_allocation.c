@@ -145,6 +145,31 @@ void test_8_byte() {
   Mem_Dump();
   printf("The pointer ptr7 is at address %p.\n", ptr7);
 
+  printf("--------------39000 byte allocation-----------------\n");
+  void* ptr10 = Mem_Alloc(39000);
+  if (ptr10 == NULL) {
+    exit(EXIT_FAILURE);
+  }
+  Mem_Dump();
+  printf("The pointer ptr7 is at address %p.\n", ptr10);
+
+
+  printf("--------------450 byte allocation-----------------\n");
+  void* ptr11 = Mem_Alloc(450);
+  if (ptr11 == NULL) {
+    exit(EXIT_FAILURE);
+  }
+  Mem_Dump();
+  printf("The pointer ptr11 is at address %p.\n", ptr10);
+
+  printf("--------------17 byte allocation-----------------\n");
+  void* ptr12 = Mem_Alloc(17);
+  if (ptr12 == NULL) {
+    exit(EXIT_FAILURE);
+  }
+  Mem_Dump();
+  printf("The pointer ptr12 is at address %p.\n", ptr10);
+
 
   end = clock();
   print_execution_time(begin, end);
