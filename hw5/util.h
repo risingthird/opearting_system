@@ -41,7 +41,7 @@ typedef struct {
 Head* global_head;
 
 
-int round_to(int val, int base);
+long round_to(int val, int base);
 int is_valid_addr(void*);
 long get_block_size(void*);
 Node* my_coalesce(Node*);
