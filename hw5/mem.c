@@ -40,6 +40,7 @@ int Mem_Init(long sizeOfRegion) {
 
 void *Mem_Alloc(long size) {
 	if (size > global_head->remaining_size) {
+		printf("I died here\n");
 		m_error = E_BAD_ARGS;
 		return NULL;
 	}
