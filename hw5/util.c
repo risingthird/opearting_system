@@ -38,7 +38,7 @@ Node* get_header(void* pointer) {
 	return pointer = temp;
 }
 
-Node* coalesce(Node* pointer) {
+Node* my_coalesce(Node* pointer) {
 	// first coalease with next pointer if it exists and is free
 	if (pointer->next != NULL && pointer->next->status == FREE) {
 		pointer->next_free = pointer->next->next_free;

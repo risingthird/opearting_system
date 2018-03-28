@@ -17,7 +17,7 @@ int Mem_Init(long sizeOfRegion) {
 	long to_alloc = round_to(sizeOfRegion, BLOCK_SIZE) / BLOCK_SIZE * BLOCK_HEADER + sizeOfRegion;
 	long to_alloc_with_global = round_to(to_alloc + GLOBAL_SIZE, getpagesize());
 
-	if (global_head = mmap(NULL, to_alloc_with_global, PROT_READ | PROT_WRITE,  MAP_PRIVATE | MAP_ANONYMOUS, -1, 0) == MAP_FAILED) {
+	if ( (global_head = mmap(NULL, to_alloc_with_global, PROT_READ | PROT_WRITE,  MAP_PRIVATE | MAP_ANONYMOUS, -1, 0)) == MAP_FAILED) {
 		m_error = E_NO_SPACE;
 		return RETURN_WITH_ERROR;
 	}
@@ -94,7 +94,7 @@ void *Mem_Alloc(long size) {
 	}
 	else {
 		if (prev_free == NULL) {
-			global_head->head_free = new_next;
+			global_head->head_free = next_to_allocate->next_free;
 		}
 	}
 
@@ -132,12 +132,12 @@ int Mem_Free(void *ptr, int coalesce) {
 			RETURN_SUCCESS; // is already a free block, no need to free
 		}
 
-		if (coalesce) {
-			long before = -1;
-			long after = -1;
+		long before = -1;
+		long after = -1;
+		if (coalesce) {			
 			Node* temp = curr;
 			before = get_block_size(temp);
-			curr = coalesce(curr);
+			curr = my_coalesce(curr);
 			after = get_block_size(curr);
 		}
 
@@ -160,9 +160,9 @@ int Mem_Free(void *ptr, int coalesce) {
 		}
 		else {
 			if (coalesce || (after - before != 0)) { 
-				curr->next_free = global_head->next_free;
+				curr->next_free = global_head->head_free;
 			}
-			global_head->next_free = curr;
+			global_head->head_free = curr;
 		}
 
 		return RETURN_SUCCESS;
