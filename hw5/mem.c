@@ -124,7 +124,7 @@ int Mem_Free(void *ptr, int coalesce) {
 		return RETURN_SUCCESS;
 	}
 
-	if (need_global_coalesce == TRUE) {
+	if (need_global_coalesce == TRUE && coalesce != 0) {
 		coalesce_all();
 		need_global_coalesce = FALSE;
 	}
