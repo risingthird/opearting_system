@@ -27,6 +27,17 @@ worstfit_allocation: worstfit_allocation.c libusermem.so
 global_coalesce: global_coalesce.c libusermem.so
 	gcc -o global_coalesce global_coalesce.c -L. -lusermem -g
 
+bad_args_to_Mem_Init: bad_args_to_Mem_Init.c libusermem.so
+	gcc -o bad_args_to_Mem_Init bad_args_to_Mem_Init.c -L. -lusermem -g
+
+several_odd_sized_allocations: several_odd_sized_allocations.c libusermem.so
+	gcc -o several_odd_sized_allocations several_odd_sized_allocations.c -L. -lusermem -g
+
+a_few_aligned_allocations: a_few_aligned_allocations.c libusermem.so
+	gcc -o a_few_aligned_allocations a_few_aligned_allocations.c -L. -lusermem -g
+
+simple_allocation_and_free: simple_allocation_and_free.c libusermem.so
+	gcc -o simple_allocation_and_free simple_allocation_and_free.c -L. -lusermem -g
 
 
 clean: 
