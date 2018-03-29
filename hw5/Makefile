@@ -24,6 +24,10 @@ two_mil_with_coalescing: two_mil_with_coalescing.c libusermem.so
 worstfit_allocation: worstfit_allocation.c libusermem.so
 	gcc -o worstfit_allocation worstfit_allocation.c -L. -lusermem -g
 
+global_coalesce: global_coalesce.c libusermem.so
+	gcc -o global_coalesce global_coalesce.c -L. -lusermem -g
+
+
 
 clean: 
 	@rm -f !(*.cpp|Makefile|README.md|*.h|BMC-CS355|*.c|*.txt)
