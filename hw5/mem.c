@@ -117,7 +117,20 @@ void *Mem_Alloc(long size) {
 int Mem_Free(void *ptr, int coalesce) {
 	if (ptr == NULL) {
 		//printf("I died here\n");
+		if (coalesce != FALSE) {
+			coalesce_all();
+			need_global_coalesce = FALSE;
+		} 
 		return RETURN_SUCCESS;
+	}
+
+	if (need_global_coalesce == TRUE) {
+		coalesce_all();
+		need_global_coalesce = FALSE;
+	}
+
+	if (coalesce == 0) {
+		need_global_coalesce = TRUE;
 	}
 
 	// how to check whether a ptr is valid 
@@ -275,25 +288,15 @@ Node* my_coalesce(Node* pointer) {
 
 Node* coalesce_all(Node* pointer) {
 	// first coalease with next pointer if it exists and is free
-	if (pointer->next != NULL && pointer->next->status == FREE) {
-		pointer->next_free = pointer->next->next_free;
-		pointer->next = pointer->next->next;
-		if (pointer->next != NULL) {
-			pointer->next->prev = pointer;
+	Node* temp = global_head->head;
+	while(temp != NULL) {
+		if (temp->status == FREE) {
+			temp = my_coalesce(temp);
 		}
+		temp = temp->next;
 	}
 
-	// coalease with previous pointer if it exists and is free
-	if (pointer->prev != NULL && pointer->prev->status == FREE) {
-		pointer->prev->next_free = pointer->next_free;
-		pointer->prev->next = pointer->next;
-		if (pointer->next != NULL) {
-			pointer->next->prev = pointer->prev;
-		}
-		return pointer->prev;
-	}
-
-	return pointer;
+	
 }
 
 
