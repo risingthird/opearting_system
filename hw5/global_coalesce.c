@@ -122,7 +122,7 @@ void test_8_byte() {
   Mem_Dump();
 
   printf("--------------4096 byte free-----------------\n");
-  Mem_Free(ptr9, 1);
+  Mem_Free(ptr9, 0);
   Mem_Dump();
 
   printf("--------------512 byte free-----------------\n");
@@ -131,6 +131,10 @@ void test_8_byte() {
 
   printf("--------------null pointer free-----------------\n");
   Mem_Free(NULL, 1);
+  Mem_Dump();
+
+  printf("--------------2048 byte free-----------------\n");
+  Mem_Free(ptr8, 1);
   Mem_Dump();
 
 
