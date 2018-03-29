@@ -286,7 +286,7 @@ Node* my_coalesce(Node* pointer) {
 	return pointer;
 }
 
-Node* coalesce_all(Node* pointer) {
+Node* coalesce_all() {
 	// first coalease with next pointer if it exists and is free
 	Node* temp = global_head->head;
 	while(temp != NULL) {
