@@ -32,6 +32,11 @@ void test_two_mil() {
       Mem_Free(ptrs[i-FREE_FREQ+1], i % COALESCE_FREQ == 0);
 
   }
+
+  printf("--------------Null pointer free with coalesce on-----------------\n");
+  Mem_Free(NULL, 1);
+  Mem_Dump();
+  
   end = clock();
   print_execution_time(begin, end);
   free(ptrs);
@@ -41,3 +46,4 @@ void test_two_mil() {
 int main() {
   test_two_mil();
   return EXIT_SUCCESS;
+}
