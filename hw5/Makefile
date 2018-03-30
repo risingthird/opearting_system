@@ -54,6 +54,9 @@ initialize_and_round_up_to_1_page: initialize_and_round_up_to_1_page.c libuserme
 no_space_left_to_allocate: no_space_left_to_allocate.c libusermem.so
 	gcc -o no_space_left_to_allocate no_space_left_to_allocate.c -L. -lusermem -g
 
+try_to_free_a_NULL_pointer: try_to_free_a_NULL_pointer.c libusermem.so
+	gcc -o try_to_free_a_NULL_pointer try_to_free_a_NULL_pointer.c -L. -lusermem -g
+
 
 clean: 
 	@rm -f !(*.cpp|Makefile|README.md|*.h|BMC-CS355|*.c|*.txt)
