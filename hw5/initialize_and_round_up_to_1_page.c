@@ -18,7 +18,7 @@ static void print_execution_time(clock_t begin, clock_t end) {
 }
 
 void test_8_byte() {
-  int result = Mem_Init(4096);
+  int result = Mem_Init(400);
   //assert(result == -1);
 
   Mem_Dump();

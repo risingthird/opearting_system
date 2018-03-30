@@ -48,6 +48,60 @@ odd_sized_allocation_and_free: odd_sized_allocation_and_free.c libusermem.so
 initialize_with_size_of_1_page: initialize_with_size_of_1_page.c libusermem.so
 	gcc -o initialize_with_size_of_1_page initialize_with_size_of_1_page.c -L. -lusermem -g
 
+initialize_and_round_up_to_1_page: initialize_and_round_up_to_1_page.c libusermem.so
+	gcc -o initialize_and_round_up_to_1_page initialize_and_round_up_to_1_page.c -L. -lusermem -g
+
+no_space_left_to_allocate: no_space_left_to_allocate.c libusermem.so
+	gcc -o no_space_left_to_allocate no_space_left_to_allocate.c -L. -lusermem -g
+
 
 clean: 
 	@rm -f !(*.cpp|Makefile|README.md|*.h|BMC-CS355|*.c|*.txt)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
