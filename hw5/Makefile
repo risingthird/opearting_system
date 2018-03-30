@@ -39,6 +39,15 @@ a_few_aligned_allocations: a_few_aligned_allocations.c libusermem.so
 simple_allocation_and_free: simple_allocation_and_free.c libusermem.so
 	gcc -o simple_allocation_and_free simple_allocation_and_free.c -L. -lusermem -g
 
+aligned_allocation_and_free: aligned_allocation_and_free.c libusermem.so
+	gcc -o aligned_allocation_and_free aligned_allocation_and_free.c -L. -lusermem -g
+
+odd_sized_allocation_and_free: odd_sized_allocation_and_free.c libusermem.so
+	gcc -o odd_sized_allocation_and_free odd_sized_allocation_and_free.c -L. -lusermem -g
+
+initialize_with_size_of_1_page: initialize_with_size_of_1_page.c libusermem.so
+	gcc -o initialize_with_size_of_1_page initialize_with_size_of_1_page.c -L. -lusermem -g
+
 
 clean: 
 	@rm -f !(*.cpp|Makefile|README.md|*.h|BMC-CS355|*.c|*.txt)
