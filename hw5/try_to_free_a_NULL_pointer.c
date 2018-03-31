@@ -31,7 +31,7 @@ void test_8_byte() {
 
 
   printf("--------------NULL pointer free-----------------\n");
-  int result = Mem_Free(NULL, 0);
+  int result1 = Mem_Free(NULL, 0);
   Mem_Dump();
 
   printf("--------------16 byte allocation-----------------\n");
@@ -43,7 +43,7 @@ void test_8_byte() {
   printf("The pointer ptr1 is at address %p.\n", ptr0);
 
   printf("--------------NULL pointer free-----------------\n");
-  int result = Mem_Free(NULL, 0);
+  int result2 = Mem_Free(NULL, 0);
   Mem_Dump();
 
   printf("--------------Null pointer free with coalesce on-----------------\n");
