@@ -222,7 +222,7 @@ void Mem_Dump() {
 				toprint = remaining_of_remaining_size;
 			}
 		}
-		printf("Block is %s, and has %ld bytes memories\n", temp->status ? "allocated" : "free", get_block_size(temp));
+		printf("Block is %s, and has %ld bytes memories\n", temp->status ? "allocated" : "free", toprint);
 		temp = temp->next;
 	}
 	return;
