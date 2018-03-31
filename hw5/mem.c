@@ -33,7 +33,6 @@ int Mem_Init(long sizeOfRegion) {
 	global_head->head->status = FREE;
 	global_head->head->canary = STACK_CANARY;
 	global_head->head_free = global_head->head;
-	size_of_last_allocate = -1;
 
 	return RETURN_SUCCESS;
 
@@ -60,10 +59,9 @@ void *Mem_Alloc(long size) {
 			m_error = E_CORRUPT_FREESPACE;
 			return RETURN_WITH_ERROR;
 		}
-
 		block_available = get_block_size(curr);
 
-		if (block_available >= size && block_available > size_to_allocate) {
+		if (block_available > size && block_available > size_to_allocate) {
 			size_to_allocate = block_available;
 			prev_free = temp1;
 			next_to_allocate = curr;
@@ -104,12 +102,10 @@ void *Mem_Alloc(long size) {
 		if (prev_free == NULL) {
 			global_head->head_free = next_to_allocate->next_free;
 		}
-		if (next_to_allocate->next == NULL) {
+		if (next_to_allocate->next ==  NULL) {
 			size_of_last_allocate = size;
 		}
 	}
-
-
 
 	next_to_allocate->next_free = NULL;
 	next_to_allocate->status = ALLOCATED;
@@ -158,7 +154,7 @@ int Mem_Free(void *ptr, int coalesce) {
 				global_head->remaining_size += size_of_last_allocate;
 				size_of_last_allocate = -1;
 			}
-			else {	
+			else {
 				global_head->remaining_size += to_free_size;
 			}
 		}
@@ -214,11 +210,7 @@ int Mem_Free(void *ptr, int coalesce) {
 void Mem_Dump() {
 	Node* temp = global_head->head;
 	while (temp != NULL) {
-		long toprint = get_block_size(temp);
-		if (temp->status != FREE && temp->next == NULL) {
-			toprint = size_of_last_allocate;
-		}
-		printf("Block is %s, and has %ld bytes memories\n", temp->status ? "allocated" : "free", toprint);
+		printf("Block is %s, and has %ld bytes memories\n", temp->status ? "allocated" : "free", get_block_size(temp));
 		temp = temp->next;
 	}
 	return;
@@ -312,39 +304,3 @@ Node* coalesce_all() {
 
 	
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
