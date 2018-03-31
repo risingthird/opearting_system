@@ -40,6 +40,7 @@ typedef struct {
 
 Head* global_head;
 int need_global_coalesce;
+long size_of_last_allocate;
 
 
 long round_to(int val, int base);

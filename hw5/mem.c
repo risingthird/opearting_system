@@ -33,6 +33,7 @@ int Mem_Init(long sizeOfRegion) {
 	global_head->head->status = FREE;
 	global_head->head->canary = STACK_CANARY;
 	global_head->head_free = global_head->head;
+	size_of_last_allocate = -1;
 
 	return RETURN_SUCCESS;
 
@@ -113,9 +114,14 @@ void *Mem_Alloc(long size) {
 		}
 	}
 
+
+
 	next_to_allocate->next_free = NULL;
 	next_to_allocate->status = ALLOCATED;
 	global_head->remaining_size -= size;
+	if (global_head->remaining_size == 0) {
+		size_of_last_allocate = size;
+	}
 	return (void*) ((char*)next_to_allocate + BLOCK_HEADER);
 
 }
@@ -156,7 +162,13 @@ int Mem_Free(void *ptr, int coalesce) {
 		}
 
 		if (curr->status == ALLOCATED) {
-			global_head->remaining_size += to_free_size;
+			if (curr->next == NULL) {
+				global_head->remaining_size = size_of_last_allocate;
+				size_of_last_allocate = -1;
+			}
+			else {	
+				global_head->remaining_size += to_free_size;
+			}
 		}
 		else {
 			RETURN_SUCCESS; // is already a free block, no need to free
@@ -220,6 +232,9 @@ void Mem_Dump() {
 		else {
 			if (temp->status ==  FREE) {
 				toprint = remaining_of_remaining_size;
+			}
+			else {
+				toprint = size_of_last_allocate;
 			}
 		}
 		printf("Block is %s, and has %ld bytes memories\n", temp->status ? "allocated" : "free", toprint);
