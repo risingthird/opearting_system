@@ -70,7 +70,7 @@ void *Mem_Alloc(long size) {
 			block_available = remaining_of_remaining_size;
 		}
 
-		if (block_available > size && block_available > size_to_allocate) {
+		if (block_available >= size && block_available > size_to_allocate) {
 			size_to_allocate = block_available;
 			prev_free = temp1;
 			next_to_allocate = curr;
