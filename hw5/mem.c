@@ -182,6 +182,9 @@ int Mem_Free(void *ptr, int coalesce) {
 				curr->next_free = prev_free->next_free;
 			}
 			prev_free->next_free = curr;
+			if (prev_free->next_free == NULL) {
+				printf("Fuck you\n");
+			}
 		}
 		else {
 			if (!coalesce || coalesce_flag == TRUE) { 
