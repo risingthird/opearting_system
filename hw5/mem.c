@@ -54,12 +54,21 @@ void *Mem_Alloc(long size) {
 	Node* next_to_allocate = NULL;
 	int size_to_allocate = -1;
 	int block_available = -1;
+	long remaining_of_remaining_size = global_head->remaining_size;
 	while(curr != NULL) {
 		if (curr->canary != STACK_CANARY) {
 			m_error = E_CORRUPT_FREESPACE;
 			return RETURN_WITH_ERROR;
 		}
+
 		block_available = get_block_size(curr);
+
+		if (curr->next_free != NULL) {
+			remaining_of_remaining_size -= block_available;
+		}
+		else {
+			block_available = remaining_of_remaining_size;
+		}
 
 		if (block_available > size && block_available > size_to_allocate) {
 			size_to_allocate = block_available;
@@ -200,7 +209,19 @@ int Mem_Free(void *ptr, int coalesce) {
 
 void Mem_Dump() {
 	Node* temp = global_head->head;
+	long remaining_of_remaining_size = global_head->remaining_size;
 	while (temp != NULL) {
+		long toprint = get_block_size(temp);
+		if (temp->next != NULL) {
+			if (temp->status ==  FREE) {
+				remaining_of_remaining_size -= toprint;
+			}
+		}
+		else {
+			if (temp->status ==  FREE) {
+				toprint = remaining_of_remaining_size;
+			}
+		}
 		printf("Block is %s, and has %ld bytes memories\n", temp->status ? "allocated" : "free", get_block_size(temp));
 		temp = temp->next;
 	}
