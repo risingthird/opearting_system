@@ -223,6 +223,15 @@ int Mem_delete_all() {
 	return result;
 }
 
+void Mem_Dump_Extra() {
+	Node* temp = global_head->head;
+	while (temp != NULL) {
+		printf("Block is %s, and has %ld bytes memories\n", temp->status ? "allocated" : "free", get_block_size(temp));
+		temp = temp->next_free;
+	}
+	return;
+}
+
 
 long round_to(int val, int base) {
 	return (((val - 1) / base) * base + base);
