@@ -102,9 +102,6 @@ void *Mem_Alloc(long size) {
 		if (prev_free == NULL) {
 			global_head->head_free = next_to_allocate->next_free;
 		}
-		if (next_to_allocate->next ==  NULL) {
-			size_of_last_allocate = size;
-		}
 	}
 
 	next_to_allocate->next_free = NULL;
@@ -150,13 +147,7 @@ int Mem_Free(void *ptr, int coalesce) {
 		}
 
 		if (curr->status == ALLOCATED) {
-			if (curr->next == NULL) {
-				global_head->remaining_size += size_of_last_allocate;
-				size_of_last_allocate = -1;
-			}
-			else {
-				global_head->remaining_size += to_free_size;
-			}
+			global_head->remaining_size += to_free_size;
 		}
 		else {
 			RETURN_SUCCESS; // is already a free block, no need to free
@@ -221,15 +212,6 @@ int Mem_delete_all() {
 	int result = munmap(global_head, to_delete);
 	global_head = NULL;
 	return result;
-}
-
-void Mem_Dump_Extra() {
-	Node* temp = global_head->head;
-	while (temp != NULL) {
-		printf("Block is %s, and has %ld bytes memories\n", temp->status ? "allocated" : "free", get_block_size(temp));
-		temp = temp->next_free;
-	}
-	return;
 }
 
 
@@ -313,3 +295,9 @@ Node* coalesce_all() {
 
 	
 }
+
+
+
+
+
+
