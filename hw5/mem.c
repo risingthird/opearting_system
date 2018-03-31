@@ -102,6 +102,9 @@ void *Mem_Alloc(long size) {
 		if (prev_free == NULL) {
 			global_head->head_free = next_to_allocate->next_free;
 		}
+		if (next_to_allocate->next == NULL) {
+			size_of_last_allocate = size;
+		}
 	}
 
 	next_to_allocate->next_free = NULL;
@@ -147,7 +150,12 @@ int Mem_Free(void *ptr, int coalesce) {
 		}
 
 		if (curr->status == ALLOCATED) {
-			global_head->remaining_size += to_free_size;
+			if (curr->next ==  NULL) {
+				global_head->remaining_size += size_of_last_allocate;
+			}
+			else {
+				global_head->remaining_size += to_free_size;
+			}
 		}
 		else {
 			RETURN_SUCCESS; // is already a free block, no need to free
@@ -182,9 +190,7 @@ int Mem_Free(void *ptr, int coalesce) {
 				curr->next_free = prev_free->next_free;
 			}
 			prev_free->next_free = curr;
-			if (prev_free->next_free == NULL) {
-				printf("Fuck you\n");
-			}
+
 		}
 		else {
 			if (!coalesce || coalesce_flag == TRUE) { 
