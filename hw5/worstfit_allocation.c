@@ -129,8 +129,8 @@ void test_8_byte() {
   Mem_Dump();
   printf("The pointer ptr0 is at address %p.\n", ptr0);
 
-  printf("--------------8 byte allocation-----------------\n");
-  ptr7 = Mem_Alloc(8);
+  printf("--------------16 byte allocation-----------------\n");
+  ptr7 = Mem_Alloc(16);
   if (ptr7 == NULL) {
     exit(EXIT_FAILURE);
   }
