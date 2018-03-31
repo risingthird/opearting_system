@@ -55,7 +55,6 @@ void *Mem_Alloc(long size) {
 	Node* next_to_allocate = NULL;
 	int size_to_allocate = -1;
 	int block_available = -1;
-	long remaining_of_remaining_size = global_head->remaining_size;
 	while(curr != NULL) {
 		if (curr->canary != STACK_CANARY) {
 			m_error = E_CORRUPT_FREESPACE;
@@ -63,13 +62,6 @@ void *Mem_Alloc(long size) {
 		}
 
 		block_available = get_block_size(curr);
-
-		if (curr->next_free != NULL) {
-			remaining_of_remaining_size -= block_available;
-		}
-		else {
-			block_available = remaining_of_remaining_size;
-		}
 
 		if (block_available >= size && block_available > size_to_allocate) {
 			size_to_allocate = block_available;
@@ -85,7 +77,7 @@ void *Mem_Alloc(long size) {
 		return NULL;
 	}
 
-	if (size_to_allocate >= size + BLOCK_SIZE) {
+	if (size_to_allocate >= size + BLOCK_HEADER + BLOCK_SIZE) {
 		temp2 = next_to_allocate->next;
 		Node* new_next = (char*) (next_to_allocate) + BLOCK_HEADER + size;
 		new_next->next = temp2;
@@ -112,6 +104,9 @@ void *Mem_Alloc(long size) {
 		if (prev_free == NULL) {
 			global_head->head_free = next_to_allocate->next_free;
 		}
+		if (next_to_allocate->next == NULL) {
+			size_of_last_allocate = size;
+		}
 	}
 
 
@@ -119,9 +114,6 @@ void *Mem_Alloc(long size) {
 	next_to_allocate->next_free = NULL;
 	next_to_allocate->status = ALLOCATED;
 	global_head->remaining_size -= size;
-	if (global_head->remaining_size == 0) {
-		size_of_last_allocate = size;
-	}
 	return (void*) ((char*)next_to_allocate + BLOCK_HEADER);
 
 }
@@ -221,21 +213,10 @@ int Mem_Free(void *ptr, int coalesce) {
 
 void Mem_Dump() {
 	Node* temp = global_head->head;
-	long remaining_of_remaining_size = global_head->remaining_size;
 	while (temp != NULL) {
 		long toprint = get_block_size(temp);
-		if (temp->next != NULL) {
-			if (temp->status ==  FREE) {
-				remaining_of_remaining_size -= toprint;
-			}
-		}
-		else {
-			if (temp->status ==  FREE) {
-				toprint = remaining_of_remaining_size;
-			}
-			else {
-				toprint = size_of_last_allocate;
-			}
+		if (temp->status != FREE && temp->next == NULL) {
+			toprint = size_of_last_allocate;
 		}
 		printf("Block is %s, and has %ld bytes memories\n", temp->status ? "allocated" : "free", toprint);
 		temp = temp->next;
