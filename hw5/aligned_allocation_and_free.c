@@ -25,18 +25,18 @@ void test_8_byte() {
   for (int i = 0; i < NUM_ALLOC; i++) {
     ptrs[i] = Mem_Alloc(BYTE << i);
     assert(ptrs[i] != NULL);
-    Mem_dump();
+    Mem_Dump();
   }
 
   for (int i = 0; i < NUM_ALLOC; i++) {
     printf("---------------------%d byte free-------------------\n", BYTE<<i);
     Mem_Free(ptrs[i], 0);
-    Mem_dump();
+    Mem_Dump();
   }
 
   printf("---------------------Coalesce all-------------------\n");
   Mem_Free(NULL, 1);
-  Mem_dump();
+  Mem_Dump();
 
   end = clock();
   print_execution_time(begin, end);
