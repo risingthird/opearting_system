@@ -5,6 +5,7 @@
 #include <assert.h>
 #include <limits.h>
 #include <unistd.h>
+#include <string.h>
 
 #define NUM_ALLOC 10
 #define FREE_FREQ 100     // 1:100
