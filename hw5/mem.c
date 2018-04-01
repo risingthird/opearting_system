@@ -3,6 +3,9 @@
 
 extern Head* global_head;
 int m_error;
+Node* largest;
+Node* second_largest;
+
 
 int Mem_Init(long sizeOfRegion) {
 	if (global_head != NULL) {
@@ -17,13 +20,11 @@ int Mem_Init(long sizeOfRegion) {
 
 	long to_alloc = round_to(sizeOfRegion, BLOCK_SIZE) / BLOCK_SIZE * BLOCK_HEADER + sizeOfRegion;
 	long to_alloc_with_global = round_to(to_alloc + GLOBAL_SIZE, getpagesize());
-	printf("The total size is %ld\n\n", to_alloc_with_global);
 
 	if ( (global_head = mmap(NULL, to_alloc_with_global, PROT_READ | PROT_WRITE,  MAP_PRIVATE | MAP_ANONYMOUS, -1, 0)) == MAP_FAILED) {
 		m_error = E_NO_SPACE;
 		return RETURN_WITH_ERROR;
 	}
-	printf("global head is at %p\n\n\n", global_head);
 	global_head->actual_size = to_alloc_with_global;
 	global_head->remaining_size = sizeOfRegion;
 	global_head->head = (Node*) ((char*) global_head + GLOBAL_SIZE);
@@ -40,7 +41,6 @@ int Mem_Init(long sizeOfRegion) {
 
 void *Mem_Alloc(long size) {
 	if (size > global_head->remaining_size) {
-		printf("I died here\n");
 		m_error = E_BAD_ARGS;
 		return NULL;
 	}
@@ -54,12 +54,44 @@ void *Mem_Alloc(long size) {
 	Node* next_to_allocate = NULL;
 	int size_to_allocate = -1;
 	int block_available = -1;
+	if (largest != NULL && second_largest != NULL) {
+			if (get_block_size(largest) >= get_block_size(second_largest)) {
+				curr = NULL;
+				next_to_allocate = largest;
+				prev_free = largest->prev;
+				size_to_allocate = get_block_size(largest);
+				while (prev_free != NULL && prev_free->status != FREE) {
+					prev_free = prev_free->prev;
+					if (prev_free->canary != STACK_CANARY) {
+						m_error = E_CORRUPT_FREESPACE;
+						return RETURN_WITH_ERROR;
+					}
+				}
+				
+			}
+	}
+	else {
+		largest = global_head->head_free;
+		second_largest = global_head->head_free;
+	}
 	while(curr != NULL) {
 		if (curr->canary != STACK_CANARY) {
 			m_error = E_CORRUPT_FREESPACE;
 			return RETURN_WITH_ERROR;
 		}
+
 		block_available = get_block_size(curr);
+
+		if (block_available > get_block_size(largest)) {
+			second_largest = largest;
+			largest = curr;
+		}
+		else if (block_available > get_block_size(second_largest)) {
+			second_largest = curr;
+		}
+		if (largest == NULL || second_largest == NULL) {
+
+		}
 
 		if (block_available > size && block_available > size_to_allocate) {
 			size_to_allocate = block_available;
@@ -97,6 +129,13 @@ void *Mem_Alloc(long size) {
 			global_head->head_free = new_next;
 		}
 		next_to_allocate->next = new_next;
+		if (get_block_size(new_next) > get_block_size(second_largest)) {
+			largest = new_next;
+		}
+		else {
+			largest = second_largest;
+			second_largest = NULL;
+		}
 	}
 	else {
 		if (prev_free == NULL) {
@@ -105,6 +144,8 @@ void *Mem_Alloc(long size) {
 		if (next_to_allocate->next == NULL) {
 			size_of_last_allocate = size;
 		}
+		largest = second_largest;
+		second_largest = NULL;
 	}
 
 	next_to_allocate->next_free = NULL;
@@ -173,6 +214,7 @@ int Mem_Free(void *ptr, int coalesce) {
 			if (after - before == 0 || temp == curr) {
 				coalesce_flag = TRUE;
 			}
+
 		}
 
 		curr->status = FREE;
@@ -200,6 +242,15 @@ int Mem_Free(void *ptr, int coalesce) {
 			global_head->head_free = curr;
 		}
 
+		if (largest != NULL && second_largest != NULL) {
+			if (get_block_size(curr) > get_block_size(largest)) {
+				second_largest = largest;
+				largest = curr;
+			}
+			else if (get_block_size(curr) > get_block_size(second_largest)) {
+				second_largest = curr;
+			}
+		}
 		return RETURN_SUCCESS;
 
 	}
@@ -278,6 +329,12 @@ Node* my_coalesce(Node* pointer) {
 		if (pointer->next != NULL) {
 			pointer->next->prev = pointer;
 		}
+		if (larget != NULL && pointer->next == largest) {
+			largest = NULL;
+		}
+		else if (second_largest != NULL && pointer->next == second_largest) {
+			second_largest = NULL;
+		}
 	}
 
 	// coalease with previous pointer if it exists and is free
@@ -286,6 +343,12 @@ Node* my_coalesce(Node* pointer) {
 		pointer->prev->next = pointer->next;
 		if (pointer->next != NULL) {
 			pointer->next->prev = pointer->prev;
+		}
+		if (larget != NULL && pointer->prev == largest) {
+			largest = NULL;
+		}
+		else if (second_largest != NULL && pointer->prev == second_largest) {
+			second_largest = NULL;
 		}
 		return pointer->prev;
 	}
