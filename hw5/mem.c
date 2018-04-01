@@ -75,7 +75,7 @@ void *Mem_Alloc(long size) {
 		return NULL;
 	}
 
-	if (size_to_allocate > size + BLOCK_HEADER + BLOCK_SIZE) {
+	if (size_to_allocate >= size + BLOCK_HEADER + BLOCK_SIZE) {
 		temp2 = next_to_allocate->next;
 		Node* new_next = (char*) (next_to_allocate) + BLOCK_HEADER + size;
 		new_next->next = temp2;
@@ -152,6 +152,7 @@ int Mem_Free(void *ptr, int coalesce) {
 		if (curr->status == ALLOCATED) {
 			if (curr->next ==  NULL) {
 				global_head->remaining_size += size_of_last_allocate;
+				size_of_last_allocate = -1;
 			}
 			else {
 				global_head->remaining_size += to_free_size;
@@ -170,7 +171,7 @@ int Mem_Free(void *ptr, int coalesce) {
 			curr = my_coalesce(curr);
 			after = get_block_size(curr);
 			if (after - before == 0 || temp == curr) {
-				coalesce = TRUE;
+				coalesce_flag = TRUE;
 			}
 		}
 
