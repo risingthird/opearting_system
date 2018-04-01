@@ -344,7 +344,7 @@ Node* my_coalesce(Node* pointer) {
 		if (pointer->next != NULL) {
 			pointer->next->prev = pointer->prev;
 		}
-		if (larget != NULL && pointer->prev == largest) {
+		if (largest != NULL && pointer->prev == largest) {
 			largest = NULL;
 		}
 		else if (second_largest != NULL && pointer->prev == second_largest) {
