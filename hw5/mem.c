@@ -125,49 +125,99 @@ void *Mem_Alloc(long size) {
 	}
 
 	long real_block_size = get_real_block_size(next_to_allocate);
+	if (next_to_allocate->next == NULL) {
+		si
+	}
 
-	if (size_to_allocate >= BLOCK_HEADER + size + BLOCK_SIZE) {
-		temp2 = next_to_allocate->next;
-		Node* new_next = (char*) (next_to_allocate) + BLOCK_HEADER + size;
-		new_next->next = temp2;
-		//printf("NEW NEXT IS HERE %p\n\n",new_next);
-		
-		if (temp2 != NULL) {
-			temp2->prev = new_next;
-		}
+	if (next_to_allocate->next != NULL){
+		if (size_to_allocate >= BLOCK_HEADER + size + BLOCK_SIZE) {
+			temp2 = next_to_allocate->next;
+			Node* new_next = (char*) (next_to_allocate) + BLOCK_HEADER + size;
+			new_next->next = temp2;
+			//printf("NEW NEXT IS HERE %p\n\n",new_next);
+			
+			if (temp2 != NULL) {
+				temp2->prev = new_next;
+			}
 
-		new_next->prev = next_to_allocate;
-		new_next->status = FREE;
-		new_next->next_free = next_to_allocate->next_free;
-		new_next->canary = STACK_CANARY;
+			new_next->prev = next_to_allocate;
+			new_next->status = FREE;
+			new_next->next_free = next_to_allocate->next_free;
+			new_next->canary = STACK_CANARY;
 
-		if (prev_free != NULL) {
-			prev_free->next_free = new_next;
+			if (prev_free != NULL) {
+				prev_free->next_free = new_next;
+			}
+			else {
+				global_head->head_free = new_next;
+			}
+			next_to_allocate->next = new_next;
+			if (get_block_size(new_next) > get_block_size(second_largest)) {
+				largest = new_next;
+			}
+			else {
+				largest = second_largest;
+				second_largest = NULL;
+			}
+			if (new_next->next == NULL) {
+				last_block_size -= size;
+			}
 		}
 		else {
-			global_head->head_free = new_next;
-		}
-		next_to_allocate->next = new_next;
-		if (get_block_size(new_next) > get_block_size(second_largest)) {
-			largest = new_next;
-		}
-		else {
+			if (prev_free == NULL) {
+				global_head->head_free = next_to_allocate->next_free;
+			}
+			if (next_to_allocate->next == NULL) {
+				size_of_last_allocate = size;
+			}
 			largest = second_largest;
 			second_largest = NULL;
 		}
-		if (new_next->next == NULL) {
-			last_block_size -= size;
-		}
 	}
 	else {
-		if (prev_free == NULL) {
-			global_head->head_free = next_to_allocate->next_free;
+		if (size_to_allocate >= size + BLOCK_SIZE) {
+			temp2 = next_to_allocate->next;
+			Node* new_next = (char*) (next_to_allocate) + BLOCK_HEADER + size;
+			new_next->next = temp2;
+			//printf("NEW NEXT IS HERE %p\n\n",new_next);
+			
+			if (temp2 != NULL) {
+				temp2->prev = new_next;
+			}
+
+			new_next->prev = next_to_allocate;
+			new_next->status = FREE;
+			new_next->next_free = next_to_allocate->next_free;
+			new_next->canary = STACK_CANARY;
+
+			if (prev_free != NULL) {
+				prev_free->next_free = new_next;
+			}
+			else {
+				global_head->head_free = new_next;
+			}
+			next_to_allocate->next = new_next;
+			if (get_block_size(new_next) > get_block_size(second_largest)) {
+				largest = new_next;
+			}
+			else {
+				largest = second_largest;
+				second_largest = NULL;
+			}
+			if (new_next->next == NULL) {
+				last_block_size -= size;
+			}
 		}
-		if (next_to_allocate->next == NULL) {
-			size_of_last_allocate = size;
-		}
-		largest = second_largest;
-		second_largest = NULL;
+		else {
+			if (prev_free == NULL) {
+				global_head->head_free = next_to_allocate->next_free;
+			}
+			if (next_to_allocate->next == NULL) {
+				size_of_last_allocate = size;
+			}
+			largest = second_largest;
+			second_largest = NULL;
+		}		
 	}
 
 	next_to_allocate->next_free = NULL;
