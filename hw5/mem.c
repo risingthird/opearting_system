@@ -57,20 +57,20 @@ void *Mem_Alloc(long size) {
 	int size_to_allocate = -1;
 	int block_available = -1;
 	if (largest != NULL && second_largest != NULL) {
-			if (get_block_size(largest) >= get_block_size(second_largest)) {
-				curr = NULL;
-				next_to_allocate = largest;
-				prev_free = largest->prev;
-				size_to_allocate = get_block_size(largest);
-				while (prev_free != NULL && prev_free->status != FREE) {
-					prev_free = prev_free->prev;
-					if (prev_free->canary != STACK_CANARY) {
-						m_error = E_CORRUPT_FREESPACE;
-						return RETURN_WITH_ERROR;
-					}
+		if (get_block_size(largest) >= get_block_size(second_largest)) {
+			curr = NULL;
+			next_to_allocate = largest;
+			prev_free = largest->prev;
+			size_to_allocate = get_block_size(largest);
+			while (prev_free != NULL && prev_free->status != FREE) {
+				prev_free = prev_free->prev;
+				if (prev_free->canary != STACK_CANARY) {
+					m_error = E_CORRUPT_FREESPACE;
+					return RETURN_WITH_ERROR;
 				}
-				
 			}
+			
+		}
 	}
 	else {
 		largest = global_head->head_free;
@@ -84,15 +84,12 @@ void *Mem_Alloc(long size) {
 
 		block_available = get_block_size(curr);
 
-		if (block_available > get_block_size(largest)) {
+		if (block_available >= get_block_size(largest)) {
 			second_largest = largest;
 			largest = curr;
 		}
-		else if (block_available > get_block_size(second_largest)) {
+		else if (block_available >= get_block_size(second_largest)) {
 			second_largest = curr;
-		}
-		if (largest == NULL || second_largest == NULL) {
-
 		}
 
 		if (block_available > size && block_available > size_to_allocate) {
