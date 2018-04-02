@@ -60,6 +60,9 @@ try_to_free_a_NULL_pointer: try_to_free_a_NULL_pointer.c libusermem.so
 check_memory_can_be_written_to: check_memory_can_be_written_to.c libusermem.so
 	gcc -o check_memory_can_be_written_to check_memory_can_be_written_to.c -L. -lusermem -g
 
+two_mil_without_coalescing: two_mil_without_coalescing.c libusermem.so
+	gcc -o two_mil_without_coalescing two_mil_without_coalescing.c -L. -lusermem -g
+
 
 clean: 
 	@rm -f !(*.cpp|Makefile|README.md|*.h|BMC-CS355|*.c|*.txt)
