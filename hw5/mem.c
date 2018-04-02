@@ -5,6 +5,7 @@ extern Head* global_head;
 int m_error;
 Node* largest;
 Node* second_largest;
+long last_block_size;
 
 
 int Mem_Init(long sizeOfRegion) {
@@ -34,6 +35,7 @@ int Mem_Init(long sizeOfRegion) {
 	global_head->head->status = FREE;
 	global_head->head->canary = STACK_CANARY;
 	global_head->head_free = global_head->head;
+	last_block_size = round_to(sizeOfRegion, BLOCK_SIZE);
 	largest = NULL;
 	second_largest = NULL;
 
@@ -134,6 +136,9 @@ void *Mem_Alloc(long size) {
 		else {
 			largest = second_largest;
 			second_largest = NULL;
+		}
+		if (new_next->next == NULL) {
+			last_block_size -= size;
 		}
 	}
 	else {
@@ -309,7 +314,7 @@ long get_block_size(Node* pointer) {
 		result = (char*)(pointer->next) - ((char*)pointer + BLOCK_HEADER);
 	}
 	else {
-		result = (char*)(global_head) + global_head->actual_size - (char*) pointer - BLOCK_HEADER;
+		result = last_block_size;
 	}
 
 	return result;
@@ -323,6 +328,15 @@ Node* get_header(void* pointer) {
 
 Node* my_coalesce(Node* pointer) {
 	// first coalease with next pointer if it exists and is free
+	if (pointer == NULL) {
+		return NULL;
+	}
+	Node* curr = pointer;
+	Node* curr2 = pointer;
+	Node* next_free_block = NULL;
+	long coalesced_size = 0;
+	long cur_size = get_block_size(pointer);
+	
 	if (pointer->next != NULL && pointer->next->status == FREE) {
 		pointer->next_free = pointer->next->next_free;
 		pointer->next = pointer->next->next;
@@ -336,6 +350,10 @@ Node* my_coalesce(Node* pointer) {
 			second_largest = NULL;
 		}
 	}
+	if (pointer->next == NULL) {
+		last_block_size += cur_size; 
+	}
+	long cur_size_prev = get_block_size(pointer->prev);
 
 	// coalease with previous pointer if it exists and is free
 	if (pointer->prev != NULL && pointer->prev->status == FREE) {
@@ -349,6 +367,9 @@ Node* my_coalesce(Node* pointer) {
 		}
 		else if (second_largest != NULL && pointer->prev == second_largest) {
 			second_largest = NULL;
+		}
+		if(pointer->prev->next == NULL) {
+			last_block_size += cur_size_prev;
 		}
 		return pointer->prev;
 	}
