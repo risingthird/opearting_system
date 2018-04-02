@@ -108,7 +108,9 @@ void *Mem_Alloc(long size) {
 		return NULL;
 	}
 
-	if (size_to_allocate > size + BLOCK_SIZE) {
+	long real_block_size = get_real_block_size(next_to_allocate);
+
+	if (real_block_size >= BLOCK_HEADER + size + BLOCK_SIZE) {
 		temp2 = next_to_allocate->next;
 		Node* new_next = (char*) (next_to_allocate) + BLOCK_HEADER + size;
 		new_next->next = temp2;
@@ -386,8 +388,23 @@ Node* coalesce_all() {
 		}
 		temp = temp->next_free;
 	}
+}
 
+long get_real_block_size(Node* pointer) {
+	long result = -1;
 	
+	if (pointer ==  NULL) {
+		return RETURN_WITH_ERROR;
+	}
+
+	if (pointer->next != NULL) {
+		result = (char*)(pointer->next) - ((char*)pointer + BLOCK_HEADER);
+	}
+	else {
+		result = (char*)(global_head) + global_head->actual_size - (char*) pointer - BLOCK_HEADER;
+	}
+
+	return result;
 }
 
 
