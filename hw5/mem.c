@@ -124,11 +124,6 @@ void *Mem_Alloc(long size) {
 		return NULL;
 	}
 
-	long real_block_size = get_real_block_size(next_to_allocate);
-	if (next_to_allocate->next == NULL) {
-		si
-	}
-
 	if (next_to_allocate->next != NULL){
 		if (size_to_allocate >= BLOCK_HEADER + size + BLOCK_SIZE) {
 			temp2 = next_to_allocate->next;
