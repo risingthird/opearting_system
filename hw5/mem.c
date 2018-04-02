@@ -108,7 +108,7 @@ void *Mem_Alloc(long size) {
 		return NULL;
 	}
 
-	if (size_to_allocate > size + BLOCK_HEADER + BLOCK_SIZE) {
+	if (size_to_allocate >= size + BLOCK_SIZE) {
 		temp2 = next_to_allocate->next;
 		Node* new_next = (char*) (next_to_allocate) + BLOCK_HEADER + size;
 		new_next->next = temp2;
