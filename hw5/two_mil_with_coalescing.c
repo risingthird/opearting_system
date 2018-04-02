@@ -35,7 +35,7 @@ void test_two_mil() {
 
   printf("--------------Null pointer free with coalesce on-----------------\n");
   Mem_Free(NULL, 1);
-  Mem_Dump();
+  //Mem_Dump();
   
   end = clock();
   print_execution_time(begin, end);

@@ -64,10 +64,10 @@ void *Mem_Alloc(long size) {
 			size_to_allocate = get_block_size(largest);
 			while (prev_free != NULL && prev_free->status != FREE) {
 				prev_free = prev_free->prev;
-				// if (prev_free->canary != STACK_CANARY) {
-				// 	m_error = E_CORRUPT_FREESPACE;
-				// 	return RETURN_WITH_ERROR;
-				// }
+				if (prev_free->canary != STACK_CANARY) {
+					m_error = E_CORRUPT_FREESPACE;
+					return RETURN_WITH_ERROR;
+				}
 			}
 			
 		}
@@ -77,10 +77,10 @@ void *Mem_Alloc(long size) {
 		second_largest = global_head->head_free;
 	}
 	while(curr != NULL) {
-		// if (curr->canary != STACK_CANARY) {
-		// 	m_error = E_CORRUPT_FREESPACE;
-		// 	return RETURN_WITH_ERROR;
-		// }
+		if (curr->canary != STACK_CANARY) {
+			m_error = E_CORRUPT_FREESPACE;
+			return RETURN_WITH_ERROR;
+		}
 
 		block_available = get_block_size(curr);
 
@@ -119,6 +119,7 @@ void *Mem_Alloc(long size) {
 		new_next->prev = next_to_allocate;
 		new_next->status = FREE;
 		new_next->next_free = next_to_allocate->next_free;
+		new_next->canary = STACK_CANARY;
 
 		if (prev_free != NULL) {
 			prev_free->next_free = new_next;
@@ -176,10 +177,10 @@ int Mem_Free(void *ptr, int coalesce) {
 	if (is_valid_addr(ptr)) {
 		//printf("I got here. Yay!\n");
 		Node* curr = get_header(ptr);
-		// if (curr->canary != STACK_CANARY) {
-		// 	m_error = E_CORRUPT_FREESPACE;
-		// 	return RETURN_WITH_ERROR;
-		// }
+		if (curr->canary != STACK_CANARY) {
+			m_error = E_CORRUPT_FREESPACE;
+			return RETURN_WITH_ERROR;
+		}
 		long to_free_size = -1;
 
 		to_free_size = get_block_size(curr);
@@ -220,10 +221,10 @@ int Mem_Free(void *ptr, int coalesce) {
 		Node* prev_free = curr->prev;
 		while (prev_free != NULL && prev_free->status != FREE) {
 			prev_free = prev_free->prev;
-			// if (prev_free->canary != STACK_CANARY) {
-			// 	m_error = E_CORRUPT_FREESPACE;
-			// 	return RETURN_WITH_ERROR;
-			// }
+			if (prev_free->canary != STACK_CANARY) {
+				m_error = E_CORRUPT_FREESPACE;
+				return RETURN_WITH_ERROR;
+			}
 		}
 
 		if (prev_free != NULL) {
