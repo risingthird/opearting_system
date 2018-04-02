@@ -215,6 +215,7 @@ int Mem_Free(void *ptr, int coalesce) {
 		if (curr->status == ALLOCATED) {
 			if (curr->next ==  NULL) {
 				global_head->remaining_size += size_of_last_allocate;
+				last_block_size = size_of_last_allocate;
 				size_of_last_allocate = -1;
 			}
 			else {
