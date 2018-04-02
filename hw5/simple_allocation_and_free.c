@@ -20,6 +20,7 @@ static void print_execution_time(clock_t begin, clock_t end) {
 void test_8_byte() {
   int result = Mem_Init(8504);
   assert(result == 0);
+  Mem_Dump();
 
   printf("--------------8 byte allocation-----------------\n");
   void* ptr0 = Mem_Alloc(8);
