@@ -34,6 +34,8 @@ int Mem_Init(long sizeOfRegion) {
 	global_head->head->status = FREE;
 	global_head->head->canary = STACK_CANARY;
 	global_head->head_free = global_head->head;
+	largest = NULL;
+	second_largest = NULL;
 
 	return RETURN_SUCCESS;
 
