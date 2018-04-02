@@ -7,6 +7,22 @@ Node* largest;
 Node* second_largest;
 long last_block_size;
 
+long get_real_block_size(Node* pointer) {
+	long result = -1;
+	
+	if (pointer ==  NULL) {
+		return RETURN_WITH_ERROR;
+	}
+
+	if (pointer->next != NULL) {
+		result = (char*)(pointer->next) - ((char*)pointer + BLOCK_HEADER);
+	}
+	else {
+		result = (char*)(global_head) + global_head->actual_size - (char*) pointer - BLOCK_HEADER;
+	}
+
+	return result;
+}
 
 int Mem_Init(long sizeOfRegion) {
 	if (global_head != NULL) {
@@ -390,22 +406,7 @@ Node* coalesce_all() {
 	}
 }
 
-long get_real_block_size(Node* pointer) {
-	long result = -1;
-	
-	if (pointer ==  NULL) {
-		return RETURN_WITH_ERROR;
-	}
 
-	if (pointer->next != NULL) {
-		result = (char*)(pointer->next) - ((char*)pointer + BLOCK_HEADER);
-	}
-	else {
-		result = (char*)(global_head) + global_head->actual_size - (char*) pointer - BLOCK_HEADER;
-	}
-
-	return result;
-}
 
 
 
