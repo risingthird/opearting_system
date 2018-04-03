@@ -332,7 +332,7 @@ void Mem_Dump() {
 	Node* temp = global_head->head;
 	while (temp != NULL) {
 		printf("Block is %s, and has %ld bytes memories\n", temp->status ? "allocated" : "free", get_block_size(temp));
-		temp = temp->next;
+		temp = temp->next_free;
 	}
 	return;
 }
