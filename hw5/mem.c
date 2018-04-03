@@ -6,6 +6,7 @@ int m_error;
 Node* largest;
 Node* second_largest;
 long last_block_size;
+#define worst_multiplier 40
 
 long get_real_block_size(Node* pointer) {
 	long result = -1;
@@ -34,8 +35,13 @@ int Mem_Init(long sizeOfRegion) {
 		m_error = E_BAD_ARGS;
 		return RETURN_WITH_ERROR;
 	}
-
+	#ifdef aligned
 	long to_alloc = round_to(sizeOfRegion, BLOCK_SIZE) / BLOCK_SIZE * BLOCK_HEADER + sizeOfRegion;
+	#endif
+	#ifdef worst
+	long to_alloc = round_to(sizeOfRegion, BLOCK_SIZE) * worst_multiplier + sizeOfRegion;
+	#endif
+
 	long to_alloc_with_global = round_to(to_alloc + GLOBAL_SIZE, getpagesize());
 
 	if ( (global_head = mmap(NULL, to_alloc_with_global, PROT_READ | PROT_WRITE,  MAP_PRIVATE | MAP_ANONYMOUS, -1, 0)) == MAP_FAILED) {
