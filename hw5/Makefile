@@ -4,7 +4,7 @@ SHELL:=/bin/bash -O extglob
 
 
 mem.o : mem.c util.h
-	gcc -Wall -pedantic -fpic -g -c -Daligned mem.c
+	gcc -Wall -pedantic -fpic -g -c -Dworst mem.c
 
 libusermem.so : mem.o
 	gcc -o libusermem.so mem.o -shared -g
