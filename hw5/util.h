@@ -24,7 +24,6 @@
 #define STACK_CANARY 25
 
 typedef struct A_Block {
-    char canary;
     struct A_Block* next;
     struct A_Block* prev;       
     struct A_Block* next_free;
