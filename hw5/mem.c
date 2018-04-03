@@ -35,11 +35,12 @@ int Mem_Init(long sizeOfRegion) {
 		return RETURN_WITH_ERROR;
 	}
 
-	long to_alloc = round_to(sizeOfRegion, BLOCK_SIZE) / BLOCK_SIZE * BLOCK_HEADER + sizeOfRegion;
+	long to_alloc = round_to(sizeOfRegion, BLOCK_SIZE) * BLOCK_HEADER + sizeOfRegion;
 	long to_alloc_with_global = round_to(to_alloc + GLOBAL_SIZE, getpagesize());
 
 	if ( (global_head = mmap(NULL, to_alloc_with_global, PROT_READ | PROT_WRITE,  MAP_PRIVATE | MAP_ANONYMOUS, -1, 0)) == MAP_FAILED) {
 		m_error = E_NO_SPACE;
+		printf("I run out of memories\n");
 		return RETURN_WITH_ERROR;
 	}
 	global_head->actual_size = to_alloc_with_global;
