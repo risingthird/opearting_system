@@ -35,7 +35,7 @@ int Mem_Init(long sizeOfRegion) {
 		return RETURN_WITH_ERROR;
 	}
 
-	long to_alloc = round_to(sizeOfRegion, BLOCK_SIZE) / BLOCK_SIZE * BLOCK_HEADER + sizeOfRegion;
+	long to_alloc = round_to(sizeOfRegion, BLOCK_SIZE) * (BLOCK_HEADER + BLOCK_SIZE);
 	long to_alloc_with_global = round_to(to_alloc + GLOBAL_SIZE, getpagesize());
 
 	if ( (global_head = mmap(NULL, to_alloc_with_global, PROT_READ | PROT_WRITE,  MAP_PRIVATE | MAP_ANONYMOUS, -1, 0)) == MAP_FAILED) {
@@ -63,7 +63,7 @@ void *Mem_Alloc(long size) {
 		m_error = E_BAD_ARGS;
 		return NULL;
 	}
-
+	long act_size = size;
 	size = round_to(size, BLOCK_SIZE);
 
 	Node* curr = global_head->head_free;
@@ -214,7 +214,7 @@ void *Mem_Alloc(long size) {
 
 	next_to_allocate->next_free = NULL;
 	next_to_allocate->status = ALLOCATED;
-	global_head->remaining_size -= size;
+	global_head->remaining_size -= act_size;
 	return (void*) ((char*)next_to_allocate + BLOCK_HEADER);
 
 }
