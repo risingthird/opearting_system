@@ -329,7 +329,7 @@ int Mem_Free(void *ptr, int coalesce) {
 }
 
 void Mem_Dump() {
-	Node* temp = global_head->head;
+	Node* temp = global_head->head_free;
 	while (temp != NULL) {
 		printf("Block is %s, and has %ld bytes memories\n", temp->status ? "allocated" : "free", get_block_size(temp));
 		temp = temp->next_free;
