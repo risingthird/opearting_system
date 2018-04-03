@@ -6,7 +6,8 @@ int m_error;
 Node* largest;
 Node* second_largest;
 long last_block_size;
-#define worst_multiplier 40
+#define worst_multiplier 1
+#define average_multiplier 12
 
 long get_real_block_size(Node* pointer) {
 	long result = -1;
@@ -39,7 +40,10 @@ int Mem_Init(long sizeOfRegion) {
 	long to_alloc = round_to(sizeOfRegion, BLOCK_SIZE) / BLOCK_SIZE * BLOCK_HEADER + sizeOfRegion;
 	#endif
 	#ifdef worst
-	long to_alloc = round_to(sizeOfRegion, BLOCK_SIZE) * worst_multiplier + sizeOfRegion;
+	long to_alloc = round_to(sizeOfRegion, BLOCK_SIZE) / worst_multiplier * (BLOCK_HEADER + BLOCK_SIZE);
+	#endif
+	#ifdef average
+	long to_alloc = round_to(sizeOfRegion, BLOCK_SIZE) / average_multiplier * (BLOCK_HEADER + BLOCK_SIZE); 
 	#endif
 
 	long to_alloc_with_global = round_to(to_alloc + GLOBAL_SIZE, getpagesize());

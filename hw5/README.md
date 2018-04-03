@@ -36,3 +36,9 @@ Global varialbes:
 
 Limitations:
 	After coalescing, header size is included in block size. Note that this won't affect the size that the users are allowed to use.
+
+Compile time macros: 
+	When compling mem.c user can choose how they want to estimate the size we're actually requesting from memory. 
+	By adding -Dworst -Daverage -Daligned flag in gcc command, the program can estimate the memory respectively.
+	Note that this flag is required, program won't run without given this flag.
+	Also note that in the given Makefile the default flag is provided as -Daligned.
