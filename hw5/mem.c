@@ -49,7 +49,6 @@ int Mem_Init(long sizeOfRegion) {
 	global_head->head->prev = NULL;
 	global_head->head->next_free = NULL;
 	global_head->head->status = FREE;
-	global_head->head->canary = STACK_CANARY;
 	global_head->head_free = global_head->head;
 	last_block_size = round_to(sizeOfRegion, BLOCK_SIZE);
 	largest = NULL;
@@ -138,7 +137,6 @@ void *Mem_Alloc(long size) {
 			new_next->prev = next_to_allocate;
 			new_next->status = FREE;
 			new_next->next_free = next_to_allocate->next_free;
-			new_next->canary = STACK_CANARY;
 
 			if (prev_free != NULL) {
 				prev_free->next_free = new_next;
@@ -183,7 +181,6 @@ void *Mem_Alloc(long size) {
 			new_next->prev = next_to_allocate;
 			new_next->status = FREE;
 			new_next->next_free = next_to_allocate->next_free;
-			new_next->canary = STACK_CANARY;
 
 			if (prev_free != NULL) {
 				prev_free->next_free = new_next;
@@ -286,7 +283,6 @@ int Mem_Free(void *ptr, int coalesce) {
 		}
 
 		curr->status = FREE;
-		curr->canary = STACK_CANARY;
 
 		Node* prev_free = curr->prev;
 		while (prev_free != NULL && prev_free->status != FREE) {
