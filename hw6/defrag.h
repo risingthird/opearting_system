@@ -32,6 +32,7 @@ char* whole_buffer;
 FILE* in_file;
 FILE* out_file;
 SuperBlock* sb;
+void print_usage();
 
 
 
