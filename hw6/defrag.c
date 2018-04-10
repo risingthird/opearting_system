@@ -24,8 +24,8 @@ int main(int argc, char** argv) {
 	}
 
 	if (argv[1][0] != '-') {
-			printf("I died in 25\n");
-		strcpy(file_name, argv[1]);
+		file_name = "datafile-frag";
+		//strcpy(file_name, argv[1]);
 	}
 
 	in_file = fopen(file_name, 'r');
