@@ -13,6 +13,15 @@
 #define EXIT_ERROR -1
 #define BOOT_SIZE 512
 
+typedef struct superblock {
+	int size; /* size of blocks in bytes */
+	int inode_offset; /* offset of inode region in blocks */
+	int data_offset; /* data region offset in blocks */
+	int swap_offset; /* swap region offset in blocks */
+	int free_inode; /* head of free inode list, index */
+	int free_block; /* head of free block list, index */
+} SuperBlock;
+
 int BLOCK_SIZE;
 int I_OFFSET;
 int D_OFFSET;
@@ -25,14 +34,7 @@ FILE* out_file;
 SuperBlock* sb;
 
 
-typedef struct superblock {
-	int size; /* size of blocks in bytes */
-	int inode_offset; /* offset of inode region in blocks */
-	int data_offset; /* data region offset in blocks */
-	int swap_offset; /* swap region offset in blocks */
-	int free_inode; /* head of free inode list, index */
-	int free_block; /* head of free block list, index */
-} SuperBlock;
+
 
 typedef struct inode {
 	int next_inode; /* index of next free inode */
