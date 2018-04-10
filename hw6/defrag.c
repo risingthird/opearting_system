@@ -22,7 +22,7 @@ int main(int argc, char** argv) {
 			}
 		}
 	}
-
+	printf("I died in 25\n");
 	if (argv[1][0] != '-') {
 		strcpy(file_name, argv[1]);
 	}
