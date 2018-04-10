@@ -5,7 +5,7 @@
 
 
 int main(int argc, char** argv) {
-	char file_name[100];
+	char file_name = malloc(100);
 	
 	if (argc != 2) {
 		exit(EXIT_ERROR);
