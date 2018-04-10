@@ -28,7 +28,7 @@ int main(int argc, char** argv) {
 		//strcpy(file_name, argv[1]);
 	}
 
-	in_file = fopen(datafile-frag, 'r');
+	in_file = fopen("datafile-frag", "r");
 
 	//out_file = fopen(strcat(file_name, "-defrag"), 'w');
 
