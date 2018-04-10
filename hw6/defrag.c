@@ -24,14 +24,14 @@ int main(int argc, char** argv) {
 	}
 
 	if (argv[1][0] != '-') {
-		file_name = "datafile-frag";
+		//file_name = "datafile-frag";
 		//strcpy(file_name, argv[1]);
 	}
 
-	in_file = fopen(file_name, 'r');
-	printf("I died in 31\n");
-	out_file = fopen(strcat(file_name, "-defrag"), 'w');
-	printf("I died in 33\n");
+	in_file = fopen(datafile-frag, 'r');
+
+	//out_file = fopen(strcat(file_name, "-defrag"), 'w');
+
 
 	fseek(in_file, 0, SEEK_END);
 	int malloc_size = ftell(in_file);
