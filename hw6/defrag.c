@@ -11,17 +11,17 @@ int main(int argc, char** argv) {
 		exit(EXIT_ERROR);
 	}
 
-	if (strlen(argv[1]) == 2) {
-		if (argv[1][0] == '-') {
-			if (argv[1][1] == 'h') {
-				print_usage();
-				exit(EXIT_SUCCESS);
-			}
-			else {
-				exit(EXIT_ERROR);
-			}
-		}
-	}
+	// if (strlen(argv[1]) == 2) {
+	// 	if (argv[1][0] == '-') {
+	// 		if (argv[1][1] == 'h') {
+	// 			print_usage();
+	// 			exit(EXIT_SUCCESS);
+	// 		}
+	// 		else {
+	// 			exit(EXIT_ERROR);
+	// 		}
+	// 	}
+	// }
 
 	if ((in_file = fopen(argv[1], "r") == NULL)) {
 		exit(EXIT_ERROR);
