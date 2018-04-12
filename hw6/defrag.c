@@ -43,6 +43,8 @@ int main(int argc, char** argv) {
 	fseek(in_file, 0, SEEK_SET);
 	whole_buffer = malloc(FILE_SIZE);
 	dest_buffer = malloc(FILE_SIZE);
+	bzero(dest_buffer, FILE_SIZE);
+	bzero(whole_buffer, FILE_SIZE);
 	fread(whole_buffer, 1, FILE_SIZE, in_file);
 
 	sb = (SuperBlock*) (whole_buffer + BOOT_SIZE);
