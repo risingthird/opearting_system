@@ -196,7 +196,7 @@ int main(int argc, char** argv) {
 	sb->free_block = block_index;
 	//void* temp_block = NULL;
 	int* a_free_block = NULL;
-	for (int i = block_index; i < sb->swap_offset; i++) {
+	for (int i = block_index; i < sb->swap_offset - sb->data_offset; i++) {
 		//temp_block = dest_buffer + DATA_BEGIN + i * BLOCK_SIZE;
 		a_free_block = (int*) (dest_buffer + DATA_BEGIN + i * BLOCK_SIZE);
 		if (i == sb->swap_offset - 1) {
