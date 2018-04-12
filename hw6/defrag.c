@@ -11,26 +11,26 @@ int main(int argc, char** argv) {
 		exit(EXIT_ERROR);
 	}
 
-	// if (strlen(argv[1]) == 2) {
-	// 	if (argv[1][0] == '-') {
-	// 		if (argv[1][1] == 'h') {
-	// 			print_usage();
-	// 			exit(EXIT_SUCCESS);
-	// 		}
-	// 		else {
-	// 			exit(EXIT_ERROR);
-	// 		}
-	// 	}
-	// }
+	if (strlen(argv[1]) == 2) {
+		if (argv[1][0] == '-') {
+			if (argv[1][1] == 'h') {
+				print_usage();
+				exit(EXIT_SUCCESS);
+			}
+			else {
+				exit(EXIT_ERROR);
+			}
+		}
+	}
 
-	if ((in_file = fopen("datafile-frag", "r") == NULL)) {
+	if ((in_file = fopen(argv[1], "r") == NULL)) {
 		exit(EXIT_ERROR);
 	}
 
-	//strcpy(file_name, argv[1]);
-	//strcat(file_name, "-defrag");
+	strcpy(file_name, argv[1]);
+	strcat(file_name, "-defrag");
 
-	if ((out_file = fopen("datafile_defrag", 'w') == NULL)) {
+	if ((out_file = fopen(file_name, "w") == NULL)) {
 		exit(EXIT_ERROR);
 	}
 
