@@ -220,7 +220,17 @@ int main(int argc, char** argv) {
 }
 
 
-void print_usage() {}
+void print_usage() {
+	printf("+++++++++++++++++++++++++++++++++++++++++++++++++++\n");
+    printf("defrag: performs defragmentation on a Disk File by compacting all the blocks of a file in sequential order on disk.\n");
+    printf("+++++++++++++++++++++++++++++++++++++++++++++++++++\n");
+    printf("Usage:\n");
+    printf("\t ./defrag <fragmented disk file>\n");
+    printf("The defragmenter will output a new disk image with \"-defrag\" concatenated to the end of the input file name. For instance, \"./defrag myfile\" should produce the output file \"myfile-defrag\".\n");
+    printf("+++++++++++++++++++++++++++++++++++++++++++++++++++\n");
+    printf("To see manual page:\n");
+    printf("\t ./defrag -h\n\n");	
+}
 
 
 
