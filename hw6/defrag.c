@@ -23,7 +23,7 @@ int main(int argc, char** argv) {
 	// 	}
 	// }
 
-	if ((in_file = fopen(argv[1], "r") == NULL)) {
+	if ((in_file = fopen("datafile-frag", "r") == NULL)) {
 		exit(EXIT_ERROR);
 	}
 
