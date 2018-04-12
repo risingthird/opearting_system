@@ -30,7 +30,7 @@ int main(int argc, char** argv) {
 	strcpy(file_name, argv[1]);
 	strcat(file_name, "-defrag");
 
-	if ((out_file = fopen(file_name, 'w') == NULL)) {
+	if ((out_file = fopen("datafile_defrag", 'w') == NULL)) {
 		exit(EXIT_ERROR);
 	}
 
