@@ -6,6 +6,7 @@
 
 int main(int argc, char** argv) {
 	char file_name[100];
+	bzero(file_name, 100);
 	
 	if (argc != 2) {
 		exit(EXIT_ERROR);
@@ -23,14 +24,14 @@ int main(int argc, char** argv) {
 		}
 	}
 
-	if ((in_file = fopen(argv[1], "r") == NULL)) {
+	if ((in_file = fopen(argv[1], "r")) == NULL) {
 		exit(EXIT_ERROR);
 	}
 
 	strcpy(file_name, argv[1]);
 	strcat(file_name, "-defrag");
 
-	if ((out_file = fopen(file_name, "w") == NULL)) {
+	if ((out_file = fopen(file_name, "w")) == NULL) {
 		exit(EXIT_ERROR);
 	}
 
