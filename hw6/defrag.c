@@ -198,7 +198,7 @@ int main(int argc, char** argv) {
 		temp_block = dest_buffer + DATA_BEGIN + i * BLOCK_SIZE;
 		a_free_block = (int*) (temp_block);
 		if (i == sb->swap_offset - 1) {
-			a_free_block[0] = -1;
+			*a_free_block = -1;
 		}
 		else {
 			a_free_block[0] = i + 1;
