@@ -1,6 +1,5 @@
 SHELL:=/bin/bash -O extglob
 
-gcc -o defrag -g defrag.c
 
 defrag : defrag.c
 	@gcc defrag.c -o -g defrag
