@@ -27,7 +27,7 @@ int main(int argc, char** argv) {
 		exit(EXIT_ERROR);
 	}
 
-	strcpy(file_name, argv[1]);
+	//strcpy(file_name, argv[1]);
 	//strcat(file_name, "-defrag");
 
 	if ((out_file = fopen("datafile_defrag", 'w') == NULL)) {
