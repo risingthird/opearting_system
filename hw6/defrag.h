@@ -12,6 +12,9 @@
 #define EXIT_SUCCESS 0
 #define EXIT_ERROR -1
 #define BOOT_SIZE 512
+#define SUPER_SIZE 512
+#define TRUE 1
+#define FALSE 0
 
 typedef struct superblock {
 	int size; /* size of blocks in bytes */
@@ -23,12 +26,17 @@ typedef struct superblock {
 } SuperBlock;
 
 int BLOCK_SIZE;
+int INODE_SIZE;
 int I_OFFSET;
 int D_OFFSET;
 int DATA_BEGIN;
 int INODE_BEGIN;
 int FILE_SIZE;
+int block_index;
+int num_inode;
+int finished;
 char* whole_buffer;
+char* dest_buffer;
 FILE* in_file;
 FILE* out_file;
 SuperBlock* sb;
