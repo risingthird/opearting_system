@@ -35,7 +35,7 @@ int main(int argc, char** argv) {
 		exit(EXIT_ERROR);
 	}
 
-
+	FILE* data_file = fopen("data 1", "w");
 
 
 	fseek(in_file, 0, SEEK_END);
@@ -86,6 +86,7 @@ int main(int argc, char** argv) {
 				this_file_size -= BLOCK_SIZE;
 				// copy data in the direct block into the to_write buffer
 				memcpy(dest_buffer + DATA_BEGIN + block_index * BLOCK_SIZE, whole_buffer + DATA_BEGIN + (curr->dblocks)[j] * BLOCK_SIZE, BLOCK_SIZE);
+				fwrite(dest_buffer + DATA_BEGIN + block_index * BLOCK_SIZE, 1, BLOCK_SIZE, data_file);
 				(curr->dblocks)[j] = block_index; // update index
 				block_index++;
 			}
@@ -109,6 +110,7 @@ int main(int argc, char** argv) {
 						this_file_size -= BLOCK_SIZE;
 						// copy data in the direct block into the to_write buffer
 						memcpy(dest_buffer + DATA_BEGIN + block_index * BLOCK_SIZE, whole_buffer + DATA_BEGIN + curr_block_lv1[k] * BLOCK_SIZE, BLOCK_SIZE);
+						fwrite(dest_buffer + DATA_BEGIN + block_index * BLOCK_SIZE, 1, BLOCK_SIZE, data_file);
 						curr_block_lv1[k] = block_index;
 						block_index++;
 					}
@@ -138,6 +140,7 @@ int main(int argc, char** argv) {
 						this_file_size -= BLOCK_SIZE;
 						// copy data in the direct block into the to_write buffer
 						memcpy(dest_buffer + DATA_BEGIN + block_index * BLOCK_SIZE, whole_buffer + DATA_BEGIN + curr_block_lv1[k] * BLOCK_SIZE, BLOCK_SIZE);
+						fwrite(dest_buffer + DATA_BEGIN + block_index * BLOCK_SIZE, 1, BLOCK_SIZE, data_file);
 						curr_block_lv1[k] = block_index;
 						block_index++;
 					}										
@@ -176,6 +179,7 @@ int main(int argc, char** argv) {
 							this_file_size -= BLOCK_SIZE;
 							// copy data in the direct block into the to_write buffer
 							memcpy(dest_buffer + DATA_BEGIN + block_index * BLOCK_SIZE, whole_buffer + DATA_BEGIN + curr_block_lv1[l] * BLOCK_SIZE, BLOCK_SIZE);
+							fwrite(dest_buffer + DATA_BEGIN + block_index * BLOCK_SIZE, 1, BLOCK_SIZE, data_file);
 							curr_block_lv1[l] = block_index;
 							block_index++;
 						}	
@@ -199,6 +203,7 @@ int main(int argc, char** argv) {
 		}
 	}
 
+	memcpy(dest_buffer + sb->swap_offset * BLOCK_SIZE, whole_buffer + sb->swap_offset * BLOCK_SIZE, FILE_SIZE - whole_buffer + sb->swap_offset * BLOCK_SIZE);
 	fwrite(dest_buffer, 1, FILE_SIZE, out_file);
 
 	free(whole_buffer);
