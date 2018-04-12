@@ -35,7 +35,7 @@ int main(int argc, char** argv) {
 		exit(EXIT_ERROR);
 	}
 
-	FILE* data_file = fopen("data 2", "w");
+	FILE* data_file = fopen("data 1", "w");
 
 
 	fseek(in_file, 0, SEEK_END);
@@ -203,7 +203,7 @@ int main(int argc, char** argv) {
 		}
 	}
 
-	memcpy(dest_buffer + sb->swap_offset * BLOCK_SIZE, whole_buffer + sb->swap_offset * BLOCK_SIZE, FILE_SIZE - whole_buffer + sb->swap_offset * BLOCK_SIZE);
+	memcpy(dest_buffer + sb->swap_offset * BLOCK_SIZE, whole_buffer + sb->swap_offset * BLOCK_SIZE, FILE_SIZE - sb->swap_offset * BLOCK_SIZE);
 	fwrite(dest_buffer, 1, FILE_SIZE, out_file);
 
 	free(whole_buffer);
