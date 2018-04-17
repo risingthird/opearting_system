@@ -109,6 +109,11 @@ void test_8_byte() {
   Mem_Free(ptr1, 1);
   Mem_Dump();
 
+  printf("--------------3000 byte allocation-----------------\n");
+  void* ptr100 = Mem_Alloc(2048);
+  assert(m_error == E_NO_SPACE);
+  Mem_Dump();
+
   printf("--------------64 byte free-----------------\n");
   Mem_Free(ptr3, 1);
   Mem_Dump();
