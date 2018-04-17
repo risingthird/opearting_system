@@ -7,7 +7,7 @@ Node* largest;
 Node* second_largest;
 long last_block_size;
 #define worst_multiplier 1
-#define average_multiplier 12
+#define average_multiplier 16
 
 long get_real_block_size(Node* pointer) {
 	long result = -1;
