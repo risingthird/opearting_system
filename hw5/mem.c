@@ -71,7 +71,7 @@ int Mem_Init(long sizeOfRegion) {
 
 void *Mem_Alloc(long size) {
 	if (size > global_head->remaining_size) {
-		m_error = E_BAD_ARGS;
+		m_error = E_NO_SPACE;
 		return NULL;
 	}
 	long act_size = size;
