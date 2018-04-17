@@ -18,20 +18,23 @@ static void print_execution_time(clock_t begin, clock_t end) {
 }
 
 void test_8_byte() {
-  int result = Mem_Init(-1);
-  assert(result == -1);
+  // int result = Mem_Init(-1);
+  // assert(result == -1);
 
-  result = Mem_Init(1024);
-  assert(result == 0);
+  // result = Mem_Init(1024);
+  // assert(result == 0);
 
-  result = Mem_Init(1024);
-  assert(result == -1);
+  // result = Mem_Init(1024);
+  // assert(result == -1);
 
+  // assert(m_error == E_BAD_ARGS);
+
+  // end = clock();
+  // print_execution_time(begin, end);
+  // printf("You passed bad args to Mem_Init() test! Yay!\n");
+  assert(Mem_Init(-4096) == -1);
   assert(m_error == E_BAD_ARGS);
-
-  end = clock();
-  print_execution_time(begin, end);
-  printf("You passed bad args to Mem_Init() test! Yay!\n");
+  exit(0);
   
 }
 
