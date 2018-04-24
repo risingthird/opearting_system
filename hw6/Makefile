@@ -5,4 +5,4 @@ defrag : defrag.c
 	@gcc -o defrag -g defrag.c
 
 clean: 
-	@rm -f !(*.c|Makefile|README.md|*.h|datafile-frag)
+	@rm -f !(*.c|Makefile|README.md|*.h|datafile-frag*|large-frag|large-frag-defrag-data)
